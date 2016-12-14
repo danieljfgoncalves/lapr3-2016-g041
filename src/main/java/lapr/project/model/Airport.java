@@ -54,32 +54,32 @@ public class Airport {
     /**
      * The default name of the airport.
      */
-    private final static String NAME_BY_DEFAULT = "Default Name";
+    private final static String DEFAULT_NAME = "Default Name";
 
     /**
      * The default town where the airport is.
      */
-    private final static String TOWN_BY_DEFAULT = "Default Town";
+    private final static String DEFAULT_TOWN = "Default Town";
 
     /**
      * The default country of the airport.
      */
-    private final static String COUNTRY_BY_DEFAULT = "Default Country";
+    private final static String DEFAULT_COUNTRY = "Default Country";
 
     /**
      * The default IATA code of the airport.
      */
-    private final static String IATA_BY_DEFAULT = "Default IATA";
+    private final static String DEFAULT_IATA = "Default IATA";
 
     /**
      * The default coordinate of the airport.
      */
-    private final static Coordinate COORDINATE_BY_DEFAULT = new Coordinate();
+    private final static Coordinate DEFAULT_COORDINATE = new Coordinate();
 
     /**
      * The default altitude of the airport.
      */
-    private final static Double ALTITUDE_BY_DEFAULT = 0.0;
+    private final static Double DEFAULT_ALTITUDE = 0.0;
 
     /**
      * Creates an Airport receiving its attributes.
@@ -104,12 +104,12 @@ public class Airport {
      * Creates an Airport with default values.
      */
     public Airport() {
-        this.name = NAME_BY_DEFAULT;
-        this.town = TOWN_BY_DEFAULT;
-        this.country = COUNTRY_BY_DEFAULT;
-        this.IATA = IATA_BY_DEFAULT;
-        this.coordinates = COORDINATE_BY_DEFAULT;
-        this.altitude = ALTITUDE_BY_DEFAULT;
+        this.name = DEFAULT_NAME;
+        this.town = DEFAULT_TOWN;
+        this.country = DEFAULT_COUNTRY;
+        this.IATA = DEFAULT_IATA;
+        this.coordinates = DEFAULT_COORDINATE;
+        this.altitude = DEFAULT_ALTITUDE;
     }
 
     /**

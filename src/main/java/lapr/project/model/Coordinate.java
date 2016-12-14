@@ -34,12 +34,12 @@ public class Coordinate {
     /**
      * The default coordinate's longitude.
      */
-    private final static Double LONGITUDE_BY_DEFAULT = 0.000000d;
+    private final static Double DEFAULT_LONGITUDE = 0.000000d;
 
     /**
      * The default coordinate's latitude.
      */
-    private final static Double LATITUDE_BY_DEFAULT = 0.000000d;
+    private final static Double DEFAULT_LATITUDE = 0.000000d;
 
     /**
      * Creates a Coordinate receiving its attributes.
@@ -56,8 +56,8 @@ public class Coordinate {
      * Creates a Coordinate with default values.
      */
     public Coordinate() {
-        this.latitude = LATITUDE_BY_DEFAULT;
-        this.longitude = LONGITUDE_BY_DEFAULT;
+        this.latitude = DEFAULT_LATITUDE;
+        this.longitude = DEFAULT_LONGITUDE;
     }
 
     /**
