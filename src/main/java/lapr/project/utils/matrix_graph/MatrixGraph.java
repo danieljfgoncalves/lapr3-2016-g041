@@ -192,11 +192,31 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
 
         ArrayList<E> edges = new ArrayList<>();
 
-        for (int i = 0; i < numVertices; i++) {
-            for (int j = 0; j < numVertices; j++) {
+        if (directed) {
+            // When graph is directed iterate all matrix
+            for (int i = 0; i < numVertices; i++) {
+                for (int j = 0; j < numVertices; j++) {
 
-                if (edgeMatrix[i][j] != null) {
-                    edges.add(edgeMatrix[i][j]);
+                    if (edgeMatrix[i][j] != null) {
+                        edges.add(edgeMatrix[i][j]);
+                    }
+                }
+            }
+        } else {
+            /*     
+                    0 1 2 3 
+                    A B C D
+                0 A|0|x|x|x|
+                1 B|_|0|x|x|
+                2 C|_|_|0|x|
+                3 D|_|_|_|0|  
+             */
+            // When graph is undirected, to not repeat edges, only iterate top triangle of matrix
+            for (int i = 0; i < numVertices - 1; i++) {
+                for (int j = i + 1; j < numVertices; j++) {
+                    if (edgeMatrix[i][j] != null) {
+                        edges.add(edgeMatrix[i][j]);
+                    }
                 }
             }
         }
@@ -214,7 +234,7 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
         // same for both (undirected/directed)
         int edgeCount = 0;
         for (int i = 0; i < numVertices; i++) {
-            if (edgeMatrix[index][i] != null || (!directed && edgeMatrix[i][index] != null)) {
+            if (edgeMatrix[index][i] != null) {
                 edgeCount++;
             }
         }
@@ -231,7 +251,7 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
         }
 
         // If undirected same as outDegree
-        if (!directed) {
+        if (!isDirected()) {
             return outDegree(vertex);
         }
 
@@ -263,7 +283,7 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
         ArrayList<V> directConnections = new ArrayList<>();
 
         for (int i = 0; i < numVertices; i++) {
-            if (edgeMatrix[index][i] != null || edgeMatrix[i][index] != null) {
+            if (edgeMatrix[index][i] != null) {
                 directConnections.add(vertices.get(i));
             }
         }
@@ -284,8 +304,6 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
         for (int i = 0; i < numVertices; i++) {
             if (edgeMatrix[index][i] != null) {
                 outgoingEdges.add(edgeMatrix[index][i]);
-            } else if (!directed && edgeMatrix[i][index] != null) {
-                outgoingEdges.add(edgeMatrix[i][index]);
             }
         }
 
@@ -300,7 +318,7 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
             return null;
         }
 
-        if (!directed) {
+        if (!isDirected()) {
             return outgoingEdges(vertex);
         }
 
@@ -327,29 +345,37 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
             return null;
         }
 
-        // Verify if opposite edge exists (in an undirected graph)
-        if (!directed && indexB > indexA) {
-
-            int tmp = indexA;
-            indexA = indexB;
-            indexB = tmp;
-        }
-
         return edgeMatrix[indexA][indexB];
     }
 
     @Override
     public V[] endVertices(E edge) {
 
-        for (int i = 0; i < numVertices; i++) {
-            for (int j = 0; j < numVertices; j++) {
-                if (edgeMatrix[i][j] != null) {
-                    if (edgeMatrix[i][j].equals(edge)) {
-                        @SuppressWarnings("unchecked")
-                        V[] result = (V[]) new Object[2];
-                        result[0] = vertices.get(i);
-                        result[1] = vertices.get(j);
-                        return result;
+        if (directed) {
+            for (int i = 0; i < numVertices; i++) {
+                for (int j = 0; j < numVertices; j++) {
+                    if (edgeMatrix[i][j] != null) {
+                        if (edgeMatrix[i][j].equals(edge)) {
+                            @SuppressWarnings("unchecked")
+                            V[] result = (V[]) new Object[2];
+                            result[0] = vertices.get(i);
+                            result[1] = vertices.get(j);
+                            return result;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < numVertices - 1; i++) {
+                for (int j = i + 1; j < numVertices; j++) {
+                    if (edgeMatrix[i][j] != null) {
+                        if (edgeMatrix[i][j].equals(edge)) {
+                            @SuppressWarnings("unchecked")
+                            V[] result = (V[]) new Object[2];
+                            result[0] = vertices.get(i);
+                            result[1] = vertices.get(j);
+                            return result;
+                        }
                     }
                 }
             }
@@ -358,7 +384,8 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
     }
 
     @Override
-    public boolean insertVertex(V newVertex) {
+    public boolean insertVertex(V newVertex
+    ) {
         int index = toIndex(newVertex);
         if (index != -1) {
             return false;
@@ -383,7 +410,11 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
      */
     private void insertEdge(int indexA, int indexB, E newEdge) {
 
-        edgeMatrix[indexA][indexB] = newEdge;
+        if (directed) {
+            edgeMatrix[indexA][indexB] = newEdge;
+        } else {
+            edgeMatrix[indexA][indexB] = edgeMatrix[indexB][indexA] = newEdge;
+        }
         numEdges++;
     }
 
@@ -402,14 +433,6 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
         int indexB = toIndex(vertexB);
         if (indexB == -1) {
             return false;
-        }
-
-        // Verify if opposite edge exists (in an undirected graph)
-        if (!directed && indexB > indexA) {
-
-            int tmp = indexA;
-            indexA = indexB;
-            indexB = tmp;
         }
 
         if (edgeMatrix[indexA][indexB] != null) {
@@ -479,7 +502,11 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
      */
     private E removeEdge(int indexA, int indexB) {
         E edge = edgeMatrix[indexA][indexB];
-        edgeMatrix[indexA][indexB] = null;
+        if (directed) {
+            edgeMatrix[indexA][indexB] = null;
+        } else {
+            edgeMatrix[indexA][indexB] = edgeMatrix[indexB][indexA] = null;
+        }
         numEdges--;
         return edge;
     }
@@ -494,14 +521,6 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
         int indexB = toIndex(vertexB);
         if (indexB == -1) {
             return null;
-        }
-
-        // Verify if opposite edge exists (in an undirected graph)
-        if (!directed && indexB > indexA) {
-
-            int tmp = indexA;
-            indexA = indexB;
-            indexB = tmp;
         }
 
         return removeEdge(indexA, indexB);
@@ -620,5 +639,14 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
         hash = 53 * hash + Objects.hashCode(this.vertices);
         hash = 53 * hash + Arrays.deepHashCode(this.edgeMatrix);
         return hash;
+    }
+
+    /**
+     * Indicates if graph is directed.
+     *
+     * @return the directed
+     */
+    public boolean isDirected() {
+        return directed;
     }
 }

@@ -52,6 +52,11 @@ public class AircraftModel {
      * AircraftType's wing area
      */
     private Double wingArea;
+    
+    /**
+     * AircraftType's engine
+     */
+    private Engine engine;
 
     /**
      * The epsilon of the allowed error.
@@ -104,7 +109,7 @@ public class AircraftModel {
      * @param cruiseSpeed the AircraftType's cruise speed
      * @param wingArea the AircraftType's wing area
      */
-    public AircraftModel(Integer registration, AircraftType type, Double emptyWheight, Double mtow, Double mzfw, Double cruiseSpeed, Double wingArea) {
+    public AircraftModel(Integer registration, AircraftType type, Double emptyWheight, Double mtow, Double mzfw, Double cruiseSpeed, Double wingArea, Engine engine) {
         this.registration = registration;
         this.type = type;
         this.emptyWeight = emptyWheight;
@@ -112,6 +117,7 @@ public class AircraftModel {
         this.mzfw = mzfw;
         this.cruiseSpeed = cruiseSpeed;
         this.wingArea = wingArea;
+        this.engine = engine;
     }
 
     /**
@@ -122,9 +128,10 @@ public class AircraftModel {
         this.type = TYPE_BY_DEFAULT;
         this.emptyWeight = EMPTY_WEIGHT_BY_DEFAULT;
         this.mtow = MTOW_BY_DEFAULT;
-        this.mzfw = MTOW_BY_DEFAULT;
+        this.mzfw = MZFW_BY_DEFAULT;
         this.cruiseSpeed = CRUISE_SPEED_BY_DEFAULT;
         this.wingArea = WING_AREA_BY_DEFAULT;
+        this.engine = new Engine(){};
     }
 
     /**
@@ -140,6 +147,7 @@ public class AircraftModel {
         this.mzfw = otherAircraftModel.mzfw;
         this.cruiseSpeed = otherAircraftModel.cruiseSpeed;
         this.wingArea = otherAircraftModel.wingArea;
+        this.engine = otherAircraftModel.engine;
     }
 
     /**
@@ -267,6 +275,23 @@ public class AircraftModel {
     public void setWingArea(Double wingArea) {
         this.wingArea = wingArea;
     }
+    
+    /**
+     * Obtains the AircraftModel's engine
+     * @return the engine
+     */
+    public Engine getEngine(){
+        return this.engine;
+    }
+    
+    /**
+     * Modifies the AircraftModel's engine
+     *
+     * @param engine the engine to set
+     */
+    public void setEngine(Engine engine){
+        this.engine = engine;
+    }
 
     public Double calculateCd(Double drag, Double dynamicPressure, Double referenceArea) {
         // TODO: Implement calculateCd
@@ -301,8 +326,10 @@ public class AircraftModel {
     @Override
     public String toString() {
         return String.format("Aircraft Model{registration=%s, type=%s, empty weight=%4f, "
-                + "maximum take off weight=%4f, maximum zero fuel weight=%4f, cruise speed=&4f, wing area=%4f}",
-                this.registration, this.type, this.emptyWeight, this.mtow, this.mzfw, this.cruiseSpeed, this.wingArea);
+                + "maximum take off weight=%4f, maximum zero fuel weight=%4f,"
+                + " cruise speed=&4f, wing area=%4f, engine=%s}",
+                this.registration, this.type, this.emptyWeight, this.mtow,
+                this.mzfw, this.cruiseSpeed, this.wingArea, this.engine);
     }
 
 }

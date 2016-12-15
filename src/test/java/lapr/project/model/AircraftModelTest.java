@@ -118,6 +118,18 @@ public class AircraftModelTest {
         Double result = instance.getWingArea();
         assertEquals(expResult, result);
     }
+    
+     /**
+     * Test of getEngine and setEngine methods, of class AircraftModel.
+     */
+    @Test
+    public void testGetSetEngine() {
+        System.out.println("getEngine and setEngine");
+        Engine expResult = new Engine("Motor1", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0) {};
+        instance.setEngine(expResult);
+        Engine result = instance.getEngine();
+        assertEquals(expResult, result);
+    }
 
     /**
      * Test of hashCode method, of class AircraftModel.
@@ -137,7 +149,8 @@ public class AircraftModelTest {
     @Test
     public void testEquals01() {
         System.out.println("equals");
-        AircraftModel obj = new AircraftModel(1, AircraftType.CARGO, 1.0, 1.0, 1.0, 1.0, 1.0);
+        Engine e = new Engine(){};
+        AircraftModel obj = new AircraftModel(1, AircraftType.CARGO, 1.0, 1.0, 1.0, 1.0, 1.0, e);
         boolean expResult = false;
         boolean result = instance.equals(obj);
         assertEquals(expResult, result);
@@ -168,7 +181,8 @@ public class AircraftModelTest {
                 + " maximum take off weight=0,000000,"
                 + " maximum zero fuel weight=0,000000,"
                 + " cruise speed=&4f,"
-                + " wing area=0,000000}";
+                + " wing area=0,000000,"
+                + " engine=0.0}";
         String result = instance.toString();
         assertEquals(expResult, result);
     }

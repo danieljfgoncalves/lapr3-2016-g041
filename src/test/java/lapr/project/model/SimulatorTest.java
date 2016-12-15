@@ -43,6 +43,20 @@ public class SimulatorTest {
     }
 
     /**
+     * Test of setProjects and getProjects methods, of class Simulator.
+     */
+    @Test
+    public void testGetSetActivatedProject() {
+        System.out.println("get and setActivatedProject");
+
+        Project project = new Project();
+
+        instance.setActivatedProject(project);
+
+        assertEquals(instance.getActivatedProject(), project);
+    }
+
+    /**
      * Test of hashCode method, of class Simulator.
      */
     @Test
@@ -81,6 +95,18 @@ public class SimulatorTest {
         String expResult = "Simulator{projects=[]}";
         String result = instance.toString();
 
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of createProject method, of class Simulator.
+     */
+    @Test
+    public void testCreateProject() {
+        System.out.println("createProject");
+
+        Project expResult = new Project();
+        Project result = instance.createProject();
         assertEquals(expResult, result);
     }
 

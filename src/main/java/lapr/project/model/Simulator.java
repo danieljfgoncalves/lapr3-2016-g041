@@ -24,6 +24,11 @@ public class Simulator {
     private List<Project> projects;
 
     /**
+     * Status of the project
+     */
+    private Project activatedProject;
+
+    /**
      * Creates an instance of simulator with its default values.
      */
     public Simulator() {
@@ -64,6 +69,35 @@ public class Simulator {
      */
     public void setProjects(List<Project> projects) {
         this.projects = projects;
+    }
+
+    /**
+     * Gets the activated project
+     *
+     * @return activated project
+     */
+    public Project getActivatedProject() {
+        return activatedProject;
+    }
+
+    /**
+     * Sets a project as activated
+     *
+     * @param activatedProject activated project
+     */
+    public void setActivatedProject(Project activatedProject) {
+        this.activatedProject = activatedProject;
+    }
+
+    /**
+     * Creates a new project.
+     *
+     * @return the new project
+     */
+    public Project createProject() {
+        Project newProject = new Project();
+        projects.add(newProject);
+        return newProject;
     }
 
     @Override
