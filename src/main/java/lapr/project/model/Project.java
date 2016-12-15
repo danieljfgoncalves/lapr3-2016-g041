@@ -15,36 +15,36 @@ import java.util.Objects;
  * @author Tiago Correia - 1151031
  */
 public class Project {
-    
+
     /**
      * Description of the Project
      */
     private String description;
-    
+
     /**
      * Name of the Project
      */
     private String name;
-    
+
     /**
      * Serie Number of the Project
      */
     private int serieNumber;
-    
+
     /**
      * Default value for Description
      */
-    private final static String DEFAULT_DESCRIPTION= "Lista de Voos";
-     /**
-      * Default value for Name
-      */
+    private final static String DEFAULT_DESCRIPTION = "Lista de Voos";
+    /**
+     * Default value for Name
+     */
     private final static String DEFAULT_NAME = "Voos para localização";
-    
+
     /**
      * Default value for Serie Number
      */
     private final static int DEFAULT_SERIE_NUMBER = 000000;
-     
+
     /**
      * Creates an instance of project with it's default values
      */
@@ -53,52 +53,52 @@ public class Project {
         this.name = DEFAULT_NAME;
         this.serieNumber = DEFAULT_SERIE_NUMBER;
     }
-    
+
     /**
      * Creates an instance of project receiving it's attributes
-     * 
-     * @param description the description of the project
+     *
      * @param name the name of the project
+     * @param description the description of the project
      * @param serieNumber the serie number of the project
      */
-    public Project(String description, String name, int serieNumber){
-        this.description = description;
+    public Project(String name, String description, int serieNumber) {
         this.name = name;
+        this.description = description;
         this.serieNumber = serieNumber;
     }
-    
+
     /**
      * Creates a project receiving another project
-     * 
-     * @param otherProject  other project to copy
+     *
+     * @param otherProject other project to copy
      */
-    public Project(Project otherProject){
+    public Project(Project otherProject) {
         this.description = otherProject.description;
         this.name = otherProject.name;
         this.serieNumber = otherProject.serieNumber;
     }
-    
+
     /**
      * Gets the description
-     * 
-     * @return description 
+     *
+     * @return description
      */
     public String getDescription() {
         return description;
     }
-    
+
     /**
      * Sets the description
-     * 
+     *
      * @param description description
      */
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     /**
      * Gets the name
-     * 
+     *
      * @return name
      */
     public String getName() {
@@ -107,7 +107,7 @@ public class Project {
 
     /**
      * Sets the name
-     * 
+     *
      * @param name name
      */
     public void setName(String name) {
@@ -116,8 +116,8 @@ public class Project {
 
     /**
      * Gets the serie number
-     * 
-     * @return  serie number
+     *
+     * @return serie number
      */
     public int getSerieNumber() {
         return serieNumber;
@@ -125,7 +125,7 @@ public class Project {
 
     /**
      * Sets the serie number
-     * 
+     *
      * @param serieNumber serie number
      */
     public void setSerieNumber(int serieNumber) {
@@ -160,6 +160,5 @@ public class Project {
     public String toString() {
         return "Project{" + "description=" + description + ", name=" + name + ", serieNumber=" + serieNumber + '}';
     }
-    
-    
+
 }

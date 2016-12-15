@@ -1,35 +1,36 @@
 package lapr.project.ui;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import lapr.project.model.CalculatorExample;
+import javax.swing.JFrame;
+import lapr.project.model.Simulator;
+import lapr.project.utils.DefaultInstantiator;
 
 /**
- * @author Nuno Bettencourt <nmb@isep.ipp.pt> on 24/05/16.
+ * The class to start the application.
+ *
+ * @author Daniel Gonçalves - 1151452
+ * @author Eric Amaral - 1141570
+ * @author Ivo Ferro - 1151159
+ * @author João Pereira - 1151241
+ * @author Tiago Correia - 1151031
  */
 class Main {
 
-	/**
-	 * Logger class.
-	 */
-	private static final Logger LOGGER = Logger.getLogger("MainLog");
+    /**
+     * Private constructor to hide implicit public one.
+     */
+    private Main() {
+    }
 
-	/**
-	 * Private constructor to hide implicit public one.
-	 */
-	private Main() {
+    /**
+     * Application main method.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Simulator simulator = DefaultInstantiator.createSimulator();
 
-	}
-
-	/**
-	 * Application main method.
-	 * 
-	 * @param args the command line arguments
-	 */
-	public static void main(String[] args) {
-		CalculatorExample calculatorExample = new CalculatorExample();
-		int value = calculatorExample.sum(3, 5);
-		LOGGER.log(Level.INFO, String.valueOf(value));
-
-	}
+        ProjectSelectionFrame projectSelectionFrame = new ProjectSelectionFrame(simulator);
+        projectSelectionFrame.setVisible(true);
+        projectSelectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
 }
