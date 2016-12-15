@@ -55,7 +55,7 @@ public class SimulatorTest {
 
         assertEquals(instance.getActivatedProject(), project);
     }
-    
+
     /**
      * Test of hashCode method, of class Simulator.
      */
@@ -95,6 +95,18 @@ public class SimulatorTest {
         String expResult = "Simulator{projects=[]}";
         String result = instance.toString();
 
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of createProject method, of class Simulator.
+     */
+    @Test
+    public void testCreateProject() {
+        System.out.println("createProject");
+
+        Project expResult = new Project();
+        Project result = instance.createProject();
         assertEquals(expResult, result);
     }
 

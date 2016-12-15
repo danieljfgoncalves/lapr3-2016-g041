@@ -27,6 +27,7 @@ public class Simulator {
      * Status of the project
      */
     private Project activatedProject;
+
     /**
      * Creates an instance of simulator with its default values.
      */
@@ -72,7 +73,7 @@ public class Simulator {
 
     /**
      * Gets the activated project
-     * 
+     *
      * @return activated project
      */
     public Project getActivatedProject() {
@@ -81,13 +82,24 @@ public class Simulator {
 
     /**
      * Sets a project as activated
-     * 
+     *
      * @param activatedProject activated project
      */
     public void setActivatedProject(Project activatedProject) {
         this.activatedProject = activatedProject;
     }
-    
+
+    /**
+     * Creates a new project.
+     *
+     * @return the new project
+     */
+    public Project createProject() {
+        Project newProject = new Project();
+        projects.add(newProject);
+        return newProject;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
