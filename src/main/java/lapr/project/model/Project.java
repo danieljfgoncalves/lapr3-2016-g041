@@ -55,6 +55,19 @@ public class Project {
     }
 
     /**
+     * Creates a project receiving his name and description.
+     *
+     * @param name project name
+     * @param description project description
+     */
+    public Project(String name, String description) {
+        final int lower = 1, upper = Integer.MAX_VALUE;
+        this.serieNumber = (int) (Math.random() * (upper - lower)) + lower;
+        this.name = name;
+        this.description = description;
+    }
+
+    /**
      * Creates an instance of project receiving it's attributes
      *
      * @param name the name of the project

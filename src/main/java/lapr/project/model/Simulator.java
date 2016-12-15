@@ -100,6 +100,37 @@ public class Simulator {
         return newProject;
     }
 
+    /**
+     * Creates a project receiving their name and description.
+     *
+     * @param name project's name
+     * @param description project's description
+     * @return created project
+     */
+    public Project createProject(String name, String description) {
+        return new Project(name, description);
+    }
+
+    /**
+     * Validates if a given project.
+     *
+     * @param project project to be validated
+     * @return true if it is valid, false otherwise
+     */
+    public boolean validateProject(Project project) {
+        return !this.projects.contains(project);
+    }
+
+    /**
+     * Adds a given project.
+     *
+     * @param project project to add
+     * @return true if it is successfully added, false otherwise
+     */
+    public boolean addProject(Project project) {
+        return this.projects.add(project);
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;

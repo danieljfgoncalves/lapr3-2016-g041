@@ -57,6 +57,46 @@ public class SimulatorTest {
     }
 
     /**
+     * Test of createProject method, of class Simulator.
+     */
+    @Test
+    public void testCreateProject() {
+        System.out.println("createProject");
+
+        String name = "Fly Safe";
+        String description = "The safest routes in a nutshell";
+
+        Project result = instance.createProject(name, description);
+        Project expResult = new Project(name, description, result.getSerieNumber());
+
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of validateProject method, of class Simulator.
+     */
+    @Test
+    public void testValidateProject() {
+        System.out.println("validateProject");
+
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
+
+        assertTrue(instance.validateProject(project));
+    }
+
+    /**
+     * Test of addProject method, of class Simulator.
+     */
+    @Test
+    public void testAddProject() {
+        System.out.println("addProject");
+
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
+
+        assertTrue(instance.addProject(project));
+    }
+
+    /**
      * Test of hashCode method, of class Simulator.
      */
     @Test
@@ -95,18 +135,6 @@ public class SimulatorTest {
         String expResult = "Simulator{projects=[]}";
         String result = instance.toString();
 
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of createProject method, of class Simulator.
-     */
-    @Test
-    public void testCreateProject() {
-        System.out.println("createProject");
-
-        Project expResult = new Project();
-        Project result = instance.createProject();
         assertEquals(expResult, result);
     }
 
