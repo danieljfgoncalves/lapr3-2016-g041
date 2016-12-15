@@ -85,7 +85,7 @@ public class MatrixGraphAlgorithms {
         knownVertices[index] = true;
 
         for (int i = 0; i < graph.numVertices; i++) {
-
+//
             if (graph.edgeMatrix[index][i] != null && knownVertices[i] == false) {
 
                 verticesQueue.add(graph.vertices.get(i));

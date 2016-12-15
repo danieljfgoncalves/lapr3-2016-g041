@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Represents an undirected Matrix Graph.
+ * Tests an undirected Matrix Graph.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
@@ -102,7 +102,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testEdges01() {
-        System.out.println("Test of Edges getter");
+        System.out.println("Test of Edges getter (Undirected)");
         // Test undirected graph
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -138,7 +138,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testEdges02() {
-        System.out.println("Test of Edges getter");
+        System.out.println("Test of Edges getter (Directed)");
         // Test directed graph
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -180,7 +180,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testOutDegree01() {
-        System.out.println("Test of Out degree");
+        System.out.println("Test of Out degree (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -209,7 +209,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testOutDegree02() {
-        System.out.println("Test of Out degree");
+        System.out.println("Test of Out degree (Directed)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -237,7 +237,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testInDegree01() {
-        System.out.println("Test of In degree");
+        System.out.println("Test of In degree (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -266,7 +266,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testInDegree02() {
-        System.out.println("Test of In degree");
+        System.out.println("Test of In degree (Directed)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -293,7 +293,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testDirectConnections01() {
-        System.out.println("Test of Direct Connections");
+        System.out.println("Test of Direct Connections (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -327,8 +327,37 @@ public class MatrixGraphTest {
     }
 
     @Test
+    public void testDirectConnections02() {
+        System.out.println("Test of Direct Connections (Directed)");
+
+        MatrixGraph<String, String> instance = new MatrixGraph<>(true);
+
+        for (int i = 1; i <= 5; i++) {
+            instance.insertVertex("Vert " + i);
+        }
+
+        Iterator<String> itVertex = instance.directConnections("Vert 2").iterator();
+
+        assertTrue("vertices should be empty", (itVertex.hasNext() == false));
+
+        instance.insertEdge("Vert 1", "Vert 2", "Edge 1");
+        instance.insertEdge("Vert 2", "Vert 4", "Edge 2");
+        instance.insertEdge("Vert 3", "Vert 5", "Edge 3");
+        instance.insertEdge("Vert 2", "Vert 3", "Edge 4");
+        instance.insertEdge("Vert 3", "Vert 1", "Edge 5");
+
+        itVertex = instance.directConnections("Vert 1").iterator();
+        assertTrue("first vertex should be \"Vert 2\"", (itVertex.next().compareTo("Vert 2") == 0));
+
+        instance.removeEdge("Vert 1", "Vert 2");
+
+        itVertex = instance.directConnections("Vert 1").iterator();
+        assertTrue("vertices should now be empty", (itVertex.hasNext() == false));
+    }
+
+    @Test
     public void testOutgoingEdges01() {
-        System.out.println("Test of Outgoing Edges");
+        System.out.println("Test of Outgoing Edges (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -363,7 +392,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testOutgoingEdges02() {
-        System.out.println("Test of Outgoing Edges");
+        System.out.println("Test of Outgoing Edges (Directed)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -391,7 +420,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testIncomingEdges01() {
-        System.out.println("Test of Incoming Edges");
+        System.out.println("Test of Incoming Edges (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -429,7 +458,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testIncomingEdges02() {
-        System.out.println("Test of Incoming Edges");
+        System.out.println("Test of Incoming Edges (Directed)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -464,7 +493,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testGetEdge01() {
-        System.out.println("Test of Get Edge");
+        System.out.println("Test of Get Edge (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -491,7 +520,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testGetEdge02() {
-        System.out.println("Test of Get Edge");
+        System.out.println("Test of Get Edge (Directed)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -518,7 +547,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testEndVertices01() {
-        System.out.println("Test of end vertices");
+        System.out.println("Test of end vertices (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -541,13 +570,13 @@ public class MatrixGraphTest {
         String v1 = (String) endVertices[0];
         String v2 = (String) endVertices[1];
 
-        assertTrue("first vertex should be \"Vert 1\"", v1.compareTo("Vert 3") == 0);
-        assertTrue("second vertex should be \"Vert 3\"", v2.compareTo("Vert 1") == 0);
+        assertTrue("first vertex should be \"Vert 1\"", v1.compareTo("Vert 1") == 0);
+        assertTrue("second vertex should be \"Vert 3\"", v2.compareTo("Vert 3") == 0);
     }
 
     @Test
     public void testEndVertices02() {
-        System.out.println("Test of end vertices");
+        System.out.println("Test of end vertices (Directed)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -576,7 +605,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testInsertEdge01() {
-        System.out.println("Test of insert edge");
+        System.out.println("Test of insert edge (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -606,7 +635,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testInsertEdge02() {
-        System.out.println("Test of insert edge");
+        System.out.println("Test of insert edge (Directed)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -720,7 +749,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testRemoveEdge01() {
-        System.out.println("Test of remove edge");
+        System.out.println("Test of remove edge (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
 
@@ -754,7 +783,7 @@ public class MatrixGraphTest {
 
     @Test
     public void testRemoveEdge02() {
-        System.out.println("Test of remove edge");
+        System.out.println("Test of remove edge (Directed)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
@@ -888,10 +917,29 @@ public class MatrixGraphTest {
     }
 
     @Test
-    public void testToString() {
-        System.out.println("Test of To String");
+    public void testToString01() {
+        System.out.println("Test of To String (Undirected)");
 
         MatrixGraph<String, String> instance = new MatrixGraph<>();
+
+        for (int i = 1; i <= 5; i++) {
+            instance.insertVertex("Vert " + i);
+        }
+
+        instance.insertEdge("Vert 1", "Vert 2", "Edge 1");
+        instance.insertEdge("Vert 2", "Vert 4", "Edge 2");
+        instance.insertEdge("Vert 1", "Vert 3", "Edge 3");
+        instance.insertEdge("Vert 2", "Vert 3", "Edge 4");
+        instance.insertEdge("Vert 1", "Vert 5", "Edge 5");
+
+        System.out.println(instance);
+    }
+
+    @Test
+    public void testToString02() {
+        System.out.println("Test of To String (Directed)");
+
+        MatrixGraph<String, String> instance = new MatrixGraph<>(true);
 
         for (int i = 1; i <= 5; i++) {
             instance.insertVertex("Vert " + i);
