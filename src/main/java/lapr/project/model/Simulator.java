@@ -24,6 +24,10 @@ public class Simulator {
     private List<Project> projects;
 
     /**
+     * Status of the project
+     */
+    private Project activatedProject;
+    /**
      * Creates an instance of simulator with its default values.
      */
     public Simulator() {
@@ -66,6 +70,24 @@ public class Simulator {
         this.projects = projects;
     }
 
+    /**
+     * Gets the activated project
+     * 
+     * @return activated project
+     */
+    public Project getActivatedProject() {
+        return activatedProject;
+    }
+
+    /**
+     * Sets a project as activated
+     * 
+     * @param activatedProject activated project
+     */
+    public void setActivatedProject(Project activatedProject) {
+        this.activatedProject = activatedProject;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;

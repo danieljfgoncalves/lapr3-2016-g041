@@ -43,6 +43,20 @@ public class SimulatorTest {
     }
 
     /**
+     * Test of setProjects and getProjects methods, of class Simulator.
+     */
+    @Test
+    public void testGetSetActivatedProject() {
+        System.out.println("get and setActivatedProject");
+
+        Project project = new Project();
+
+        instance.setActivatedProject(project);
+
+        assertEquals(instance.getActivatedProject(), project);
+    }
+    
+    /**
      * Test of hashCode method, of class Simulator.
      */
     @Test
