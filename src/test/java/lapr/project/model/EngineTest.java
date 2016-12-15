@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Package location for Model concept tests
  */
 package lapr.project.model;
 
@@ -9,12 +7,16 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Tests for project class
  *
- * @author jp_fp
+ * @author Daniel Gonçalves - 1151452
+ * @author Eric Amaral - 1141570
+ * @author Ivo Ferro - 1151159
+ * @author João Pereira - 1151241
+ * @author Tiago Correia - 1151031
  */
 public class EngineTest {
     
@@ -176,7 +178,7 @@ public class EngineTest {
     public void testHashCode() {
         System.out.println("hashCode");
         Engine instance = new EngineImpl();
-        int expResult = 1024004007;
+        int expResult = -402754734;
         int result = instance.hashCode();
         assertEquals(expResult, result);
     }
@@ -201,16 +203,16 @@ public class EngineTest {
     public void testToString() {
         System.out.println("toString");
         Engine instance = new EngineImpl();
-        instance.setBpr(1);
+        instance.setBpr(1.0);
         instance.setDescription("new");
-        instance.setServiceCeiling(1);
-        instance.setV0(1);
-        instance.setV1(1);
-        instance.setVe(1);
-        instance.setVf(1);
-        instance.setmFlow0(1);
-        instance.setmFlowC(1);
-        instance.setmFlowE(1);
+        instance.setServiceCeiling(1.0);
+        instance.setV0(1.0);
+        instance.setV1(1.0);
+        instance.setVe(1.0);
+        instance.setVf(1.0);
+        instance.setmFlow0(1.0);
+        instance.setmFlowC(1.0);
+        instance.setmFlowE(1.0);
         String description = "new";
         double bpr = 1;
         double mFlow0 = 1;

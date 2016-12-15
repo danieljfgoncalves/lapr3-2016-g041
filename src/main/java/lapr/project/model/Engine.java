@@ -1,9 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Package location for Model concepts
  */
 package lapr.project.model;
+
+import java.util.Objects;
 
 /**
  * Represents an engine.
@@ -11,19 +11,11 @@ package lapr.project.model;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241 Tiago Correia - 1151031
+ * @author João Pereira - 1151241
+ * @author Tiago Correia - 1151031
  */
 public abstract class Engine {
 
-    /**
-     * @param mFlow - mass flow rate (mass / time)
-     * @param V - Velocity
-     * @param bpr - Bypass Ratio (mFlowF / mFlowC) Extensions 0 - free stream
-     * conditions 1 - propeller exit conditions e - core exit conditions c-
-     * entrance to the core f - fan flow (or bypass flow)
-     *
-     *
-     */
  
     
     /**
@@ -37,112 +29,112 @@ public abstract class Engine {
      *
      */
    
-    private double mFlow0;
+    private Double mFlow0;
 
     /**
      * Mass flow on core exit conditions
      */
-    private double mFlowE;
+    private Double mFlowE;
 
     /**
      * Mass flow on the entrance to the core
      */
-    private double mFlowC;
+    private Double mFlowC;
 
     /**
      * Velocity on free stream conditions
      */
-    private double V0;
+    private Double V0;
 
     /**
      * Velocity on propeller exit conditions
      */
-    private double V1;
+    private Double V1;
 
     /**
      * Velocity on core exit conditions
      */
-    private double Ve;
+    private Double Ve;
 
     /**
      * Fan flow velocity
      */
-    private double Vf;
+    private Double Vf;
 
     /**
      * Bypass Ratio
      */
-    private double bpr;
+    private Double bpr;
 
     /**
      * Maximum height for sustained climb
      */
-    private double serviceCeiling;
+    private Double serviceCeiling;
 
     /**
      * default value for V0
      */
-    private final double defaultV0 = 0;
+    private final static Double DEFAULT_V0 = 0d;
 
     /**
      * default value for V1
      */
-    private final double defaultV1 = 0;
+    private final static Double DEFAULT_V1 = 0d;
 
     /**
      * default value for Ve
      */
-    private final double defaultVe = 0;
+    private final static Double DEFAULT_VE = 0d;
 
     /**
      * default value for Vf
      */
-    private final double defaultVf = 0;
+    private final static Double DEFAULT_VF = 0d;
 
     /**
      * default value for bpr
      */
-    private final double defaultbpr = 0;
+    private final static Double DEFAULT_BPR = 0d;
 
     /**
      * default value for mFlow0
      */
-    private final double defaultmFlow0 = 0;
+    private final static Double DEFAULT_MFLOW0 = 0d;
 
     /**
      * default value for mFlowC
      */
-    private final double defaultmFlowC = 0;
+    private final static Double DEFAULT_MFLOWC = 0d;
 
     /**
      * default value for mFlowE
      */
-    private final double defaultmFlowE = 0;
+    private final static Double DEFAULT_MFLOWE = 0d;
 
     /**
      * default value for serviceCeiling;
      */
-    private final double defaultServiceCeiling = 10000;
+    private final static Double DEFAULT_SERVICE_CEILING = 10000d;
     
     /**
      * default value for Description
      */
-    private final String defaultDescription = "model";
+    private final static String DEFAULT_DESCRIPTION = "model";
 
     /**
      * Creats an instance of Engine with it's default values
      */
     public Engine() {
-        this.description = defaultDescription;
-        this.V0 = defaultV0;
-        this.V1 = defaultV1;
-        this.Ve = defaultVe;
-        this.Vf = defaultVf;
-        this.bpr = defaultbpr;
-        this.mFlow0 = defaultmFlow0;
-        this.mFlowC = defaultmFlowC;
-        this.mFlowE = defaultmFlowE;
-        this.serviceCeiling = defaultServiceCeiling;
+        this.description = DEFAULT_DESCRIPTION;
+        this.V0 = DEFAULT_V0;
+        this.V1 = DEFAULT_V1;
+        this.Ve = DEFAULT_VE;
+        this.Vf = DEFAULT_VF;
+        this.bpr = DEFAULT_BPR;
+        this.mFlow0 = DEFAULT_MFLOW0;
+        this.mFlowC = DEFAULT_MFLOWC;
+        this.mFlowE = DEFAULT_MFLOWE;
+        this.serviceCeiling = DEFAULT_SERVICE_CEILING;
     }
 
     /**
@@ -159,7 +151,7 @@ public abstract class Engine {
      * @param mFlowE
      * @param serviceCeiling
      */
-    public Engine(String description, double V0, double V1, double Ve, double Vf, double bpr, double mFlow0, double mFlowC, double mFlowE, double serviceCeiling) {
+    public Engine(String description, Double V0, Double V1, Double Ve, Double Vf, Double bpr, Double mFlow0, Double mFlowC, Double mFlowE, Double serviceCeiling) {
         this.description = description;
         this.V0 = V0;
         this.V1 = V1;
@@ -194,7 +186,7 @@ public abstract class Engine {
      * 
      * @return V0
      */
-    public double getV0() {
+    public Double getV0() {
         return V0;
     }
 
@@ -203,7 +195,7 @@ public abstract class Engine {
      * 
      * @param V0 Velocity on free stream conditions
      */
-    public void setV0(double V0) {
+    public void setV0(Double V0) {
         this.V0 = V0;
     }
 
@@ -230,7 +222,7 @@ public abstract class Engine {
      * 
      * @return mass flow on free stream conditions
      */
-    public double getmFlow0() {
+    public Double getmFlow0() {
         return mFlow0;
     }
     
@@ -239,7 +231,7 @@ public abstract class Engine {
      * 
      * @param mFlow0 mass flow on free stream conditions 
      */
-    public void setmFlow0(double mFlow0) {
+    public void setmFlow0(Double mFlow0) {
         this.mFlow0 = mFlow0;
     }
     
@@ -248,7 +240,7 @@ public abstract class Engine {
      * 
      * @return mass flow on core exit conditions
      */
-    public double getmFlowE() {
+    public Double getmFlowE() {
         return mFlowE;
     }
     
@@ -257,7 +249,7 @@ public abstract class Engine {
      * 
      * @param mFlowE mass flow on core exit conditions
      */
-    public void setmFlowE(double mFlowE) {
+    public void setmFlowE(Double mFlowE) {
         this.mFlowE = mFlowE;
     }
 
@@ -266,7 +258,7 @@ public abstract class Engine {
      * 
      * @return mass flow on the entrance to the core 
      */
-    public double getmFlowC() {
+    public Double getmFlowC() {
         return mFlowC;
     }
 
@@ -275,7 +267,7 @@ public abstract class Engine {
     * 
     * @param mFlowC mass flow on the entrance to the core 
     */
-    public void setmFlowC(double mFlowC) {
+    public void setmFlowC(Double mFlowC) {
         this.mFlowC = mFlowC;
     }
     
@@ -284,7 +276,7 @@ public abstract class Engine {
      * 
      * @return velocity on propeller exit conditions
      */
-    public double getV1() {
+    public Double getV1() {
         return V1;
     }
 
@@ -293,7 +285,7 @@ public abstract class Engine {
      * 
      * @param V1 velocity on propeller exit conditions
      */
-    public void setV1(double V1) {
+    public void setV1(Double V1) {
         this.V1 = V1;
     }
 
@@ -302,7 +294,7 @@ public abstract class Engine {
      * 
      * @return velocity on core exit conditions
      */
-    public double getVe() {
+    public Double getVe() {
         return Ve;
     }
 
@@ -311,7 +303,7 @@ public abstract class Engine {
      * 
      * @param Ve velocity on core exit conditions
      */
-    public void setVe(double Ve) {
+    public void setVe(Double Ve) {
         this.Ve = Ve;
     }
 
@@ -320,7 +312,7 @@ public abstract class Engine {
      * 
      * @return fan flow velocity
      */
-    public double getVf() {
+    public Double getVf() {
         return Vf;
     }
 
@@ -329,7 +321,7 @@ public abstract class Engine {
      * 
      * @param Vf fan flow velocity
      */
-    public void setVf(double Vf) {
+    public void setVf(Double Vf) {
         this.Vf = Vf;
     }
 
@@ -338,7 +330,7 @@ public abstract class Engine {
      * 
      * @return bypass ratio 
      */
-    public double getBpr() {
+    public Double getBpr() {
         return bpr;
     }
 
@@ -347,7 +339,7 @@ public abstract class Engine {
      * 
      * @param bpr bypass ratio 
      */
-    public void setBpr(double bpr) {
+    public void setBpr(Double bpr) {
         this.bpr = bpr;
     }
 
@@ -356,7 +348,7 @@ public abstract class Engine {
      * 
      * @return Service ceiling
      */
-    public double getServiceCeiling() {
+    public Double getServiceCeiling() {
         return serviceCeiling;
     }
 
@@ -365,22 +357,23 @@ public abstract class Engine {
      * 
      * @param serviceCeiling Service ceiling
      */
-    public void setServiceCeiling(double serviceCeiling) {
+    public void setServiceCeiling(Double serviceCeiling) {
         this.serviceCeiling = serviceCeiling;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.mFlow0) ^ (Double.doubleToLongBits(this.mFlow0) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.mFlowE) ^ (Double.doubleToLongBits(this.mFlowE) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.mFlowC) ^ (Double.doubleToLongBits(this.mFlowC) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.V0) ^ (Double.doubleToLongBits(this.V0) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.V1) ^ (Double.doubleToLongBits(this.V1) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.Ve) ^ (Double.doubleToLongBits(this.Ve) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.Vf) ^ (Double.doubleToLongBits(this.Vf) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.bpr) ^ (Double.doubleToLongBits(this.bpr) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.serviceCeiling) ^ (Double.doubleToLongBits(this.serviceCeiling) >>> 32));
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.description);
+        hash = 29 * hash + Objects.hashCode(this.mFlow0);
+        hash = 29 * hash + Objects.hashCode(this.mFlowE);
+        hash = 29 * hash + Objects.hashCode(this.mFlowC);
+        hash = 29 * hash + Objects.hashCode(this.V0);
+        hash = 29 * hash + Objects.hashCode(this.V1);
+        hash = 29 * hash + Objects.hashCode(this.Ve);
+        hash = 29 * hash + Objects.hashCode(this.Vf);
+        hash = 29 * hash + Objects.hashCode(this.bpr);
+        hash = 29 * hash + Objects.hashCode(this.serviceCeiling);
         return hash;
     }
 

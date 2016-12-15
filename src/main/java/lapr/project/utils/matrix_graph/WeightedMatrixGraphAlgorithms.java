@@ -29,7 +29,7 @@ public class WeightedMatrixGraphAlgorithms {
      */
     private static <V> void shortestPath(MatrixGraph<V, Double> graph,
             int sourceIdx, boolean[] knownVertices, int[] verticesIndex, double[] minDist) {
-        
+
         double maxDistance = Double.POSITIVE_INFINITY;
         int[] path = verticesIndex;
         double[] dist = minDist;
@@ -129,7 +129,7 @@ public class WeightedMatrixGraphAlgorithms {
      * @param verticesIndex index of vertices in the minimum path
      * @param Queue Vertices in the path (empty if no path)
      */
-    private static <V> void recreatePath(MatrixGraph<V, Double> graph, int sourceIdx, 
+    private static <V> void recreatePath(MatrixGraph<V, Double> graph, int sourceIdx,
             int destIdx, int[] verticesIndex, LinkedList<V> path) {
 
         path.add(graph.vertices.get(destIdx));
@@ -149,7 +149,7 @@ public class WeightedMatrixGraphAlgorithms {
      * @throws java.lang.CloneNotSupportedException
      */
     public static <V> MatrixGraph<V, Double> minDistGraph(MatrixGraph<V, Double> graph) throws CloneNotSupportedException {
-        
+
         MatrixGraph<V, Double> graphClone = (MatrixGraph) graph.clone();
         int num = graphClone.numVertices;
 
@@ -161,11 +161,11 @@ public class WeightedMatrixGraphAlgorithms {
 
             for (int i = 0; i < num; i++) {
                 for (int j = 0; j < num; j++) {
-                    
+
                     if (i != j && i != k && j != k) {
-                        
+
                         if (newGraph[k - 1].edgeMatrix[i][k] != null && newGraph[k - 1].edgeMatrix[k][j] != null) {
-                            
+
                             if (newGraph[k - 1].edgeMatrix[i][j] == null) {
                                 newGraph[k].edgeMatrix[i][j] = newGraph[k - 1].edgeMatrix[i][k] + newGraph[k - 1].edgeMatrix[k][j];
                             } else if (newGraph[k - 1].edgeMatrix[i][k] + newGraph[k - 1].edgeMatrix[k][j] < newGraph[k - 1].edgeMatrix[i][j]) {
