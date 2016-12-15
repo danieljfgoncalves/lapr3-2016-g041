@@ -5,6 +5,7 @@ package lapr.project.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,7 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import lapr.project.model.Project;
 import lapr.project.model.Simulator;
 import lapr.project.ui.components.CustomMenuBar;
@@ -36,6 +36,21 @@ public class ProjectSelectionFrame extends JFrame {
      * List of the selected projects.
      */
     private final List<Project> projects;
+
+    /**
+     * The button to open project.
+     */
+    private JButton openProjectButton;
+
+    /**
+     * The button to copy project.
+     */
+    private JButton copyProjectButton;
+
+    /**
+     * The button to edit project.
+     */
+    private JButton editProjectButton;
 
     /**
      * Title for the frame.
@@ -67,7 +82,7 @@ public class ProjectSelectionFrame extends JFrame {
 
         CustomMenuBar customMenuBar = new CustomMenuBar();
         setJMenuBar(customMenuBar);
-        
+
         pack();
         setSize(WINDOW_DIMENSION);
         setMinimumSize(new Dimension(getWidth(), getHeight()));
@@ -98,9 +113,11 @@ public class ProjectSelectionFrame extends JFrame {
         JList projectsList = new JList(new ListModelProject(this.projects));
         projectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         projectsList.setCellRenderer(new ListCellRendererProject());
-        
+
         projectsList.addListSelectionListener((ListSelectionEvent lse) -> {
-            // TODO activate needed buttons
+            this.openProjectButton.setEnabled(!projectsList.isSelectionEmpty());
+            this.copyProjectButton.setEnabled(!projectsList.isSelectionEmpty());
+            this.editProjectButton.setEnabled(!projectsList.isSelectionEmpty());
         });
 
         JScrollPane scrollPane = new JScrollPane(projectsList);
@@ -117,16 +134,77 @@ public class ProjectSelectionFrame extends JFrame {
     private JPanel createButtonsPanel() {
         JPanel buttonsPanel = new JPanel();
 
-        JButton newProjectButton = new JButton("New Project");
-        JButton openProjectButton = new JButton("Open Project");
-        JButton copyProjectButton = new JButton("Copy Project");
-        JButton editProjectButton = new JButton("Edit Project");
-
-        buttonsPanel.add(newProjectButton);
-        buttonsPanel.add(openProjectButton);
-        buttonsPanel.add(copyProjectButton);
-        buttonsPanel.add(editProjectButton);
+        buttonsPanel.add(createNewProjectButton());
+        buttonsPanel.add(createOpenProjectButton());
+        buttonsPanel.add(createCopyProjectButton());
+        buttonsPanel.add(createEditProjectButton());
 
         return buttonsPanel;
+    }
+
+    /**
+     * Creates the new project button.
+     *
+     * @return new project button
+     */
+    private JButton createNewProjectButton() {
+        JButton newProjectButton = new JButton("New Project");
+
+        newProjectButton.addActionListener((ActionEvent ae) -> {
+            // TODO
+        });
+
+        return newProjectButton;
+    }
+
+    /**
+     * Creates the open project button.
+     *
+     * @return open project button
+     */
+    private JButton createOpenProjectButton() {
+        openProjectButton = new JButton("Open Project");
+
+        openProjectButton.addActionListener((ActionEvent ae) -> {
+            // TODO
+        });
+        
+        openProjectButton.setEnabled(false);
+
+        return openProjectButton;
+    }
+
+    /**
+     * Creates the copy project button.
+     *
+     * @return copy project button
+     */
+    private JButton createCopyProjectButton() {
+        copyProjectButton = new JButton("Copy Project");
+
+        copyProjectButton.addActionListener((ActionEvent ae) -> {
+            // TODO
+        });
+        
+        copyProjectButton.setEnabled(false);
+
+        return copyProjectButton;
+    }
+
+    /**
+     * Creates the edit project button.
+     *
+     * @return edit project button
+     */
+    private JButton createEditProjectButton() {
+        editProjectButton = new JButton("Edit Project");
+
+        editProjectButton.addActionListener((ActionEvent ae) -> {
+            // TODO
+        });
+        
+        editProjectButton.setEnabled(false);
+
+        return editProjectButton;
     }
 }

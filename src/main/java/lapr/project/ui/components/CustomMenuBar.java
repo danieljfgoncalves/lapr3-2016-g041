@@ -50,6 +50,7 @@ public class CustomMenuBar extends JMenuBar {
         JMenu menuExport = new JMenu("Export");
         menuExport.setMnemonic(KeyEvent.VK_E);
         menuExport.add(createItemExportHTML());
+        menuExport.setEnabled(false);
         return menuExport;
     }
 
