@@ -55,6 +55,19 @@ public class Project {
     }
 
     /**
+     * Creates a project receiving his name and description.
+     *
+     * @param name project name
+     * @param description project description
+     */
+    public Project(String name, String description) {
+        final int lower = 1, upper = Integer.MAX_VALUE;
+        this.serieNumber = (int) (Math.random() * (upper - lower)) + lower;
+        this.name = name;
+        this.description = description;
+    }
+
+    /**
      * Creates an instance of project receiving it's attributes
      *
      * @param name the name of the project
@@ -131,7 +144,7 @@ public class Project {
     public void setSerieNumber(int serieNumber) {
         this.serieNumber = serieNumber;
     }
-    
+
     /**
      * Obtains the validation of name and description(true if name and
      * description not empty), false otherwise
