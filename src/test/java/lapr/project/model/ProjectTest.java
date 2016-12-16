@@ -3,10 +3,7 @@
  */
 package lapr.project.model;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -20,24 +17,12 @@ import static org.junit.Assert.*;
  * @author Tiago Correia - 1151031
  */
 public class ProjectTest {
-    
-    public ProjectTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+
+    private Project instance;
+
     @Before
     public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        instance = new Project();
     }
 
     /**
@@ -76,6 +61,31 @@ public class ProjectTest {
         assertEquals(expResult, instance.getSerieNumber());
     }
 
+    /**
+     * Test of validate method, of class Project.
+     */
+    @Test
+    public void testValidate01() {
+        System.out.println("validate");
+        String name = "";
+        String description = "";
+        boolean expResult = false;
+        boolean result = instance.validate(name, description);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of validate method, of class Project.
+     */
+    @Test
+    public void testValidate02() {
+        System.out.println("validate");
+        String name = "a";
+        String description = "b";
+        boolean expResult = true;
+        boolean result = instance.validate(name, description);
+        assertEquals(expResult, result);
+    }
 
     /**
      * Test of hashCode method, of class Project.
@@ -117,5 +127,4 @@ public class ProjectTest {
         String result = instance.toString();
         assertEquals(expResult, result);
     }
-    
 }

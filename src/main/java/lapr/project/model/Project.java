@@ -131,6 +131,16 @@ public class Project {
     public void setSerieNumber(int serieNumber) {
         this.serieNumber = serieNumber;
     }
+    
+    /**
+     * Obtains the validation of name and description(true if name and
+     * description not empty), false otherwise
+     *
+     * @return true if validated, false otherwise
+     */
+    public boolean validate(String name, String description) {
+        return !name.equals("") && !description.equals("");
+    }
 
     @Override
     public int hashCode() {
