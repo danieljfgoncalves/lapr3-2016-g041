@@ -15,11 +15,11 @@ import lapr.project.model.Simulator;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class OpenProjectControllerTemp {
+public class OpenProjectController {
     
     Simulator simulator;
     
-    public OpenProjectControllerTemp(Simulator simulator){
+    public OpenProjectController(Simulator simulator){
       this.simulator = simulator;        
     }
     
