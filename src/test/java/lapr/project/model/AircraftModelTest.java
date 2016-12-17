@@ -41,8 +41,8 @@ public class AircraftModelTest {
     public void testGetSetRegistration() {
         System.out.println("getRegistration and setRegistration");
         Integer expResult = 10;
-        instance.setRegistration(expResult);
-        Integer result = instance.getRegistration();
+        instance.setModelID(expResult);
+        Integer result = instance.getModelID();
         assertEquals(expResult, result);
     }
 
@@ -95,19 +95,6 @@ public class AircraftModelTest {
     }
 
     /**
-     * Test of getCruiseSpeed and setCruiseSpeed methods, of class
-     * AircraftModel.
-     */
-    @Test
-    public void testGetSetCruiseSpeed() {
-        System.out.println("getCruiseSpeed and setCruiseSpeed");
-        Double expResult = 900.0;
-        instance.setCruiseSpeed(expResult);
-        Double result = instance.getCruiseSpeed();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of getWingArea and setWingArea methods, of class AircraftModel.
      */
     @Test
@@ -120,14 +107,14 @@ public class AircraftModelTest {
     }
     
      /**
-     * Test of getEngine and setEngine methods, of class AircraftModel.
+     * Test of getMotorization and setMotorization methods, of class AircraftModel.
      */
     @Test
-    public void testGetSetEngine() {
+    public void testGetSetMotorization() {
         System.out.println("getEngine and setEngine");
-        Engine expResult = new Engine("Motor1", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0) {};
-        instance.setEngine(expResult);
-        Engine result = instance.getEngine();
+        Motorization expResult = new Motorization(){};
+        instance.setMotorization(expResult);
+        Motorization result = instance.getMotorization();
         assertEquals(expResult, result);
     }
 
@@ -149,8 +136,9 @@ public class AircraftModelTest {
     @Test
     public void testEquals01() {
         System.out.println("equals");
-        Engine e = new Engine(){};
-        AircraftModel obj = new AircraftModel(1, AircraftType.CARGO, 1.0, 1.0, 1.0, 1.0, 1.0, e);
+        Motorization m = new Motorization() {};
+        AircraftModel obj = new AircraftModel(1, AircraftType.MIXED, 1.0, 1.0, 1.0, 1.0, m, "motor1",
+                "Boeing Vertol Company (United States)", 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
         boolean expResult = false;
         boolean result = instance.equals(obj);
         assertEquals(expResult, result);
@@ -175,14 +163,13 @@ public class AircraftModelTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        String expResult = "Aircraft Model{registration=0,"
-                + " type=PASSENGER,"
-                + " empty weight=0,000000,"
-                + " maximum take off weight=0,000000,"
-                + " maximum zero fuel weight=0,000000,"
-                + " cruise speed=&4f,"
-                + " wing area=0,000000,"
-                + " engine=0.0}";
+        String expResult = "Aircraft Model{modelID=0, type=PASSENGER, empty weight=0,000000,"
+                + " maximum take off weight=0,000000, maximum zero fuel weight=0,000000,"
+                + " wing area=0,000000, Motorization=Motorization{description=model,"
+                + " mFlow0=0.0, mFlowE=0.0, mFlowC=0.0, V0=0.0, V1=0.0, Ve=0.0, Vf=0.0, bpr=0.0,"
+                + " serviceCeiling=10000.0}, description=DefaultDescription, maker=DefaultMaker,"
+                + " max payload=0,000000, max fuel capacity=0,000000, max operating speed=0,000000,"
+                + " max mach operating speed=0,0, wing span=0,0, e=0,00 }";
         String result = instance.toString();
         assertEquals(expResult, result);
     }

@@ -19,9 +19,9 @@ import java.util.Objects;
 public class AircraftModel {
 
     /**
-     * AircraftType's registration
+     * AircraftType's modelID
      */
-    private Integer registration;
+    private Integer modelID;
 
     /**
      * AircraftType's type
@@ -29,7 +29,7 @@ public class AircraftModel {
     private AircraftType type;
 
     /**
-     * AircraftType's empty weight
+     * AircraftType's empty weight (EWeight)
      */
     private Double emptyWeight;
 
@@ -44,19 +44,54 @@ public class AircraftModel {
     private Double mzfw;
 
     /**
-     * AircraftType's cruise speed
-     */
-    private Double cruiseSpeed;
-
-    /**
      * AircraftType's wing area
      */
     private Double wingArea;
-    
+
     /**
-     * AircraftType's engine
+     * AircraftType's motorization
      */
-    private Engine engine;
+    private Motorization motorization;
+
+    /**
+     * AircraftType's description;
+     */
+    private String description;
+
+    /**
+     * AircraftType's maker
+     */
+    private String maker;
+
+    /**
+     * AircraftType's maxPayload
+     */
+    private Double maxPayload;
+
+    /**
+     * AircraftType's maxFuelCapacity
+     */
+    private Double maxFuelCapacity;
+
+    /**
+     * AircraftType's maxOperatingSpeed (VMO)
+     */
+    private Double vmo;
+
+    /**
+     * AircraftType's maxMachOperatingSpeed (MMO)
+     */
+    private Double mmo;
+
+    /**
+     * AircraftType's wingSpan
+     */
+    private Double wingSpan;
+
+    /**
+     * AircraftType's e
+     */
+    private Double e;
 
     /**
      * The epsilon of the allowed error.
@@ -64,9 +99,9 @@ public class AircraftModel {
     private final static Double EPSILON = 0.01d;
 
     /**
-     * The AircraftType's registration by default
+     * The AircraftType's modelID by default
      */
-    private final static Integer REGISTRATION_BY_DEFAULT = 0;
+    private final static Integer MODEL_ID_BY_DEFAULT = 0;
 
     /**
      * The AircraftType's type by default
@@ -89,49 +124,108 @@ public class AircraftModel {
     private final static Double MZFW_BY_DEFAULT = 0.0d;
 
     /**
-     * The AircraftType's cruise speed by default
-     */
-    private final static Double CRUISE_SPEED_BY_DEFAULT = 0.0d;
-
-    /**
      * The AircraftType's wing area by default
      */
     private final static Double WING_AREA_BY_DEFAULT = 0.0d;
 
     /**
+     * The AircraftType's description by default
+     */
+    private final static String DESCRIPTION_BY_DEFAULT = "DefaultDescription";
+
+    /**
+     * The AircraftType's maker by default
+     */
+    private static final String MAKER_BY_DEFAULT = "DefaultMaker";
+
+    /**
+     * The AircraftType's max payload by default
+     */
+    private static final Double MAX_PAYLOAD_BY_DEFAULT = 0.0;
+
+    /**
+     * The AircraftType's max fuel capacity by default
+     */
+    private static final Double MAX_FUEL_CAPACITY_BY_DEFAULT = 0.0;
+
+    /**
+     * The AircraftType's VMO (maxOperatingSpeed) by default
+     */
+    private static final Double VMO_BY_DEFAULT = 0.0;
+
+    /**
+     * The AircraftType's MMO (maxMachOperatingSpeed) by default
+     */
+    private static final Double MMO_BY_DEFAULT = 0.0;
+
+    /**
+     * The AircraftType's wing span by default
+     */
+    private static final Double WING_SPAN_BY_DEFAULT = 0.0;
+
+    /**
+     * The AircraftType's e by default
+     */
+    private static final Double E_BY_DEFAULT = 0.0;
+
+    /**
      * Constructs an instance of AircraftModel receiving it's parameters.
      *
-     * @param registration the AircraftType's registration
+     * @param modelID the AircraftType's modelID
      * @param type the AircraftType's type
      * @param emptyWheight the AircraftType's empty weight
      * @param mtow the AircraftType's maximum take off weight
      * @param mzfw the AircraftType's maximum zero flight weight
-     * @param cruiseSpeed the AircraftType's cruise speed
      * @param wingArea the AircraftType's wing area
+     * @param motorization the AircraftType's motorization
+     * @param description the AircraftType's description
+     * @param maker the AircraftType's maker
+     * @param maxPayload the AircraftType's maker
+     * @param maxFuelCapacity the AircraftType's max fuel capacity
+     * @param vmo the AircraftType's vmo (max operating system velocity)
+     * @param mmo the AircraftType's mmo (max mach operating system velocity)
+     * @param wingSpan the AircraftType's wing span
+     * @param e the AircraftType's e
      */
-    public AircraftModel(Integer registration, AircraftType type, Double emptyWheight, Double mtow, Double mzfw, Double cruiseSpeed, Double wingArea, Engine engine) {
-        this.registration = registration;
+    public AircraftModel(Integer modelID, AircraftType type, Double emptyWheight, Double mtow, Double mzfw, Double wingArea, Motorization motorization, String description, String maker, Double maxPayload, Double maxFuelCapacity, Double vmo, Double mmo, Double wingSpan, Double e) {
+        this.modelID = modelID;
         this.type = type;
         this.emptyWeight = emptyWheight;
         this.mtow = mtow;
         this.mzfw = mzfw;
-        this.cruiseSpeed = cruiseSpeed;
         this.wingArea = wingArea;
-        this.engine = engine;
+        this.motorization = motorization;
+        this.description = description;
+        this.maker = maker;
+        this.maxPayload = maxPayload;
+        this.maxFuelCapacity = maxFuelCapacity;
+        this.vmo = vmo;
+        this.mmo = mmo;
+        this.wingSpan = wingSpan;
+        this.e = e;
     }
 
     /**
      * Constructs an instance of AircraftModel using it's parameters by default.
      */
     public AircraftModel() {
-        this.registration = REGISTRATION_BY_DEFAULT;
+        this.modelID = MODEL_ID_BY_DEFAULT;
         this.type = TYPE_BY_DEFAULT;
         this.emptyWeight = EMPTY_WEIGHT_BY_DEFAULT;
         this.mtow = MTOW_BY_DEFAULT;
         this.mzfw = MZFW_BY_DEFAULT;
-        this.cruiseSpeed = CRUISE_SPEED_BY_DEFAULT;
         this.wingArea = WING_AREA_BY_DEFAULT;
-        this.engine = new Engine(){};
+        this.description = DESCRIPTION_BY_DEFAULT;
+        this.motorization = new Motorization() {
+        };
+        this.description = DESCRIPTION_BY_DEFAULT;
+        this.maker = MAKER_BY_DEFAULT;
+        this.maxPayload = MAX_PAYLOAD_BY_DEFAULT;
+        this.maxFuelCapacity = MAX_FUEL_CAPACITY_BY_DEFAULT;
+        this.vmo = VMO_BY_DEFAULT;
+        this.mmo = MMO_BY_DEFAULT;
+        this.wingSpan = WING_SPAN_BY_DEFAULT;
+        this.e = E_BY_DEFAULT;
     }
 
     /**
@@ -140,32 +234,39 @@ public class AircraftModel {
      * @param otherAircraftModel the instance of aircraftModel to copy
      */
     public AircraftModel(AircraftModel otherAircraftModel) {
-        this.registration = otherAircraftModel.registration;
+        this.modelID = otherAircraftModel.modelID;
         this.type = otherAircraftModel.type;
         this.emptyWeight = otherAircraftModel.emptyWeight;
         this.mtow = otherAircraftModel.mtow;
         this.mzfw = otherAircraftModel.mzfw;
-        this.cruiseSpeed = otherAircraftModel.cruiseSpeed;
         this.wingArea = otherAircraftModel.wingArea;
-        this.engine = otherAircraftModel.engine;
+        this.motorization = otherAircraftModel.motorization;
+        this.description = otherAircraftModel.description;
+        this.maker = otherAircraftModel.maker;
+        this.maxPayload = otherAircraftModel.maxPayload;
+        this.maxFuelCapacity = otherAircraftModel.maxFuelCapacity;
+        this.vmo = otherAircraftModel.vmo;
+        this.mmo = otherAircraftModel.mmo;
+        this.wingSpan = otherAircraftModel.wingSpan;
+        this.e = otherAircraftModel.e;
     }
 
     /**
-     * Obtains the AircraftModel's registration
+     * Obtains the AircraftModel's modelID
      *
-     * @return the registration
+     * @return the modelID
      */
-    public Integer getRegistration() {
-        return registration;
+    public Integer getModelID() {
+        return this.modelID;
     }
 
     /**
-     * Modifies the AircraftModel's registration
+     * Modifies the AircraftModel's modelID
      *
-     * @param registration the registration to set
+     * @param modelID the modelID to set
      */
-    public void setRegistration(Integer registration) {
-        this.registration = registration;
+    public void setModelID(Integer modelID) {
+        this.modelID = modelID;
     }
 
     /**
@@ -174,7 +275,7 @@ public class AircraftModel {
      * @return the type
      */
     public AircraftType getType() {
-        return type;
+        return this.type;
     }
 
     /**
@@ -192,7 +293,7 @@ public class AircraftModel {
      * @return the emptyWeight
      */
     public Double getEmptyWeight() {
-        return emptyWeight;
+        return this.emptyWeight;
     }
 
     /**
@@ -210,7 +311,7 @@ public class AircraftModel {
      * @return the mtow
      */
     public Double getMtow() {
-        return mtow;
+        return this.mtow;
     }
 
     /**
@@ -228,7 +329,7 @@ public class AircraftModel {
      * @return the mzfw
      */
     public Double getMzfw() {
-        return mzfw;
+        return this.mzfw;
     }
 
     /**
@@ -241,30 +342,12 @@ public class AircraftModel {
     }
 
     /**
-     * Obtains the AircraftModel's cruise speed
-     *
-     * @return the cruiseSpeed
-     */
-    public Double getCruiseSpeed() {
-        return cruiseSpeed;
-    }
-
-    /**
-     * Modifies the AircraftModel's cruise speed
-     *
-     * @param cruiseSpeed the cruiseSpeed to set
-     */
-    public void setCruiseSpeed(Double cruiseSpeed) {
-        this.cruiseSpeed = cruiseSpeed;
-    }
-
-    /**
      * Obtains the AircraftModel's wing area
      *
      * @return the wingArea
      */
     public Double getWingArea() {
-        return wingArea;
+        return this.wingArea;
     }
 
     /**
@@ -275,22 +358,41 @@ public class AircraftModel {
     public void setWingArea(Double wingArea) {
         this.wingArea = wingArea;
     }
-    
+
     /**
-     * Obtains the AircraftModel's engine
-     * @return the engine
-     */
-    public Engine getEngine(){
-        return this.engine;
-    }
-    
-    /**
-     * Modifies the AircraftModel's engine
+     * Obtains the AircraftModel's motorization
      *
-     * @param engine the engine to set
+     * @return the motorization
      */
-    public void setEngine(Engine engine){
-        this.engine = engine;
+    public Motorization getMotorization() {
+        return this.motorization;
+    }
+
+    /**
+     * Modifies the AircraftModel's motorization
+     *
+     * @param motorization the motorization to set
+     */
+    public void setMotorization(Motorization motorization) {
+        this.motorization = motorization;
+    }
+
+    /**
+     * Obtains the AircraftModel's description
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Modifies the AircraftModel's description
+     *
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double calculateCd(Double drag, Double dynamicPressure, Double referenceArea) {
@@ -306,7 +408,7 @@ public class AircraftModel {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 47 * hash + Objects.hashCode(this.registration);
+        hash = 47 * hash + Objects.hashCode(this.modelID);
         return hash;
     }
 
@@ -319,17 +421,20 @@ public class AircraftModel {
             return false;
         }
         final AircraftModel other = (AircraftModel) obj;
-        // we just compared registration because it is an unique id
-        return this.registration.equals(other.registration);
+        // we just compared modelID because it is an unique id
+        return this.modelID.equals(other.modelID);
     }
 
     @Override
     public String toString() {
-        return String.format("Aircraft Model{registration=%s, type=%s, empty weight=%4f, "
-                + "maximum take off weight=%4f, maximum zero fuel weight=%4f,"
-                + " cruise speed=&4f, wing area=%4f, engine=%s}",
-                this.registration, this.type, this.emptyWeight, this.mtow,
-                this.mzfw, this.cruiseSpeed, this.wingArea, this.engine);
+        return String.format("Aircraft Model{modelID=%s, type=%s, empty weight=%4f, "
+                + "maximum take off weight=%f, maximum zero fuel weight=%f, "
+                + "wing area=%f, Motorization=%s, description=%s, "
+                + "maker=%s, max payload=%f, max fuel capacity=%f, max operating speed=%f, max mach operating speed=%.1f, "
+                + "wing span=%.1f, e=%.2f }",
+                this.modelID, this.type, this.emptyWeight, this.mtow,
+                this.mzfw, this.wingArea, this.motorization, this.description,
+                this.maker, this.maxPayload, this.maxFuelCapacity, this.vmo, this.mmo, this.wingSpan, this.e);
     }
 
 }
