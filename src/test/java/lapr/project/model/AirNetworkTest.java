@@ -41,8 +41,8 @@ public class AirNetworkTest {
         testMatrix.insertVertex(new Coordinate("ID02", 2.0, 2.0));
         testMatrix.insertVertex(new Coordinate("ID03", 3.0, 3.0));
 
-        testMatrix.insertEdge(new Coordinate("ID01", 1.0, 1.0), new Coordinate("ID02", 2.0, 2.0), new Segment(new ArrayList<>(), 1.0, 1.0));
-        testMatrix.insertEdge(new Coordinate("ID02", 2.0, 2.0), new Coordinate("ID03", 3.0, 3.0), new Segment(new ArrayList<>(), 2.0, 2.0));
+        testMatrix.insertEdge(new Coordinate("ID01", 1.0, 1.0), new Coordinate("ID02", 2.0, 2.0), new Segment("SG01", new ArrayList<>(), 1.0, 1.0));
+        testMatrix.insertEdge(new Coordinate("ID02", 2.0, 2.0), new Coordinate("ID03", 3.0, 3.0), new Segment("SG02", new ArrayList<>(), 2.0, 2.0));
     }
 
     /**
@@ -92,8 +92,8 @@ public class AirNetworkTest {
         AirNetwork instance2 = new AirNetwork(testMatrix);
 
         List<Segment> segments = new LinkedList<>();
-        segments.add(new Segment(new ArrayList<>(), 1.0, 1.0));
-        segments.add(new Segment(new ArrayList<>(), 2.0, 2.0));
+        segments.add(new Segment("SG01", new ArrayList<>(), 1.0, 1.0));
+        segments.add(new Segment("SG02", new ArrayList<>(), 2.0, 2.0));
         Iterable<Segment> expResult = segments;
 
         Iterable<Segment> result = instance2.getSegments();
@@ -127,14 +127,14 @@ public class AirNetworkTest {
         AirNetwork instance2 = new AirNetwork(testMatrix);
         Coordinate coordinateA = new Coordinate("ID01", 1.0, 1.0);
         Coordinate coordinateB = new Coordinate("ID03", 3.0, 3.0);
-        Segment newSegment = new Segment(new ArrayList<>(), 1.0, 1.0);
+        Segment newSegment = new Segment("SG01", new ArrayList<>(), 1.0, 1.0);
         boolean result = instance2.addSegment(coordinateA, coordinateB, newSegment);
         assertTrue(result);
         // Adding the same segment should return false
         boolean result2 = instance2.addSegment(coordinateA, coordinateB, newSegment);
         assertFalse(result2);
         // Verify if network contains segment
-        assertEquals(new Segment(new ArrayList<>(), 1.0, 1.0), instance2.getSegments().iterator().next());
+        assertEquals(new Segment("SG01", new ArrayList<>(), 1.0, 1.0), instance2.getSegments().iterator().next());
     }
 
     /**
@@ -147,7 +147,7 @@ public class AirNetworkTest {
         AirNetwork instance2 = new AirNetwork(testMatrix);
         Coordinate coordinateA = new Coordinate("ID02", 2.0, 2.0);
         Coordinate coordinateB = new Coordinate("ID03", 3.0, 3.0);
-        Segment expResult = new Segment(new ArrayList<>(), 2.0, 2.0);
+        Segment expResult = new Segment("SG02", new ArrayList<>(), 2.0, 2.0);
         Segment result = instance2.removeSegment(coordinateA, coordinateB);
         assertEquals(expResult, result);
 
@@ -285,46 +285,5 @@ public class AirNetworkTest {
         AirNetwork instance2 = new AirNetwork(testMatrix);
         boolean result = instance.equals(instance2);
         assertFalse(result);
-    }
-
-    /**
-     * Test of toString method, of class AirNetwork.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        // Test if string is equal
-        AirNetwork instance = new AirNetwork(testMatrix);
-        String expResult = "AirNetwork{\n"
-                + "network=\n"
-                + "Vertices:\n"
-                + "ID: ID01\n"
-                + "Latitude: 1,000000\n"
-                + "Longitude: 1,000000\n"
-                + "\n"
-                + "ID: ID02\n"
-                + "Latitude: 2,000000\n"
-                + "Longitude: 2,000000\n"
-                + "\n"
-                + "ID: ID03\n"
-                + "Latitude: 3,000000\n"
-                + "Longitude: 3,000000\n"
-                + "\n"
-                + "\n"
-                + "Matrix:\n"
-                + "   |  0  |  1  |  2 \n"
-                + " 0 |     |  X  |     \n"
-                + " 1 |     |     |  X  \n"
-                + " 2 |     |     |     \n"
-                + "\n"
-                + "Edges:\n"
-                + "From 0 to 1-> Segment{allowedAltitudes=\"[]\", windDirection=\"1.0\", windSpeed=\"1.0\"}\n"
-                + "From 1 to 2-> Segment{allowedAltitudes=\"[]\", windDirection=\"2.0\", windSpeed=\"2.0\"}\n"
-                + "\n"
-                + "\n"
-                + "}";
-
-        String result = instance.toString();
-        assertEquals(expResult, result);
     }
 }

@@ -36,6 +36,19 @@ public class SegmentTest {
     }
 
     /**
+     * Test of getIdentification and setIdentification method, of class Segment.
+     */
+    @Test
+    public void testGetSetIdentification() {
+        System.out.println("get and setIdentification");
+
+        String identification = "";
+        instance.setIdentification(identification);
+
+        assertEquals(instance.getIdentification(), identification);
+    }
+
+    /**
      * Test of getAllowedAltitudes method, of class Segment.
      */
     @Test
@@ -75,22 +88,9 @@ public class SegmentTest {
 
         Double windSpeed = 113.13d;
 
-        instance.setWindSpeed(windSpeed);
+        instance.setWindIntensity(windSpeed);
 
-        assertEquals(instance.getWindSpeed(), windSpeed, EPSILON);
-    }
-
-    /**
-     * Test of hashCode method, of class Segment.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-
-        int expResult = -2047690060;
-        int result = instance.hashCode();
-
-        assertEquals(expResult, result);
+        assertEquals(instance.getWindIntensity(), windSpeed, EPSILON);
     }
 
     /**
@@ -116,7 +116,7 @@ public class SegmentTest {
     public void testToString() {
         System.out.println("toString");
 
-        String expResult = "Segment{allowedAltitudes=\"[]\", windDirection=\"90.0\", windSpeed=\"20.0\"}";
+        String expResult = "Segment{identification=XX01, allowedAltitudes=[], windDirection=90.0, windSpeed=20.0}";
         String result = instance.toString();
 
         assertEquals(expResult, result);

@@ -20,6 +20,11 @@ import java.util.Objects;
 public class Segment {
 
     /**
+     * The segment identification.
+     */
+    private String identification;
+
+    /**
      * The allowed altitude.
      */
     private List<Double> allowedAltitudes;
@@ -30,9 +35,14 @@ public class Segment {
     private Double windDirection;
 
     /**
-     * The wind speed.
+     * The wind intensity.
      */
-    private Double windSpeed;
+    private Double windIntensity;
+
+    /**
+     * The default identification.
+     */
+    private static final String DEFAULT_IDENTIFICATION = "XX01";
 
     /**
      * The default value for the angle of the wind direction relative to north.
@@ -53,22 +63,25 @@ public class Segment {
      * Creates an instance of segment with it's default values.
      */
     public Segment() {
+        this.identification = DEFAULT_IDENTIFICATION;
         this.allowedAltitudes = new ArrayList<>();
         this.windDirection = DEFAULT_WIND_DIRECTION;
-        this.windSpeed = DEFAULT_WIND_SPEED;
+        this.windIntensity = DEFAULT_WIND_SPEED;
     }
 
     /**
      * Creates an instance of segment receiving their attributes.
      *
+     * @param identification segment's identification
      * @param allowedAltitudes allowed altitudes
      * @param windDirection the angle of the wind direction relative to north
      * @param windSpeed the wind speed
      */
-    public Segment(List<Double> allowedAltitudes, Double windDirection, Double windSpeed) {
+    public Segment(String identification, List<Double> allowedAltitudes, Double windDirection, Double windSpeed) {
+        this.identification = identification;
         this.allowedAltitudes = allowedAltitudes;
         this.windDirection = windDirection;
-        this.windSpeed = windSpeed;
+        this.windIntensity = windSpeed;
     }
 
     /**
@@ -77,9 +90,28 @@ public class Segment {
      * @param otherSegment other segment to copy
      */
     public Segment(Segment otherSegment) {
+        this.identification = otherSegment.identification;
         this.allowedAltitudes = new ArrayList<>(otherSegment.allowedAltitudes);
         this.windDirection = otherSegment.windDirection;
-        this.windSpeed = otherSegment.windSpeed;
+        this.windIntensity = otherSegment.windIntensity;
+    }
+
+    /**
+     * Gets the segment's identification.
+     *
+     * @return segment's identification
+     */
+    public String getIdentification() {
+        return identification;
+    }
+
+    /**
+     * Sets the segment's identification.
+     *
+     * @param identification segment's identification
+     */
+    public void setIdentification(String identification) {
+        this.identification = identification;
     }
 
     /**
@@ -123,25 +155,26 @@ public class Segment {
      *
      * @return wind speed
      */
-    public Double getWindSpeed() {
-        return windSpeed;
+    public Double getWindIntensity() {
+        return windIntensity;
     }
 
     /**
      * Sets the wind speed.
      *
-     * @param windSpeed wind speed
+     * @param windIntensity wind speed
      */
-    public void setWindSpeed(Double windSpeed) {
-        this.windSpeed = windSpeed;
+    public void setWindIntensity(Double windIntensity) {
+        this.windIntensity = windIntensity;
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
+        hash = 17 * hash + Objects.hashCode(this.identification);
         hash = 17 * hash + Objects.hashCode(this.allowedAltitudes);
         hash = 17 * hash + Objects.hashCode(this.windDirection);
-        hash = 17 * hash + Objects.hashCode(this.windSpeed);
+        hash = 17 * hash + Objects.hashCode(this.windIntensity);
         return hash;
     }
 
@@ -155,15 +188,16 @@ public class Segment {
         }
 
         final Segment other = (Segment) obj;
-        return this.allowedAltitudes.equals(other.allowedAltitudes)
+        return this.identification.equals(other.identification)
+                && this.allowedAltitudes.equals(other.allowedAltitudes)
                 && Math.abs(this.windDirection - other.windDirection) < EPSILON
-                && Math.abs(this.windSpeed - other.windSpeed) < EPSILON;
+                && Math.abs(this.windIntensity - other.windIntensity) < EPSILON;
     }
 
     @Override
     public String toString() {
-        return String.format("Segment{allowedAltitudes=\"%s\", windDirection=\"%s\", windSpeed=\"%s\"}",
-                this.allowedAltitudes, this.windDirection, this.windSpeed);
+        return String.format("Segment{identification=%s, allowedAltitudes=%s, windDirection=%s, windSpeed=%s}",
+                this.identification, this.allowedAltitudes, this.windDirection, this.windIntensity);
     }
 
 }
