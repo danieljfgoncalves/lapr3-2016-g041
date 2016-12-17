@@ -88,18 +88,6 @@ public class ProjectTest {
     }
 
     /**
-     * Test of hashCode method, of class Project.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-        Project instance = new Project();
-        int expResult = -2050343103;
-        int result = instance.hashCode();
-        assertEquals(expResult, instance.hashCode());
-    }
-
-    /**
      * Test of equals method, of class Project.
      */
     @Test

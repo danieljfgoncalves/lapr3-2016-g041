@@ -214,32 +214,6 @@ public class AirNetworkTest {
     }
 
     /**
-     * Test of hashCode method, of class AirNetwork.
-     */
-    @Test
-    public void testHashCode01() {
-        System.out.println("hashCode");
-        // Verify if equal objects have same hash code
-        AirNetwork instance2 = new AirNetwork();
-        int expResult = instance2.hashCode();
-        int result = instance.hashCode();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of hashCode method, of class AirNetwork.
-     */
-    @Test
-    public void testHashCode02() {
-        System.out.println("hashCode");
-        // Test if not equal objects have same hash code
-        AirNetwork instance2 = new AirNetwork(testMatrix);
-        int expResult = instance2.hashCode();
-        int result = instance.hashCode();
-        assertTrue(expResult != result);
-    }
-
-    /**
      * Test of equals method, of class AirNetwork.
      */
     @Test

@@ -97,19 +97,6 @@ public class FlightSimulatorTest {
     }
 
     /**
-     * Test of hashCode method, of class FlightSimulator.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-
-        int expResult = 236;
-        int result = instance.hashCode();
-
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of equals method, of class FlightSimulator.
      */
     @Test

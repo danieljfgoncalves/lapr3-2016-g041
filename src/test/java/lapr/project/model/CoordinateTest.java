@@ -62,18 +62,6 @@ public class CoordinateTest {
     }
 
     /**
-     * Test of hashCode method, of class Coordinate.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-
-        int expResult = 9583;
-        int result = instance.hashCode();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of equals method, of class Coordinate.
      */
     @Test

@@ -110,18 +110,6 @@ public class AirportTest {
     }
 
     /**
-     * Test of hashCode method, of class Airport.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-
-        int expResult = -268371233;
-        int result = instance.hashCode();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of equals method, of class Airport.
      */
     @Test

@@ -89,18 +89,6 @@ public class RegimeTest {
     }
 
     /**
-     * Test of hashCode method, of class Regime.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-
-        int expResult = 1011290466;
-        int result = instance.hashCode();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of equals method, of class Regime.
      */
     @Test

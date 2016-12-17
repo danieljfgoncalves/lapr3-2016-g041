@@ -80,19 +80,6 @@ public class AircraftTest {
     }
 
     /**
-     * Test of hashCode method, of class Aircraft.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-
-        int expResult = 394;
-        int result = instance.hashCode();
-
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of equals method, of class Aircraft.
      */
     @Test
