@@ -37,12 +37,12 @@ public class AirNetworkTest {
         instance = new AirNetwork();
 
         testMatrix = new MatrixGraph(true);
-        testMatrix.insertVertex(new Coordinate(1.0, 1.0));
-        testMatrix.insertVertex(new Coordinate(2.0, 2.0));
-        testMatrix.insertVertex(new Coordinate(3.0, 3.0));
+        testMatrix.insertVertex(new Coordinate("ID01", 1.0, 1.0));
+        testMatrix.insertVertex(new Coordinate("ID02", 2.0, 2.0));
+        testMatrix.insertVertex(new Coordinate("ID03", 3.0, 3.0));
 
-        testMatrix.insertEdge(new Coordinate(1.0, 1.0), new Coordinate(2.0, 2.0), new Segment(new ArrayList<>(), 1.0, 1.0));
-        testMatrix.insertEdge(new Coordinate(2.0, 2.0), new Coordinate(3.0, 3.0), new Segment(new ArrayList<>(), 2.0, 2.0));
+        testMatrix.insertEdge(new Coordinate("ID01", 1.0, 1.0), new Coordinate("ID02", 2.0, 2.0), new Segment(new ArrayList<>(), 1.0, 1.0));
+        testMatrix.insertEdge(new Coordinate("ID02", 2.0, 2.0), new Coordinate("ID03", 3.0, 3.0), new Segment(new ArrayList<>(), 2.0, 2.0));
     }
 
     /**
@@ -109,9 +109,9 @@ public class AirNetworkTest {
         AirNetwork instance2 = new AirNetwork(testMatrix);
 
         List<Coordinate> coordinates = new LinkedList<>();
-        coordinates.add(new Coordinate(1.0, 1.0));
-        coordinates.add(new Coordinate(2.0, 2.0));
-        coordinates.add(new Coordinate(3.0, 3.0));
+        coordinates.add(new Coordinate("ID01", 1.0, 1.0));
+        coordinates.add(new Coordinate("ID02", 2.0, 2.0));
+        coordinates.add(new Coordinate("ID03", 3.0, 3.0));
         Iterable<Coordinate> expResult = coordinates;
         Iterable<Coordinate> result = instance2.getJunctions();
         assertEquals(expResult, result);
@@ -125,8 +125,8 @@ public class AirNetworkTest {
         System.out.println("addSegment");
 
         AirNetwork instance2 = new AirNetwork(testMatrix);
-        Coordinate coordinateA = new Coordinate(1.0, 1.0);
-        Coordinate coordinateB = new Coordinate(3.0, 3.0);
+        Coordinate coordinateA = new Coordinate("ID01", 1.0, 1.0);
+        Coordinate coordinateB = new Coordinate("ID03", 3.0, 3.0);
         Segment newSegment = new Segment(new ArrayList<>(), 1.0, 1.0);
         boolean result = instance2.addSegment(coordinateA, coordinateB, newSegment);
         assertTrue(result);
@@ -145,8 +145,8 @@ public class AirNetworkTest {
         System.out.println("removeSegment");
 
         AirNetwork instance2 = new AirNetwork(testMatrix);
-        Coordinate coordinateA = new Coordinate(2.0, 2.0);
-        Coordinate coordinateB = new Coordinate(3.0, 3.0);
+        Coordinate coordinateA = new Coordinate("ID02", 2.0, 2.0);
+        Coordinate coordinateB = new Coordinate("ID03", 3.0, 3.0);
         Segment expResult = new Segment(new ArrayList<>(), 2.0, 2.0);
         Segment result = instance2.removeSegment(coordinateA, coordinateB);
         assertEquals(expResult, result);
@@ -161,7 +161,7 @@ public class AirNetworkTest {
     @Test
     public void testAddJunction() {
         System.out.println("addJunction");
-        Coordinate newJunction = new Coordinate(4.0, 4.0);
+        Coordinate newJunction = new Coordinate("ID04", 4.0, 4.0);
         boolean result = instance.addJunction(newJunction);
         // Check if adds (true)
         assertTrue(result);
@@ -169,7 +169,7 @@ public class AirNetworkTest {
         boolean result2 = instance.addJunction(newJunction);
         assertFalse(result2);
         // Verify if network contains coordinate
-        assertEquals(new Coordinate(4.0, 4.0), instance.getJunctions().iterator().next());
+        assertEquals(new Coordinate("ID04", 4.0, 4.0), instance.getJunctions().iterator().next());
     }
 
     /**
@@ -179,7 +179,7 @@ public class AirNetworkTest {
     public void testRemoveJunction01() {
         System.out.println("removeJunction");
         // Test if method returns true when a valid junction is removed
-        Coordinate junction = new Coordinate(1.0, 1.0);
+        Coordinate junction = new Coordinate("ID01", 1.0, 1.0);
         AirNetwork instance = new AirNetwork(testMatrix);
         boolean result = instance.removeJunction(junction);
         assertTrue(result);
@@ -192,7 +192,7 @@ public class AirNetworkTest {
     public void testRemoveJunction02() {
         System.out.println("removeJunction");
         // Test if method returns false when junction is invalid
-        Coordinate junction = new Coordinate(4.0, 4.0);
+        Coordinate junction = new Coordinate("ID04", 4.0, 4.0);
         AirNetwork instance = new AirNetwork(testMatrix);
         boolean result = instance.removeJunction(junction);
         assertFalse(result);
@@ -205,7 +205,7 @@ public class AirNetworkTest {
     public void testRemoveJunction03() {
         System.out.println("removeJunction");
         // Test if method returns false when junction is invalid
-        Coordinate junction = new Coordinate(3.0, 3.0);
+        Coordinate junction = new Coordinate("ID03", 3.0, 3.0);
         AirNetwork instance = new AirNetwork(testMatrix);
         instance.removeJunction(junction);
         int expResult = 2;
@@ -298,12 +298,15 @@ public class AirNetworkTest {
         String expResult = "AirNetwork{\n"
                 + "network=\n"
                 + "Vertices:\n"
+                + "ID: ID01\n"
                 + "Latitude: 1,000000\n"
                 + "Longitude: 1,000000\n"
                 + "\n"
+                + "ID: ID02\n"
                 + "Latitude: 2,000000\n"
                 + "Longitude: 2,000000\n"
                 + "\n"
+                + "ID: ID03\n"
                 + "Latitude: 3,000000\n"
                 + "Longitude: 3,000000\n"
                 + "\n"

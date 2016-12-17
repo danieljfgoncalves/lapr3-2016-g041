@@ -26,6 +26,18 @@ public class CoordinateTest {
     }
 
     /**
+     * Test of getId and setId methods, of class Coordinate.
+     */
+    @Test
+    public void testGetSetId() {
+        System.out.println("getId");
+
+        String id = "PT01";
+        instance.setId(id);
+        assertEquals(id, instance.getId());
+    }
+
+    /**
      * Test of getLongitude and setLongitude methods, of class Coordinate.
      */
     @Test
@@ -81,7 +93,7 @@ public class CoordinateTest {
     public void testToString() {
         System.out.println("toString");
 
-        String expResult = String.format("Latitude: %.6f\nLongitude: %.6f\n", 0.0d, 0.0d);
+        String expResult = String.format("ID: %s\nLatitude: %.6f\nLongitude: %.6f\n", "ID00", 0.0d, 0.0d);
         String result = instance.toString();
         assertEquals(expResult, result);
 

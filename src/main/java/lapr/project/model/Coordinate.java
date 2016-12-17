@@ -17,6 +17,11 @@ import java.util.Objects;
 public class Coordinate {
 
     /**
+     * The coordinate's ID.
+     */
+    private String id;
+
+    /**
      * The coordinate's latitude.
      */
     private Double latitude;
@@ -32,6 +37,11 @@ public class Coordinate {
     private final static Double EPSILON = 0.01d;
 
     /**
+     * The default coordinate's ID.
+     */
+    private final static String DEFAULT_ID = "ID00";
+
+    /**
      * The default coordinate's longitude.
      */
     private final static Double DEFAULT_LONGITUDE = 0.000000d;
@@ -44,10 +54,12 @@ public class Coordinate {
     /**
      * Creates a Coordinate receiving its attributes.
      *
+     * @param id the given id
      * @param latitude the given latitude
      * @param longitude the given longitude
      */
-    public Coordinate(Double latitude, Double longitude) {
+    public Coordinate(String id, Double latitude, Double longitude) {
+        this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -56,6 +68,7 @@ public class Coordinate {
      * Creates a Coordinate with default values.
      */
     public Coordinate() {
+        this.id = DEFAULT_ID;
         this.latitude = DEFAULT_LATITUDE;
         this.longitude = DEFAULT_LONGITUDE;
     }
@@ -66,8 +79,27 @@ public class Coordinate {
      * @param other the Coordinate to copy
      */
     public Coordinate(Coordinate other) {
+        this.id = other.id;
         this.longitude = other.longitude;
         this.latitude = other.latitude;
+    }
+
+    /**
+     * Gets the coordinate's id.
+     *
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Modifies the coordinate's id.
+     *
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -131,7 +163,7 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return String.format("Latitude: %.6f\nLongitude: %.6f\n", latitude, longitude);
+        return String.format("ID: %s\nLatitude: %.6f\nLongitude: %.6f\n", id, latitude, longitude);
     }
 
 }

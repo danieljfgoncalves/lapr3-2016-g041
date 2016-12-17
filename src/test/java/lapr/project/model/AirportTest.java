@@ -91,7 +91,7 @@ public class AirportTest {
     public void testGetSetCoordinates() {
         System.out.println("getCoordinates");
 
-        Coordinate coordinate = new Coordinate(41.2481003, -8.6813898);
+        Coordinate coordinate = new Coordinate("testLocation", 41.2481003, -8.6813898);
         instance.setCoordinates(coordinate);
         assertEquals(coordinate, instance.getCoordinates());
     }
@@ -146,7 +146,7 @@ public class AirportTest {
                 + "Country: %s\n"
                 + "IATA code: %s\n"
                 + "Coordinates: %s\n"
-                + "Altitude: %.2f\n", "Default Name", "Default Town", "Default Country", "Default IATA", new Coordinate(0.0d, 0.0d), 0.0d);
+                + "Altitude: %.2f\n", "Default Name", "Default Town", "Default Country", "Default IATA", new Coordinate("ID00", 0.0d, 0.0d), 0.0d);
         String result = instance.toString();
         assertEquals(expResult, result);
     }
