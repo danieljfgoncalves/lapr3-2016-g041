@@ -1,5 +1,10 @@
+/**
+ * Package location for Model concepts.
+ */
 package lapr.project.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,364 +16,147 @@ import java.util.Objects;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public abstract class Motorization {
+public class Motorization {
 
     /**
-     * Description of the engine
+     * The number of motors.
      */
-    private String description;
+    private Integer numberOfMotors;
 
     /**
-     * Mass flow rate on free stream conditions
-     *
+     * The motor.
      */
-    private Double mFlow0;
+    private String motor;
 
     /**
-     * Mass flow on core exit conditions
+     * The motor type.
      */
-    private Double mFlowE;
+    private MotorType motorType;
 
     /**
-     * Mass flow on the entrance to the core
+     * The available regimes.
      */
-    private Double mFlowC;
+    private List<Regime> regimes;
 
     /**
-     * Velocity on free stream conditions
+     * The default number of motors.
      */
-    private Double V0;
+    private static final Integer DEFAULT_NUMBER_OF_MOTORS = 4;
 
     /**
-     * Velocity on propeller exit conditions
+     * The default motor.
      */
-    private Double V1;
+    private static final String DEFAULT_MOTOR = "GE CF6-80C2B1F";
 
     /**
-     * Velocity on core exit conditions
+     * The default motor type.
      */
-    private Double Ve;
+    private static final MotorType DEFAULT_MOTOR_TYPE = MotorType.TURBOFAN;
 
     /**
-     * Fan flow velocity
-     */
-    private Double Vf;
-
-    /**
-     * Bypass Ratio
-     */
-    private Double bpr;
-
-    /**
-     * Maximum height for sustained climb
-     */
-    private Double serviceCeiling;
-
-    /**
-     * default value for V0
-     */
-    private final static Double DEFAULT_V0 = 0d;
-
-    /**
-     * default value for V1
-     */
-    private final static Double DEFAULT_V1 = 0d;
-
-    /**
-     * default value for Ve
-     */
-    private final static Double DEFAULT_VE = 0d;
-
-    /**
-     * default value for Vf
-     */
-    private final static Double DEFAULT_VF = 0d;
-
-    /**
-     * default value for bpr
-     */
-    private final static Double DEFAULT_BPR = 0d;
-
-    /**
-     * default value for mFlow0
-     */
-    private final static Double DEFAULT_MFLOW0 = 0d;
-
-    /**
-     * default value for mFlowC
-     */
-    private final static Double DEFAULT_MFLOWC = 0d;
-
-    /**
-     * default value for mFlowE
-     */
-    private final static Double DEFAULT_MFLOWE = 0d;
-
-    /**
-     * default value for serviceCeiling;
-     */
-    private final static Double DEFAULT_SERVICE_CEILING = 10000d;
-
-    /**
-     * default value for Description
-     */
-    private final static String DEFAULT_DESCRIPTION = "model";
-
-    /**
-     * Creates an instance of Motorization with it's default values
+     * Creates an instance of motorization with it's default values.
      */
     public Motorization() {
-        this.description = DEFAULT_DESCRIPTION;
-        this.V0 = DEFAULT_V0;
-        this.V1 = DEFAULT_V1;
-        this.Ve = DEFAULT_VE;
-        this.Vf = DEFAULT_VF;
-        this.bpr = DEFAULT_BPR;
-        this.mFlow0 = DEFAULT_MFLOW0;
-        this.mFlowC = DEFAULT_MFLOWC;
-        this.mFlowE = DEFAULT_MFLOWE;
-        this.serviceCeiling = DEFAULT_SERVICE_CEILING;
+        numberOfMotors = DEFAULT_NUMBER_OF_MOTORS;
+        motor = DEFAULT_MOTOR;
+        motorType = DEFAULT_MOTOR_TYPE;
+        regimes = new ArrayList<>();
     }
 
     /**
-     * Creates an instance of Motorization receiving their attributes
+     * Creates an instance of motorization receiving their parameter.
      *
-     * @param description
-     * @param V0
-     * @param V1
-     * @param Ve
-     * @param Vf
-     * @param bpr
-     * @param mFlow0
-     * @param mFlowC
-     * @param mFlowE
-     * @param serviceCeiling
+     * @param numberOfMotors the number of motors
+     * @param motor the motor
+     * @param motorType the motor type
+     * @param regimes available regimes
      */
-    public Motorization(String description, Double V0, Double V1, Double Ve, Double Vf, Double bpr, Double mFlow0, Double mFlowC, Double mFlowE, Double serviceCeiling) {
-        this.description = description;
-        this.V0 = V0;
-        this.V1 = V1;
-        this.Ve = Ve;
-        this.Vf = Vf;
-        this.bpr = bpr;
-        this.mFlow0 = mFlow0;
-        this.mFlowC = mFlowC;
-        this.mFlowE = mFlowE;
-        this.serviceCeiling = serviceCeiling;
+    public Motorization(Integer numberOfMotors, String motor, MotorType motorType, List<Regime> regimes) {
+        this.numberOfMotors = numberOfMotors;
+        this.motor = motor;
+        this.motorType = motorType;
+        this.regimes = regimes;
     }
 
     /**
-     * Creates an Motorization receiving other Motorization
+     * gets the number of motors.
      *
-     * @param otherMotorization
+     * @return number of motors
      */
-    public Motorization(Motorization otherMotorization) {
-        this.description = otherMotorization.description;
-        this.V0 = otherMotorization.V0;
-        this.V1 = otherMotorization.V1;
-        this.Ve = otherMotorization.Ve;
-        this.Vf = otherMotorization.Vf;
-        this.bpr = otherMotorization.bpr;
-        this.mFlow0 = otherMotorization.mFlow0;
-        this.mFlowC = otherMotorization.mFlowC;
-        this.mFlowE = otherMotorization.mFlowE;
-        this.serviceCeiling = otherMotorization.serviceCeiling;
-
+    public Integer getNumberOfMotors() {
+        return numberOfMotors;
     }
 
     /**
-     * Gets the value for V0
+     * Sets the number of motors
      *
-     * @return V0
+     * @param numberOfMotors number of motors
      */
-    public Double getV0() {
-        return V0;
+    public void setNumberOfMotors(Integer numberOfMotors) {
+        this.numberOfMotors = numberOfMotors;
     }
 
     /**
-     * Sets the value for V0
+     * Gets the motor.
      *
-     * @param V0 Velocity on free stream conditions
+     * @return motor
      */
-    public void setV0(Double V0) {
-        this.V0 = V0;
+    public String getMotor() {
+        return motor;
     }
 
     /**
-     * Gets the Description
+     * Sets the motor.
      *
-     * @return description
+     * @param motor motor
      */
-    public String getDescription() {
-        return description;
+    public void setMotor(String motor) {
+        this.motor = motor;
     }
 
     /**
-     * Sets the Description
+     * Gets the motor type.
      *
-     * @param description
+     * @return motor type
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public MotorType getMotorType() {
+        return motorType;
     }
 
     /**
-     * Gets the value of mFlow0
+     * Sets the motor type.
      *
-     * @return mass flow on free stream conditions
+     * @param motorType motor type
      */
-    public Double getmFlow0() {
-        return mFlow0;
+    public void setMotorType(MotorType motorType) {
+        this.motorType = motorType;
     }
 
     /**
-     * Sets the mflow0
+     * Gets the regimes.
      *
-     * @param mFlow0 mass flow on free stream conditions
+     * @return regimes
      */
-    public void setmFlow0(Double mFlow0) {
-        this.mFlow0 = mFlow0;
+    public List<Regime> getRegimes() {
+        return regimes;
     }
 
     /**
-     * Gets the value of mFlowE
+     * Sets the regimes.
      *
-     * @return mass flow on core exit conditions
+     * @param regimes regimes
      */
-    public Double getmFlowE() {
-        return mFlowE;
-    }
-
-    /**
-     * Sets the value of mFlowE
-     *
-     * @param mFlowE mass flow on core exit conditions
-     */
-    public void setmFlowE(Double mFlowE) {
-        this.mFlowE = mFlowE;
-    }
-
-    /**
-     * Gets the value of mFlowC
-     *
-     * @return mass flow on the entrance to the core
-     */
-    public Double getmFlowC() {
-        return mFlowC;
-    }
-
-    /**
-     * Sets the value of mFlowC
-     *
-     * @param mFlowC mass flow on the entrance to the core
-     */
-    public void setmFlowC(Double mFlowC) {
-        this.mFlowC = mFlowC;
-    }
-
-    /**
-     * Gets the value of V1
-     *
-     * @return velocity on propeller exit conditions
-     */
-    public Double getV1() {
-        return V1;
-    }
-
-    /**
-     * Sets the value of V1
-     *
-     * @param V1 velocity on propeller exit conditions
-     */
-    public void setV1(Double V1) {
-        this.V1 = V1;
-    }
-
-    /**
-     * Gets the value of Ve
-     *
-     * @return velocity on core exit conditions
-     */
-    public Double getVe() {
-        return Ve;
-    }
-
-    /**
-     * Sets the value of Ve
-     *
-     * @param Ve velocity on core exit conditions
-     */
-    public void setVe(Double Ve) {
-        this.Ve = Ve;
-    }
-
-    /**
-     * Gets the value of Vf
-     *
-     * @return fan flow velocity
-     */
-    public Double getVf() {
-        return Vf;
-    }
-
-    /**
-     * Sets the value of Vf
-     *
-     * @param Vf fan flow velocity
-     */
-    public void setVf(Double Vf) {
-        this.Vf = Vf;
-    }
-
-    /**
-     * Gets the value of bpr
-     *
-     * @return bypass ratio
-     */
-    public Double getBpr() {
-        return bpr;
-    }
-
-    /**
-     * Sets the value of bpr
-     *
-     * @param bpr bypass ratio
-     */
-    public void setBpr(Double bpr) {
-        this.bpr = bpr;
-    }
-
-    /**
-     * Gets the value of serviceCeiling
-     *
-     * @return Service ceiling
-     */
-    public Double getServiceCeiling() {
-        return serviceCeiling;
-    }
-
-    /**
-     * Sets the value of serviceCeiling
-     *
-     * @param serviceCeiling Service ceiling
-     */
-    public void setServiceCeiling(Double serviceCeiling) {
-        this.serviceCeiling = serviceCeiling;
+    public void setRegimes(List<Regime> regimes) {
+        this.regimes = regimes;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.description);
-        hash = 29 * hash + Objects.hashCode(this.mFlow0);
-        hash = 29 * hash + Objects.hashCode(this.mFlowE);
-        hash = 29 * hash + Objects.hashCode(this.mFlowC);
-        hash = 29 * hash + Objects.hashCode(this.V0);
-        hash = 29 * hash + Objects.hashCode(this.V1);
-        hash = 29 * hash + Objects.hashCode(this.Ve);
-        hash = 29 * hash + Objects.hashCode(this.Vf);
-        hash = 29 * hash + Objects.hashCode(this.bpr);
-        hash = 29 * hash + Objects.hashCode(this.serviceCeiling);
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.numberOfMotors);
+        hash = 67 * hash + Objects.hashCode(this.motor);
+        hash = 67 * hash + Objects.hashCode(this.motorType);
+        hash = 67 * hash + Objects.hashCode(this.regimes);
         return hash;
     }
 
@@ -382,14 +170,16 @@ public abstract class Motorization {
         }
 
         final Motorization other = (Motorization) obj;
-        return this.description.equals(other.description);
+        return this.numberOfMotors.equals(other.numberOfMotors)
+                && this.motor.equalsIgnoreCase(other.motor)
+                && this.motorType.equals(other.motorType)
+                && this.regimes.equals(other.regimes);
     }
 
     @Override
     public String toString() {
-        return "Motorization{" + "description=" + description + ", mFlow0=" + mFlow0 + ","
-                + " mFlowE=" + mFlowE + ", mFlowC=" + mFlowC + ", V0=" + V0 + ", V1=" + V1
-                + ", Ve=" + Ve + ", Vf=" + Vf + ", bpr=" + bpr + ", serviceCeiling=" + serviceCeiling + '}';
+        return String.format("Motorization{numberOfMotors=%d, motor=%s, motorType=%s, regimes=%s}",
+                this.numberOfMotors, this.motor, this.motorType, this.regimes);
     }
 
 }
