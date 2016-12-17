@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -151,7 +152,9 @@ public class ProjectSelectionFrame extends JFrame {
         JButton newProjectButton = new JButton("New Project");
 
         newProjectButton.addActionListener((ActionEvent ae) -> {
-            // TODO
+            CreateProjectDialog createProjectDialog = new CreateProjectDialog(this);
+            createProjectDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            createProjectDialog.setVisible(true);
         });
 
         return newProjectButton;
@@ -168,7 +171,7 @@ public class ProjectSelectionFrame extends JFrame {
         openProjectButton.addActionListener((ActionEvent ae) -> {
             // TODO
         });
-        
+
         openProjectButton.setEnabled(false);
 
         return openProjectButton;
@@ -185,7 +188,7 @@ public class ProjectSelectionFrame extends JFrame {
         copyProjectButton.addActionListener((ActionEvent ae) -> {
             // TODO
         });
-        
+
         copyProjectButton.setEnabled(false);
 
         return copyProjectButton;
@@ -202,7 +205,7 @@ public class ProjectSelectionFrame extends JFrame {
         editProjectButton.addActionListener((ActionEvent ae) -> {
             // TODO
         });
-        
+
         editProjectButton.setEnabled(false);
 
         return editProjectButton;
