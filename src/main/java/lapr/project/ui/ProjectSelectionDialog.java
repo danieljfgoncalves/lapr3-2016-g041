@@ -45,6 +45,16 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
      * List of the selected projects.
      */
     private final List<Project> projects;
+    
+    /**
+     * The selected Project.
+     */
+    private Project project;
+    
+    /**
+     * The JList for the list of projects.
+     */
+    private JList projectsList;
 
     /**
      * The button to open project.
@@ -121,7 +131,7 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
     private JPanel createListPanel() {
         JPanel listPanel = new JPanel();
 
-        JList projectsList = new JList(new ListModelProject(this.projects));
+        projectsList = new JList(new ListModelProject(this.projects));
         projectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         projectsList.setCellRenderer(new ListCellRendererProject());
 
@@ -196,7 +206,10 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         copyProjectButton = new JButton("Copy Project");
 
         copyProjectButton.addActionListener((ActionEvent ae) -> {
-            // TODO
+            project = (Project)projectsList.getSelectedValue();
+            this.setVisible(false);
+            CopyProjectDialog copyProjectDialog = new CopyProjectDialog(this, simulator, project);
+            copyProjectDialog.setVisible(true);
         });
 
         copyProjectButton.setEnabled(false);
