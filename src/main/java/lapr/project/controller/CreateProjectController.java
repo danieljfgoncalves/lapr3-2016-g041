@@ -4,7 +4,7 @@
 package lapr.project.controller;
 
 import lapr.project.model.Project;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 
 /**
  * Controller to create a project.
@@ -19,7 +19,7 @@ public class CreateProjectController {
     /**
      * The simulator.
      */
-    private final Simulator simulator;
+    private final FlightSimulator simulator;
 
     /**
      * The created project.
@@ -31,7 +31,7 @@ public class CreateProjectController {
      *
      * @param simulator the simulator
      */
-    public CreateProjectController(Simulator simulator) {
+    public CreateProjectController(FlightSimulator simulator) {
         this.simulator = simulator;
     }
 

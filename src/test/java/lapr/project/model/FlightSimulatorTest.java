@@ -18,17 +18,17 @@ import static org.junit.Assert.*;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class SimulatorTest {
+public class FlightSimulatorTest {
 
-    private Simulator instance;
+    private FlightSimulator instance;
 
     @Before
     public void setUp() {
-        instance = new Simulator();
+        instance = new FlightSimulator();
     }
 
     /**
-     * Test of setProjects and getProjects methods, of class Simulator.
+     * Test of setProjects and getProjects methods, of class FlightSimulator.
      */
     @Test
     public void testGetSetProjects() {
@@ -43,7 +43,7 @@ public class SimulatorTest {
     }
 
     /**
-     * Test of setProjects and getProjects methods, of class Simulator.
+     * Test of setProjects and getProjects methods, of class FlightSimulator.
      */
     @Test
     public void testGetSetActivatedProject() {
@@ -57,7 +57,7 @@ public class SimulatorTest {
     }
 
     /**
-     * Test of createProject method, of class Simulator.
+     * Test of createProject method, of class FlightSimulator.
      */
     @Test
     public void testCreateProject() {
@@ -73,7 +73,7 @@ public class SimulatorTest {
     }
 
     /**
-     * Test of validateProject method, of class Simulator.
+     * Test of validateProject method, of class FlightSimulator.
      */
     @Test
     public void testValidateProject() {
@@ -85,7 +85,7 @@ public class SimulatorTest {
     }
 
     /**
-     * Test of addProject method, of class Simulator.
+     * Test of addProject method, of class FlightSimulator.
      */
     @Test
     public void testAddProject() {
@@ -97,7 +97,7 @@ public class SimulatorTest {
     }
 
     /**
-     * Test of hashCode method, of class Simulator.
+     * Test of hashCode method, of class FlightSimulator.
      */
     @Test
     public void testHashCode() {
@@ -110,7 +110,7 @@ public class SimulatorTest {
     }
 
     /**
-     * Test of equals method, of class Simulator.
+     * Test of equals method, of class FlightSimulator.
      */
     @Test
     public void testEquals() {
@@ -120,13 +120,13 @@ public class SimulatorTest {
 
         assertFalse(instance.equals(obj));
 
-        obj = new Simulator();
+        obj = new FlightSimulator();
 
         assertTrue(instance.equals(obj));
     }
 
     /**
-     * Test of toString method, of class Simulator.
+     * Test of toString method, of class FlightSimulator.
      */
     @Test
     public void testToString() {

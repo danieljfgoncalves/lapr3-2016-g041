@@ -16,7 +16,7 @@ import java.util.Objects;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class Simulator {
+public class FlightSimulator {
 
     /**
      * The projects.
@@ -31,7 +31,7 @@ public class Simulator {
     /**
      * Creates an instance of simulator with its default values.
      */
-    public Simulator() {
+    public FlightSimulator() {
         this.projects = new ArrayList<>();
     }
 
@@ -40,7 +40,7 @@ public class Simulator {
      *
      * @param projects the projects
      */
-    public Simulator(List<Project> projects) {
+    public FlightSimulator(List<Project> projects) {
         this.projects = projects;
     }
 
@@ -49,7 +49,7 @@ public class Simulator {
      *
      * @param otherSimulator other simulator
      */
-    public Simulator(Simulator otherSimulator) {
+    public FlightSimulator(FlightSimulator otherSimulator) {
         this.projects = new ArrayList<>(otherSimulator.projects);
     }
 
@@ -147,7 +147,7 @@ public class Simulator {
             return false;
         }
 
-        final Simulator other = (Simulator) obj;
+        final FlightSimulator other = (FlightSimulator) obj;
         return this.projects.equals(other.projects);
     }
 

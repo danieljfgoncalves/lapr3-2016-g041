@@ -4,7 +4,7 @@
 package lapr.project.controller;
 
 import lapr.project.model.Project;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 
 /**
  * Represents a CopyProjectController.
@@ -25,7 +25,7 @@ public class CopyProjectController {
     /**
      * The simulator.
      */
-    private final Simulator simulator;
+    private final FlightSimulator simulator;
 
     /**
      * Creates an instance of the controller.
@@ -33,7 +33,7 @@ public class CopyProjectController {
      * @param simulator the simulator
      * @param project the selected project
      */
-    public CopyProjectController(Simulator simulator, Project project) {
+    public CopyProjectController(FlightSimulator simulator, Project project) {
         this.simulator = simulator;
         projectCopy = new Project(project);
     }

@@ -4,7 +4,7 @@
 package lapr.project.controller;
 
 import lapr.project.model.Project;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 
 /**
  * Controller responsible for opening projects
@@ -17,9 +17,9 @@ import lapr.project.model.Simulator;
  */
 public class OpenProjectController {
     
-    Simulator simulator;
+    FlightSimulator simulator;
     
-    public OpenProjectController(Simulator simulator){
+    public OpenProjectController(FlightSimulator simulator){
       this.simulator = simulator;        
     }
     

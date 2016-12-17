@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import lapr.project.controller.CreateProjectController;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 
 /**
  * The frame to create project.
@@ -85,7 +85,7 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
      * @param parentWindow the parent window
      * @param simulator the simulator
      */
-    public CreateProjectDialog(T parentWindow, Simulator simulator) {
+    public CreateProjectDialog(T parentWindow, FlightSimulator simulator) {
         super(parentWindow, WINDOW_TITLE);
         setModal(true);
 

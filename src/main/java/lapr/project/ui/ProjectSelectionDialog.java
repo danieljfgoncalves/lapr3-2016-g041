@@ -16,7 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import lapr.project.model.Project;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 import lapr.project.ui.components.ListCellRendererProject;
 import lapr.project.ui.components.ListModelProject;
 
@@ -39,7 +39,7 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
     /**
      * The simulator.
      */
-    private final Simulator simulator;
+    private final FlightSimulator simulator;
 
     /**
      * List of the selected projects.
@@ -92,7 +92,7 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
      * @param mainFrame the main frame
      * @param simulator the simulator
      */
-    public ProjectSelectionDialog(MainFrame mainFrame, Simulator simulator) {
+    public ProjectSelectionDialog(MainFrame mainFrame, FlightSimulator simulator) {
 
         super(mainFrame, WINDOW_TITLE, true); // Modal
 

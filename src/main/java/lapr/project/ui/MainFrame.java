@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import lapr.project.model.Project;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 import lapr.project.ui.components.CustomMenuBar;
 
 /**
@@ -24,7 +24,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
     /**
      * The app simulator.
      */
-    private final Simulator simulator;
+    private final FlightSimulator simulator;
 
     /**
      * Active Project.
@@ -41,7 +41,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
      *
      * @param simulator the simulator
      */
-    public MainFrame(Simulator simulator) {
+    public MainFrame(FlightSimulator simulator) {
         super(WINDOW_TITLE);
 
         // Set simulator

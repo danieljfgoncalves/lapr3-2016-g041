@@ -9,7 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 import lapr.project.ui.CreateProjectDialog;
 import lapr.project.ui.MainFrame;
 
@@ -31,7 +31,7 @@ public class CustomMenuBar extends JMenuBar {
     /**
      * The simulator.
      */
-    private final Simulator simulator;
+    private final FlightSimulator simulator;
 
     /**
      * Creates an instance of the CustomMenuBar.
@@ -39,7 +39,7 @@ public class CustomMenuBar extends JMenuBar {
      * @param mainFrame the main frame
      * @param simulator the simulator
      */
-    public CustomMenuBar(MainFrame mainFrame, Simulator simulator) {
+    public CustomMenuBar(MainFrame mainFrame, FlightSimulator simulator) {
 
         this.mainFrame = mainFrame;
         this.simulator = simulator;

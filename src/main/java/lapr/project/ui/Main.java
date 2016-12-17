@@ -3,7 +3,7 @@ package lapr.project.ui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 import lapr.project.utils.DefaultInstantiator;
 
 /**
@@ -30,7 +30,7 @@ class Main {
      */
     public static void main(String[] args) {
         // Mock Object
-        Simulator simulator = DefaultInstantiator.createSimulator();
+        FlightSimulator simulator = DefaultInstantiator.createSimulator();
 
         // Get screen size
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

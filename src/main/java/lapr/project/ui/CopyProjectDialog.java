@@ -19,7 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import lapr.project.controller.CopyProjectController;
 import lapr.project.model.Project;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 
 /**
  * The frame to copy a project.
@@ -91,7 +91,7 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
      * @param simulator the simulator
      * @param project the selected project
      */
-    public CopyProjectDialog(T parentWindow, Simulator simulator, Project project) {
+    public CopyProjectDialog(T parentWindow, FlightSimulator simulator, Project project) {
         super(parentWindow, WINDOW_TITLE);
         setModal(true);
 

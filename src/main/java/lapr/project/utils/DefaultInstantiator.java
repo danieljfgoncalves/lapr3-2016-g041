@@ -6,7 +6,7 @@ package lapr.project.utils;
 import java.util.ArrayList;
 import java.util.List;
 import lapr.project.model.Project;
-import lapr.project.model.Simulator;
+import lapr.project.model.FlightSimulator;
 
 /**
  * Creates instances with mockup data.
@@ -24,7 +24,7 @@ public class DefaultInstantiator {
      *
      * @return the simulator
      */
-    public static Simulator createSimulator() {
+    public static FlightSimulator createSimulator() {
 
         Project project1 = new Project("Simullations Europe", "Flight routes of europe.", 915);
         Project project2 = new Project("Africa Flights", "The commerce flights.", 792);
@@ -59,6 +59,6 @@ public class DefaultInstantiator {
         projects.add(project14);
         projects.add(project15);
 
-        return new Simulator(projects);
+        return new FlightSimulator(projects);
     }
 }
