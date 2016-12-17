@@ -1,5 +1,7 @@
 package lapr.project.ui;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 import lapr.project.model.Simulator;
 import lapr.project.utils.DefaultInstantiator;
@@ -27,10 +29,21 @@ class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // Mock Object
         Simulator simulator = DefaultInstantiator.createSimulator();
 
-        ProjectSelectionFrame projectSelectionFrame = new ProjectSelectionFrame(simulator);
-        projectSelectionFrame.setVisible(true);
-        projectSelectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Get screen size
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // Open Main Frame
+        MainFrame mainFrame = new MainFrame(simulator);
+        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        mainFrame.setSize(screenSize);
+        mainFrame.setVisible(true);
+        mainFrame.setResizable(false);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Open Project Selection
+        mainFrame.openProjectSelection();
     }
 }

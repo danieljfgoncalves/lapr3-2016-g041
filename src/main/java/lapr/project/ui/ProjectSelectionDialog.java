@@ -18,7 +18,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import lapr.project.model.Project;
 import lapr.project.model.Simulator;
-import lapr.project.ui.components.CustomMenuBar;
 import lapr.project.ui.components.ListCellRendererProject;
 import lapr.project.ui.components.ListModelProject;
 
@@ -31,7 +30,12 @@ import lapr.project.ui.components.ListModelProject;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class ProjectSelectionFrame extends JFrame {
+public class ProjectSelectionDialog extends JDialog {
+
+    /**
+     * Main Frame.
+     */
+    private final JFrame mainFrame;
 
     /**
      * List of the selected projects.
@@ -56,7 +60,7 @@ public class ProjectSelectionFrame extends JFrame {
     /**
      * Title for the frame.
      */
-    private static final String WINDOW_TITLE = "Flights Consumption Simulator";
+    private static final String WINDOW_TITLE = "Select or create a Project";
 
     /**
      * Window's dimension.
@@ -69,25 +73,33 @@ public class ProjectSelectionFrame extends JFrame {
     private final static EmptyBorder PADDING_BORDER = new EmptyBorder(10, 10, 10, 10);
 
     /**
-     * Creates an instance of project selection frame.
+     * Creates an instance of project selection dialog.
      *
      * @param simulator the simulator
      */
-    public ProjectSelectionFrame(Simulator simulator) {
+    public ProjectSelectionDialog(JFrame mainFrame, Simulator simulator) {
 
-        super(WINDOW_TITLE);
+        super(mainFrame, WINDOW_TITLE, true); // Modal
+
+        // Set Main Frame
+        this.mainFrame = mainFrame;
 
         this.projects = simulator.getProjects();
 
+        // TODO: Verify if active project is null after project selection is closed
+        /*
+        // When Dialog close if no project is selected close app
+        if (activeProject == null) {
+            // TODO: Default operations before exit
+            System.exit(0);
+        }
+         */
         createComponents();
-
-        CustomMenuBar customMenuBar = new CustomMenuBar();
-        setJMenuBar(customMenuBar);
 
         pack();
         setSize(WINDOW_DIMENSION);
         setMinimumSize(new Dimension(getWidth(), getHeight()));
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(mainFrame);
     }
 
     /**
@@ -152,9 +164,12 @@ public class ProjectSelectionFrame extends JFrame {
         JButton newProjectButton = new JButton("New Project");
 
         newProjectButton.addActionListener((ActionEvent ae) -> {
-            CreateProjectDialog createProjectDialog = new CreateProjectDialog(this);
+            this.dispose(); // Dispose Project Selection
+            CreateProjectDialog createProjectDialog = new CreateProjectDialog(mainFrame);
             createProjectDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             createProjectDialog.setVisible(true);
+
+            // TODO: If project created go to main frame, else open project selection again
         });
 
         return newProjectButton;
