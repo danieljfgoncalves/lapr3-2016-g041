@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,12 +29,17 @@ import lapr.project.ui.components.ListModelProject;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class ProjectSelectionDialog extends JDialog {
+public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
 
     /**
      * Main Frame.
      */
-    private final JFrame mainFrame;
+    private final MainFrame mainFrame;
+
+    /**
+     * The simulator.
+     */
+    private final Simulator simulator;
 
     /**
      * List of the selected projects.
@@ -75,25 +79,19 @@ public class ProjectSelectionDialog extends JDialog {
     /**
      * Creates an instance of project selection dialog.
      *
+     * @param mainFrame the main frame
      * @param simulator the simulator
      */
-    public ProjectSelectionDialog(JFrame mainFrame, Simulator simulator) {
+    public ProjectSelectionDialog(MainFrame mainFrame, Simulator simulator) {
 
         super(mainFrame, WINDOW_TITLE, true); // Modal
 
         // Set Main Frame
         this.mainFrame = mainFrame;
+        this.simulator = simulator;
 
         this.projects = simulator.getProjects();
 
-        // TODO: Verify if active project is null after project selection is closed
-        /*
-        // When Dialog close if no project is selected close app
-        if (activeProject == null) {
-            // TODO: Default operations before exit
-            System.exit(0);
-        }
-         */
         createComponents();
 
         pack();
@@ -164,12 +162,9 @@ public class ProjectSelectionDialog extends JDialog {
         JButton newProjectButton = new JButton("New Project");
 
         newProjectButton.addActionListener((ActionEvent ae) -> {
-            this.dispose(); // Dispose Project Selection
-            CreateProjectDialog createProjectDialog = new CreateProjectDialog(mainFrame);
-            createProjectDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            this.setVisible(false);
+            CreateProjectDialog createProjectDialog = new CreateProjectDialog(this, simulator);
             createProjectDialog.setVisible(true);
-
-            // TODO: If project created go to main frame, else open project selection again
         });
 
         return newProjectButton;
@@ -224,5 +219,11 @@ public class ProjectSelectionDialog extends JDialog {
         editProjectButton.setEnabled(false);
 
         return editProjectButton;
+    }
+
+    @Override
+    public void activateProject(Project project) {
+        dispose();
+        mainFrame.activateProject(project);
     }
 }

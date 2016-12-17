@@ -42,7 +42,7 @@ class Main {
         mainFrame.setVisible(true);
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         // Open Project Selection
         mainFrame.openProjectSelection();
     }

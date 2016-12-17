@@ -22,6 +22,11 @@ public class CreateProjectController {
     private final Simulator simulator;
 
     /**
+     * The created project.
+     */
+    private Project createdProject;
+
+    /**
      * Creates an instance of the controller.
      *
      * @param simulator the simulator
@@ -38,8 +43,17 @@ public class CreateProjectController {
      * @return true if the project is successfully added, false otherwise
      */
     public boolean newProject(String name, String description) {
-        Project project = simulator.createProject(name, description);
+        createdProject = simulator.createProject(name, description);
 
-        return simulator.validateProject(project) ? simulator.addProject(project) : false;
+        return simulator.validateProject(createdProject) ? simulator.addProject(createdProject) : false;
+    }
+
+    /**
+     * Gets the created project.
+     *
+     * @return created project
+     */
+    public Project getCreatedProject() {
+        return this.createdProject;
     }
 }

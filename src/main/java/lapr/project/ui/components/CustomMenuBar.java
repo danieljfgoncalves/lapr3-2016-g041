@@ -9,6 +9,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import lapr.project.model.Simulator;
+import lapr.project.ui.CreateProjectDialog;
+import lapr.project.ui.MainFrame;
 
 /**
  * Creates a custom JMenuBar.
@@ -21,9 +24,25 @@ import javax.swing.KeyStroke;
 public class CustomMenuBar extends JMenuBar {
 
     /**
-     * Creates an instance of the CustomMenuBar.
+     * The main frame.
      */
-    public CustomMenuBar() {
+    private final MainFrame mainFrame;
+
+    /**
+     * The simulator.
+     */
+    private final Simulator simulator;
+
+    /**
+     * Creates an instance of the CustomMenuBar.
+     *
+     * @param mainFrame the main frame
+     * @param simulator the simulator
+     */
+    public CustomMenuBar(MainFrame mainFrame, Simulator simulator) {
+
+        this.mainFrame = mainFrame;
+        this.simulator = simulator;
 
         add(createMenuFile());
         add(createMenuSimulations());
@@ -87,7 +106,8 @@ public class CustomMenuBar extends JMenuBar {
         JMenuItem item = new JMenuItem("New Project", 'N');
         item.setAccelerator(KeyStroke.getKeyStroke("ctrl N"));
         item.addActionListener((ActionEvent e) -> {
-            // TODO
+            CreateProjectDialog createProjectDialog = new CreateProjectDialog(mainFrame, simulator);
+            createProjectDialog.setVisible(true);
         });
         return item;
     }

@@ -4,6 +4,8 @@
 package lapr.project.ui;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 import lapr.project.model.Project;
 import lapr.project.model.Simulator;
 import lapr.project.ui.components.CustomMenuBar;
@@ -17,7 +19,7 @@ import lapr.project.ui.components.CustomMenuBar;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ProjectHandler {
 
     /**
      * The app simulator.
@@ -46,9 +48,9 @@ public class MainFrame extends JFrame {
         this.simulator = simulator;
         // Instanciate active project
         this.activeProject = null;
-        
+
         // Set Custom Menu Bar
-        CustomMenuBar customMenuBar = new CustomMenuBar();
+        CustomMenuBar customMenuBar = new CustomMenuBar(this, simulator);
         setJMenuBar(customMenuBar);
 
         // TODO: Implement components
@@ -58,11 +60,9 @@ public class MainFrame extends JFrame {
     }
 
     public void openProjectSelection() {
-
-        // Open Project Selection Dialog
         ProjectSelectionDialog projectSelectionDialog = new ProjectSelectionDialog(this, simulator);
         projectSelectionDialog.setVisible(true);
-        projectSelectionDialog.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        projectSelectionDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -71,5 +71,13 @@ public class MainFrame extends JFrame {
     public void createComponents() {
 
         // TODO: Set main panel not visble
+    }
+
+    @Override
+    public void activateProject(Project project) {
+        this.activeProject = project;
+        //TODO activate project
+        JOptionPane.showMessageDialog(this,
+                "The project was activated!");
     }
 }

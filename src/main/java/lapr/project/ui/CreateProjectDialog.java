@@ -6,14 +6,20 @@ package lapr.project.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import lapr.project.controller.CreateProjectController;
+import lapr.project.model.Simulator;
 
 /**
  * The frame to create project.
@@ -23,8 +29,30 @@ import javax.swing.border.EmptyBorder;
  * @author Ivo Ferro - 1151159
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
+ *
+ * @param <T> window that extend ProjectHandler
  */
-public class CreateProjectDialog extends JDialog {
+public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDialog {
+
+    /**
+     * The parent window.
+     */
+    private final T parentWindow;
+
+    /**
+     * The controller to create project.
+     */
+    private final CreateProjectController controller;
+
+    /**
+     * The name text field;
+     */
+    private JTextField nameTextField;
+
+    /**
+     * The description text field.
+     */
+    private JTextField descriptionTextField;
 
     /**
      * Title for the frame.
@@ -54,16 +82,22 @@ public class CreateProjectDialog extends JDialog {
     /**
      * Creates an instance of create project dialog.
      *
-     * @param parentFrame the parent frame
+     * @param parentWindow the parent window
+     * @param simulator the simulator
      */
-    public CreateProjectDialog(JFrame parentFrame) {
-        super(parentFrame, WINDOW_TITLE);
+    public CreateProjectDialog(T parentWindow, Simulator simulator) {
+        super(parentWindow, WINDOW_TITLE);
+        setModal(true);
+
+        this.parentWindow = parentWindow;
+        this.controller = new CreateProjectController(simulator);
 
         createComponents();
+        createWindowClosingListener();
 
         pack();
         setMinimumSize(new Dimension(getWidth(), getHeight()));
-        setLocationRelativeTo(parentFrame);
+        setLocationRelativeTo(parentWindow);
     }
 
     /**
@@ -105,12 +139,12 @@ public class CreateProjectDialog extends JDialog {
         nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         nameLabel.setPreferredSize(LABEL_PREFERED_SIZE);
 
-        JTextField nameField = new JTextField();
-        nameField.setFont(new Font("Arial", Font.PLAIN, 14));
-        nameField.setPreferredSize(TEXT_FIELD_PREFERED_SIZE);
+        nameTextField = new JTextField();
+        nameTextField.setFont(new Font("Arial", Font.PLAIN, 14));
+        nameTextField.setPreferredSize(TEXT_FIELD_PREFERED_SIZE);
 
         namePanel.add(nameLabel);
-        namePanel.add(nameField);
+        namePanel.add(nameTextField);
 
         return namePanel;
     }
@@ -127,12 +161,12 @@ public class CreateProjectDialog extends JDialog {
         descriptionLabel.setFont(new Font("Arial", Font.BOLD, 14));
         descriptionLabel.setPreferredSize(LABEL_PREFERED_SIZE);
 
-        JTextField descriptionField = new JTextField();
-        descriptionField.setFont(new Font("Arial", Font.PLAIN, 14));
-        descriptionField.setPreferredSize(TEXT_FIELD_PREFERED_SIZE);
+        descriptionTextField = new JTextField();
+        descriptionTextField.setFont(new Font("Arial", Font.PLAIN, 14));
+        descriptionTextField.setPreferredSize(TEXT_FIELD_PREFERED_SIZE);
 
         descriptionPanel.add(descriptionLabel);
-        descriptionPanel.add(descriptionField);
+        descriptionPanel.add(descriptionTextField);
 
         return descriptionPanel;
     }
@@ -186,8 +220,33 @@ public class CreateProjectDialog extends JDialog {
         JButton createProjectButton = new JButton("Create Project");
         createProjectButton.setPreferredSize(BUTTON_PREFERED_SIZE);
 
+        createProjectButton.addActionListener((ActionEvent ae) -> {
+            if (controller.newProject(nameTextField.getText(), descriptionTextField.getText())) {
+                dispose();
+                parentWindow.activateProject(controller.getCreatedProject());
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "The data is invalid.\nPlease review the data!",
+                        "Invalid data",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         createProjectLabel.add(createProjectButton);
 
         return createProjectLabel;
+    }
+
+    /**
+     * Creates the window closing listener.
+     */
+    private void createWindowClosingListener() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                dispose();
+                parentWindow.setVisible(true);
+            }
+        });
     }
 }
