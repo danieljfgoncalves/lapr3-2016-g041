@@ -552,11 +552,11 @@ public class AircraftModel {
 
     @Override
     public String toString() {
-        return String.format("Aircraft Model{modelID=%s, type=%s, empty weight=%4f, "
-                + "maximum take off weight=%f, maximum zero fuel weight=%f, "
-                + "wing area=%f, Motorization=%s, description=%s, "
-                + "maker=%s, max payload=%f, max fuel capacity=%f, max operating speed=%f, max mach operating speed=%.1f, "
-                + "wing span=%.1f, e=%.2f }",
+        return String.format("Aircraft Model{modelID=%s, type=%s, empty weight=%.2f, "
+                + "maximum take off weight=%.2f, maximum zero fuel weight=%.2f, "
+                + "wing area=%.2f, Motorization=%s, description=%s, "
+                + "maker=%s, max payload=%.2f, max fuel capacity=%.2f, max operating speed=%.2f, max mach operating speed=%.2f, "
+                + "wing span=%.2f, e=%.2f }",
                 this.modelID, this.type, this.emptyWeight, this.mtow,
                 this.mzfw, this.wingArea, this.motorization, this.description,
                 this.maker, this.maxPayload, this.maxFuelCapacity, this.vmo, this.mmo, this.wingSpan, this.e);
