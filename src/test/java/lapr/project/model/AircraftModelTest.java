@@ -113,8 +113,7 @@ public class AircraftModelTest {
     @Test
     public void testGetSetMotorization() {
         System.out.println("getEngine and setEngine");
-        Motorization expResult = new Motorization() {
-        };
+        Motorization expResult = new Motorization();
         instance.setMotorization(expResult);
         Motorization result = instance.getMotorization();
         assertEquals(expResult, result);
@@ -150,7 +149,6 @@ public class AircraftModelTest {
     @Test
     public void testGetSetMaker() {
         System.out.println("getSetMaker");
-        AircraftModel instance = new AircraftModel();
         String expResult = "DAE(Dubai Aerospace Enterprise)";
         instance.setMaker(expResult);
         String result = instance.getMaker();
@@ -236,8 +234,7 @@ public class AircraftModelTest {
     @Test
     public void testEquals01() {
         System.out.println("equals");
-        Motorization m = new Motorization() {
-        };
+        Motorization m = new Motorization();
         AircraftModel obj = new AircraftModel(1, AircraftType.MIXED, 1.0, 1.0, 1.0, 1.0, m, "motor1",
                 "Boeing Vertol Company (United States)", 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
         boolean expResult = false;

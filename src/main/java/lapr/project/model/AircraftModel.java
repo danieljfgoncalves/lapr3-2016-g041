@@ -216,8 +216,7 @@ public class AircraftModel {
         this.mzfw = MZFW_BY_DEFAULT;
         this.wingArea = WING_AREA_BY_DEFAULT;
         this.description = DESCRIPTION_BY_DEFAULT;
-        this.motorization = new Motorization() {
-        };
+        this.motorization = new Motorization();
         this.description = DESCRIPTION_BY_DEFAULT;
         this.maker = MAKER_BY_DEFAULT;
         this.maxPayload = MAX_PAYLOAD_BY_DEFAULT;
