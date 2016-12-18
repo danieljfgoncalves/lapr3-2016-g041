@@ -79,7 +79,7 @@ public class FlightSimulatorTest {
     public void testValidateProject() {
         System.out.println("validateProject");
 
-        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell", 101);
 
         assertTrue(instance.validateProject(project));
     }
@@ -91,7 +91,7 @@ public class FlightSimulatorTest {
     public void testAddProject() {
         System.out.println("addProject");
 
-        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell", 250);
 
         assertTrue(instance.addProject(project));
     }

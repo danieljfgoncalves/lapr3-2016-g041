@@ -90,17 +90,6 @@ public class FlightSimulator {
     }
 
     /**
-     * Creates a new project.
-     *
-     * @return the new project
-     */
-    public Project createProject() {
-        Project newProject = new Project();
-        projects.add(newProject);
-        return newProject;
-    }
-
-    /**
      * Creates a project receiving their name and description.
      *
      * @param name project's name

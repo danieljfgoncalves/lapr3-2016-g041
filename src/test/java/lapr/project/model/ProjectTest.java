@@ -3,12 +3,14 @@
  */
 package lapr.project.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Tests for segment class
+ * Tests for Project class
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
@@ -18,6 +20,9 @@ import static org.junit.Assert.*;
  */
 public class ProjectTest {
 
+    /**
+     * The instance to test.
+     */
     private Project instance;
 
     @Before
@@ -26,39 +31,86 @@ public class ProjectTest {
     }
 
     /**
-     * Test of getDescription method, of class Project.
+     * Test of getDescription and setDescription methods, of class Project.
      */
     @Test
     public void testGetSetDescription() {
         System.out.println("getDescription");
-        Project instance = new Project();
+
         String expResult = "description";
         instance.setDescription(expResult);
         assertEquals(expResult, instance.getDescription());
     }
 
     /**
-     * Test of getName method, of class Project.
+     * Test of getName and setName methods, of class Project.
      */
     @Test
     public void testGetSetName() {
         System.out.println("getName");
-        Project instance = new Project();
+
         String expResult = "name";
         instance.setName(expResult);
         assertEquals(expResult, instance.getName());
     }
 
     /**
-     * Test of getSerieNumber method, of class Project.
+     * Test of getSerieNumber and setSerieNumber method, of class Project.
      */
     @Test
     public void testGetSetSerieNumber() {
         System.out.println("getSerieNumber");
-        Project instance = new Project();
+
         int expResult = 10;
         instance.setSerieNumber(expResult);
         assertEquals(expResult, instance.getSerieNumber());
+    }
+
+    /**
+     * Test of getAirNetwork and setAirNetwork methods, of class Project.
+     */
+    @Test
+    public void testGetSetAirNetwork() {
+        System.out.println("getAirNetwork");
+
+        AirNetwork airNetwork = new AirNetwork();
+        instance.setAirNetwork(airNetwork);
+        assertEquals(airNetwork, instance.getAirNetwork());
+    }
+
+    /**
+     * Test of getAirports and setAirports methods, of class Project.
+     */
+    @Test
+    public void testGetSetAirports() {
+        System.out.println("getAirports");
+
+        List<Airport> airports = new ArrayList();
+        instance.setAirports(airports);
+        assertEquals(airports, instance.getAirports());
+    }
+
+    /**
+     * Test of getAircraftModels and setAircraftModels method, of class Project.
+     */
+    @Test
+    public void testGetSetAircraftModels() {
+        System.out.println("getAircraftModels");
+
+        List<AircraftModel> aircraftModels = new ArrayList();
+        instance.setAircraftModels(aircraftModels);
+        assertEquals(aircraftModels, instance.getAircraftModels());
+    }
+
+    /**
+     * Test of getSimulations and setSimulations methods, of class Project.
+     */
+    @Test
+    public void testGetSetSimulations() {
+        System.out.println("getSimulations");
+        
+        List<Simulation> simulations = new ArrayList();
+        assertEquals(simulations, instance.getSimulations());
     }
 
     /**
@@ -93,7 +145,7 @@ public class ProjectTest {
     @Test
     public void testEquals() {
         System.out.println("equals");
-        Project instance = new Project();
+
         Object obj = null;
         assertFalse(instance.equals(obj));
         obj = new Project();
@@ -107,12 +159,19 @@ public class ProjectTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        Project instance = new Project();
-        instance.setDescription("name");
+
+        instance.setDescription("description");
         instance.setName("name");
         instance.setSerieNumber(1);
-        String expResult = "Project{" + "description=" + "name" + ", name=" + "name" + ", serieNumber=" + "1" + '}';
+        String expResult = String.format("Serie Number: %d\n"
+                + "Name: %s\n"
+                + "Description: %s\n"
+                + "Air Network: %s\n"
+                + "Airports: %s\n"
+                + "Aircraft Models: %s\n"
+                + "Simulations: %s", 1, "name", "description", instance.getAirNetwork(), instance.getAirports(), instance.getAircraftModels(), instance.getSimulations());
         String result = instance.toString();
         assertEquals(expResult, result);
     }
+
 }

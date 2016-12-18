@@ -40,7 +40,7 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
     private final T parentWindow;
 
     /**
-     * The controller to create project.
+     * The controller to copy project.
      */
     private final CopyProjectController controller;
     
@@ -85,7 +85,7 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
     private static final Dimension TEXT_FIELD_PREFERED_SIZE = new Dimension(150, 30);
 
     /**
-     * Creates an instance of create project dialog.
+     * Creates an instance of copy project dialog.
      *
      * @param parentWindow the parent window
      * @param simulator the simulator
@@ -195,9 +195,9 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
 
 
     /**
-     * Creates the create project label.
+     * Creates the copy project label.
      *
-     * @return create project label
+     * @return copy project label
      */
     private JPanel createCopyProjectLabel() {
         JPanel copyProjectLabel = new JPanel();
