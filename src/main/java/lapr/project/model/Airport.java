@@ -47,11 +47,6 @@ public class Airport {
     private Double altitude;
 
     /**
-     * The epsilon of the allowed error.
-     */
-    private final static Double EPSILON = 0.01d;
-
-    /**
      * The default name of the airport.
      */
     private final static String DEFAULT_NAME = "Default Name";
