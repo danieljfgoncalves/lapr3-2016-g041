@@ -1,7 +1,7 @@
 /**
  * Package location for Pure Fabrication util classes.
  */
-package lapr.project.model;
+package lapr.project.utils;
 
 import java.io.File;
 
