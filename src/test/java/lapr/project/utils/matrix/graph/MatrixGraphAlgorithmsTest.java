@@ -1,8 +1,10 @@
 /**
  * Package location for Pure Fabrication util class tests.
  */
-package lapr.project.utils.matrix_graph;
+package lapr.project.utils.matrix.graph;
 
+import lapr.project.utils.matrix.graph.MatrixGraphAlgorithms;
+import lapr.project.utils.matrix.graph.MatrixGraph;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.junit.Before;
