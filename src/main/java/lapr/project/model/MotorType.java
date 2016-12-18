@@ -13,5 +13,5 @@ package lapr.project.model;
  * @author Tiago Correia - 1151031
  */
 public enum MotorType {
-    TURBOFAN, TURBOPROP
+    TURBOFAN, TURBOPROP, TURBOJET
 }
