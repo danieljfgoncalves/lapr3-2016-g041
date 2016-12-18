@@ -395,6 +395,132 @@ public class AircraftModel {
         this.description = description;
     }
 
+    /**
+     * Obtains the AircraftModel's maker
+     *
+     * @return the maker
+     */
+    public String getMaker() {
+        return this.maker;
+    }
+
+    /**
+     * Modifies the AircraftModel's maker
+     *
+     * @param maker the maker to set
+     */
+    public void setMaker(String maker) {
+        this.maker = maker;
+    }
+
+    /**
+     * Obtains the AircraftModel's max payload
+     *
+     * @return the max payload
+     */
+    public Double getMaxPayload() {
+        return this.maxPayload;
+    }
+
+    /**
+     * Modifies the AircraftModel's max payload
+     *
+     * @param maxPayload the max payload to set
+     */
+    public void setMaxPayload(Double maxPayload) {
+        this.maxPayload = maxPayload;
+    }
+
+    /**
+     * Obtains the AircraftModel's max fuel capacity
+     *
+     * @return the max fuel capacity
+     */
+    public Double getMaxFuelCapacity() {
+        return this.maxFuelCapacity;
+    }
+
+    /**
+     * Modifies the c max fuel capacity
+     *
+     * @param maxFuelCapacity the max fuel capacity to set
+     */
+    public void setMaxFuelCapacity(Double maxFuelCapacity) {
+        this.maxFuelCapacity = maxFuelCapacity;
+    }
+
+    /**
+     * Obtains the AircraftModel's vmo (max operating speed)
+     *
+     * @return the vmo (max operating speed)
+     */
+    public Double getVmo() {
+        return this.vmo;
+    }
+
+    /**
+     * Modifies the AircraftModel's vmo (max operating speed)
+     *
+     * @param vmo the vmo (max operating speed) to set
+     */
+    public void setVmo(Double vmo) {
+        this.vmo = vmo;
+    }
+
+    /**
+     * Obtains the AircraftModel's mmo (max mach operating speed)
+     *
+     * @return the mmo (max mach operating speed)
+     */
+    public Double getMmo() {
+        return this.mmo;
+    }
+
+    /**
+     * Modifies the AircraftModel's mmo (max mach operating system)
+     *
+     * @param mmo the mmo (max mach operating system) to set
+     */
+    public void setMmo(Double mmo) {
+        this.mmo = mmo;
+    }
+
+    /**
+     * Obtains the AircraftModel's wing span
+     *
+     * @return the wing span
+     */
+    public Double getWingSpan() {
+        return wingSpan;
+    }
+
+    /**
+     * Modifies the AircraftModel's wing span
+     *
+     * @param wingSpan the wing span to set
+     */
+    public void setWingSpan(Double wingSpan) {
+        this.wingSpan = wingSpan;
+    }
+
+    /**
+     * Obtains the AircraftModel's e
+     *
+     * @return the e
+     */
+    public Double getE() {
+        return e;
+    }
+
+    /**
+     * Modifies the AircraftModel's e
+     *
+     * @param e e to set
+     */
+    public void setE(Double e) {
+        this.e = e;
+    }
+
     public Double calculateCd(Double drag, Double dynamicPressure, Double referenceArea) {
         // TODO: Implement calculateCd
         throw new UnsupportedOperationException("Not supported yet.");
