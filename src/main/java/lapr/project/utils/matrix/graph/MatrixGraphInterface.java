@@ -1,7 +1,7 @@
 /**
  * Package location for Pure Fabrication util classes.
  */
-package lapr.project.utils.matrix_graph;
+package lapr.project.utils.matrix.graph;
 
 /**
  * Interface with the Matrix Graph Methods.

@@ -4,7 +4,7 @@
 package lapr.project.model;
 
 import java.util.Objects;
-import lapr.project.utils.matrix_graph.MatrixGraph;
+import lapr.project.utils.matrix.graph.MatrixGraph;
 
 /**
  * Represents a airnetwork. (contains a graph of coordinates and segments)
