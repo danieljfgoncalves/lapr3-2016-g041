@@ -67,7 +67,7 @@ public class AircraftModelTest {
         Double expResult = 4000.0;
         instance.setEmptyWeight(expResult);
         Double result = instance.getEmptyWeight();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -79,7 +79,7 @@ public class AircraftModelTest {
         Double expResult = 100000000.0;
         instance.setMtow(expResult);
         Double result = instance.getMtow();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -91,7 +91,7 @@ public class AircraftModelTest {
         Double expResult = 20000.0;
         instance.setMzfw(expResult);
         Double result = instance.getMzfw();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -103,7 +103,7 @@ public class AircraftModelTest {
         Double expResult = 124.60; // 124.60 m2 wing area of Boeing 737
         instance.setWingArea(expResult);
         Double result = instance.getWingArea();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -164,7 +164,7 @@ public class AircraftModelTest {
         Double expResult = 100000000.0;
         instance.setMaxPayload(expResult);
         Double result = instance.getMaxPayload();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -176,7 +176,7 @@ public class AircraftModelTest {
         Double expResult = 29666.27; //max fuel capacity of Boeing 737-900ER in liters
         instance.setMaxFuelCapacity(expResult);
         Double result = instance.getMaxFuelCapacity();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -188,7 +188,7 @@ public class AircraftModelTest {
         Double expResult = 340.0; // max operating speed of boeing 700 = 340.0kt
         instance.setVmo(expResult);
         Double result = instance.getVmo();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -200,7 +200,7 @@ public class AircraftModelTest {
         Double expResult = 0.82; // max mach operating speed for boeing 700 = 0.82 Mach
         instance.setMmo(expResult);
         Double result = instance.getMmo();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -212,7 +212,7 @@ public class AircraftModelTest {
         Double expResult = 35.79; // 35.79 m with winglets(little wings) for Boeing 737 without winglets: 34.32 m
         instance.setWingSpan(expResult);
         Double result = instance.getWingSpan();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -224,7 +224,7 @@ public class AircraftModelTest {
         Double expResult = 10.0;
         instance.setE(expResult);
         Double result = instance.getE();
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**

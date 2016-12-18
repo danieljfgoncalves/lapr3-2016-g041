@@ -163,7 +163,7 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return String.format("ID: %s\nLatitude: %.6f\nLongitude: %.6f\n", id, latitude, longitude);
+        return String.format("ID: %s%nLatitude: %.6f%nLongitude: %.6f%n", id, latitude, longitude);
     }
 
 }

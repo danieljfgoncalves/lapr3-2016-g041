@@ -96,42 +96,42 @@ public class AircraftModel {
     /**
      * The epsilon of the allowed error.
      */
-    private final static Double EPSILON = 0.01d;
+    private static final Double EPSILON = 0.01d;
 
     /**
      * The AircraftType's modelID by default
      */
-    private final static Integer MODEL_ID_BY_DEFAULT = 0;
+    private static final Integer MODEL_ID_BY_DEFAULT = 0;
 
     /**
      * The AircraftType's type by default
      */
-    private final static AircraftType TYPE_BY_DEFAULT = AircraftType.PASSENGER;
+    private static final AircraftType TYPE_BY_DEFAULT = AircraftType.PASSENGER;
 
     /**
      * The AircraftType's empty weight by default
      */
-    private final static Double EMPTY_WEIGHT_BY_DEFAULT = 0.0d;
+    private static final Double EMPTY_WEIGHT_BY_DEFAULT = 0.0d;
 
     /**
      * The AircraftType's mtow by default
      */
-    private final static Double MTOW_BY_DEFAULT = 0.0d;
+    private static final Double MTOW_BY_DEFAULT = 0.0d;
 
     /**
      * The AircraftType's mzfw by default
      */
-    private final static Double MZFW_BY_DEFAULT = 0.0d;
+    private static final Double MZFW_BY_DEFAULT = 0.0d;
 
     /**
      * The AircraftType's wing area by default
      */
-    private final static Double WING_AREA_BY_DEFAULT = 0.0d;
+    private static final Double WING_AREA_BY_DEFAULT = 0.0d;
 
     /**
      * The AircraftType's description by default
      */
-    private final static String DESCRIPTION_BY_DEFAULT = "DefaultDescription";
+    private static final String DESCRIPTION_BY_DEFAULT = "DefaultDescription";
 
     /**
      * The AircraftType's maker by default
