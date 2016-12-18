@@ -111,18 +111,4 @@ public class FlightSimulatorTest {
 
         assertTrue(instance.equals(obj));
     }
-
-    /**
-     * Test of toString method, of class FlightSimulator.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-
-        String expResult = "Simulator{projects=[]}";
-        String result = instance.toString();
-
-        assertEquals(expResult, result);
-    }
-
 }

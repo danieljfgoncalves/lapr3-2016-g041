@@ -94,18 +94,4 @@ public class AircraftTest {
 
         assertTrue(instance.equals(obj));
     }
-
-    /**
-     * Test of toString method, of class Aircraft.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-
-        String expResult = "Aircraft{registration=\"99\", company=\"Ryan Air\", cabinConfiguration=\"30\", numberFlightCrew=\"60\"}";
-        String result = instance.toString();
-
-        assertEquals(expResult, result);
-    }
-
 }

@@ -254,21 +254,4 @@ public class AircraftModelTest {
         boolean result = instance.equals(obj);
         assertEquals(expResult, result);
     }
-
-    /**
-     * Test of toString method, of class AircraftModel.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        String expResult = "Aircraft Model{modelID=0, type=PASSENGER, empty weight=0,00,"
-                + " maximum take off weight=0,00, maximum zero fuel weight=0,00,"
-                + " wing area=0,00, "
-                + "Motorization=Motorization{numberOfMotors=4, motor=GE CF6-80C2B1F, motorType=TURBOFAN, regimes=[]},"
-                + " description=DefaultDescription, maker=DefaultMaker,"
-                + " max payload=0,00, max fuel capacity=0,00, max operating speed=0,00,"
-                + " max mach operating speed=0,00, wing span=0,00, e=0,00 }";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-    }
 }

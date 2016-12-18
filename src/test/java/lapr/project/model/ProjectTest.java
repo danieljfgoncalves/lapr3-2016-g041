@@ -152,26 +152,4 @@ public class ProjectTest {
         assertTrue(instance.equals(obj));
 
     }
-
-    /**
-     * Test of toString method, of class Project.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-
-        instance.setDescription("description");
-        instance.setName("name");
-        instance.setSerieNumber(1);
-        String expResult = String.format("Serie Number: %d\n"
-                + "Name: %s\n"
-                + "Description: %s\n"
-                + "Air Network: %s\n"
-                + "Airports: %s\n"
-                + "Aircraft Models: %s\n"
-                + "Simulations: %s", 1, "name", "description", instance.getAirNetwork(), instance.getAirports(), instance.getAircraftModels(), instance.getSimulations());
-        String result = instance.toString();
-        assertEquals(expResult, result);
-    }
-
 }

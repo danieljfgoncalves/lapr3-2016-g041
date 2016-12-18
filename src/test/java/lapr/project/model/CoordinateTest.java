@@ -73,18 +73,4 @@ public class CoordinateTest {
         obj = new Coordinate();
         assertTrue(instance.equals(obj));
     }
-
-    /**
-     * Test of toString method, of class Coordinate.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-
-        String expResult = String.format("ID: %s\nLatitude: %.6f\nLongitude: %.6f\n", "ID00", 0.0d, 0.0d);
-        String result = instance.toString();
-        assertEquals(expResult, result);
-
-    }
-
 }

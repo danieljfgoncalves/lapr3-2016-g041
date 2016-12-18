@@ -121,22 +121,4 @@ public class AirportTest {
         obj = new Airport();
         assertTrue(instance.equals(obj));
     }
-
-    /**
-     * Test of toString method, of class Airport.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-
-        String expResult = String.format("Name: %s\n"
-                + "Town: %s\n"
-                + "Country: %s\n"
-                + "IATA code: %s\n"
-                + "Coordinates: %s\n"
-                + "Altitude: %.2f\n", "Default Name", "Default Town", "Default Country", "Default IATA", new Coordinate("ID00", 0.0d, 0.0d), 0.0d);
-        String result = instance.toString();
-        assertEquals(expResult, result);
-    }
-
 }

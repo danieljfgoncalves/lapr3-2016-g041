@@ -100,19 +100,4 @@ public class RegimeTest {
         obj = new Regime();
         assertTrue(instance.equals(obj));
     }
-
-    /**
-     * Test of toString method, of class Regime.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        String expResult = String.format("Regime ID: %s\n"
-                + "TSFC: %.3f\n"
-                + "Speed: %.2f\n"
-                + "Thrust: %.1f\n"
-                + "Altitude: %.1f", "Cruise", 0.1d, 0.1d, 1.0d, 100.0d);
-        assertEquals(expResult, instance.toString());
-    }
-
 }

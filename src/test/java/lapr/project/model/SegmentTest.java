@@ -108,18 +108,4 @@ public class SegmentTest {
 
         assertTrue(instance.equals(obj));
     }
-
-    /**
-     * Test of toString method, of class Segment.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-
-        String expResult = "Segment{identification=XX01, allowedAltitudes=[], windDirection=90.0, windSpeed=20.0}";
-        String result = instance.toString();
-
-        assertEquals(expResult, result);
-    }
-
 }
