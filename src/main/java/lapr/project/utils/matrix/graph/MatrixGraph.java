@@ -384,8 +384,7 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
     }
 
     @Override
-    public boolean insertVertex(V newVertex
-    ) {
+    public boolean insertVertex(V newVertex) {
         int index = toIndex(newVertex);
         if (index != -1) {
             return false;

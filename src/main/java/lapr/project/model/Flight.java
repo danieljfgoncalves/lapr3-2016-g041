@@ -100,7 +100,6 @@ public class Flight {
         this.scheduledArrival = new GregorianCalendar();
         this.flightPlan = new LinkedList<>();
         this.stops = new LinkedList<>();
-
     }
 
     /**
@@ -300,7 +299,7 @@ public class Flight {
      * @return the stops
      */
     public List<Stop> getStops() {
-        return new LinkedList<>(stops);
+        return stops;
     }
 
     /**
@@ -309,7 +308,7 @@ public class Flight {
      * @param stops the stops to set
      */
     public void setStops(List<Stop> stops) {
-        this.stops = new LinkedList<>(stops);
+        this.stops = stops;
     }
 
     /**
@@ -318,7 +317,7 @@ public class Flight {
      * @return the flightPlan
      */
     public List<Segment> getFlightPlan() {
-        return new LinkedList<>(flightPlan);
+        return flightPlan;
     }
 
     /**
@@ -327,7 +326,7 @@ public class Flight {
      * @param flightPlan the flightPlan to set
      */
     public void setFlightPlan(List<Segment> flightPlan) {
-        this.flightPlan = new LinkedList<>(flightPlan);
+        this.flightPlan = flightPlan;
     }
 
     @Override
