@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import lapr.project.controller.CreateProjectController;
 import lapr.project.model.FlightSimulator;
+import lapr.project.model.Project;
 
 /**
  * The frame to create project.
@@ -195,6 +197,17 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
 
         JButton importAirNetworkButton = new JButton("Import Air Network");
         importAirNetworkButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+
+        // Airnetwork Import Listener
+        importAirNetworkButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                // TODO: Implement new project method in constructor
+                ImportAirNetworkUI importUI = new ImportAirNetworkUI(new Project());
+                importUI.setSettings();
+            }
+        });
 
         JButton importAirportsButton = new JButton("Import Airports");
         importAirportsButton.setPreferredSize(BUTTON_PREFERED_SIZE);

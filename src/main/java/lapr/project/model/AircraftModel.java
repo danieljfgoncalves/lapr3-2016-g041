@@ -3,8 +3,6 @@
  */
 package lapr.project.model;
 
-import lapr.project.utils.Importable;
-import java.io.File;
 import java.util.Objects;
 
 /**
@@ -18,7 +16,7 @@ import java.util.Objects;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class AircraftModel implements Importable{
+public class AircraftModel {
 
     /**
      * AircraftType's modelID
@@ -562,11 +560,6 @@ public class AircraftModel implements Importable{
                 this.modelID, this.type, this.emptyWeight, this.mtow,
                 this.mzfw, this.wingArea, this.motorization, this.description,
                 this.maker, this.maxPayload, this.maxFuelCapacity, this.vmo, this.mmo, this.wingSpan, this.e);
-    }
-
-    @Override
-    public boolean importXml(File fileToImport) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -4,7 +4,7 @@
 package lapr.project.model;
 
 /**
- * Represents the motor type.
+ * Enumerates the diferent flight types.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
@@ -12,6 +12,6 @@ package lapr.project.model;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public enum MotorType {
-    TURBOFAN, TURBOPROP, TURBOJET
+public enum FlightType {
+    REGULAR, CHARTER
 }

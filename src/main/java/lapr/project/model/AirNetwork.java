@@ -3,8 +3,13 @@
  */
 package lapr.project.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
-import lapr.project.utils.matrix_graph.MatrixGraph;
+import javax.xml.parsers.ParserConfigurationException;
+import lapr.project.utils.Importable;
+import lapr.project.utils.matrix.graph.MatrixGraph;
+import org.xml.sax.SAXException;
 
 /**
  * Represents a airnetwork. (contains a graph of coordinates and segments)
@@ -15,7 +20,7 @@ import lapr.project.utils.matrix_graph.MatrixGraph;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class AirNetwork {
+public class AirNetwork implements Importable {
 
     /**
      * Air Network
@@ -186,6 +191,11 @@ public class AirNetwork {
     public String toString() {
 
         return "AirNetwork{\nnetwork=\n" + network + "\n}";
+    }
+
+    @Override
+    public boolean importXml(File fileToImport) throws SAXException, IOException, ParserConfigurationException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

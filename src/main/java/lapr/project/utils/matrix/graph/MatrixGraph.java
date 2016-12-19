@@ -1,7 +1,7 @@
 /**
  * Package location for Pure Fabrication util classes.
  */
-package lapr.project.utils.matrix_graph;
+package lapr.project.utils.matrix.graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -384,8 +384,7 @@ public class MatrixGraph<V, E> implements MatrixGraphInterface<V, E>, Cloneable 
     }
 
     @Override
-    public boolean insertVertex(V newVertex
-    ) {
+    public boolean insertVertex(V newVertex) {
         int index = toIndex(newVertex);
         if (index != -1) {
             return false;

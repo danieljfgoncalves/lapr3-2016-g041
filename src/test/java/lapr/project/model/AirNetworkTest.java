@@ -6,7 +6,7 @@ package lapr.project.model;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import lapr.project.utils.matrix_graph.MatrixGraph;
+import lapr.project.utils.matrix.graph.MatrixGraph;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
