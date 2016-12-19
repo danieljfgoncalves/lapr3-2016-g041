@@ -27,7 +27,7 @@ public class StopTest {
 
     @Before
     public void setUp() {
-        instance = new Stop();
+        instance = new Stop(new Airport(), 1, new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
     }
 
     /**
@@ -72,10 +72,10 @@ public class StopTest {
      */
     @Test
     public void testGetSetDepartureTime() {
-        System.out.println("getSetDepartureTime");
+        System.out.println("getSetDepartureTime");   
         Calendar expResult = new GregorianCalendar(2016, 12, 27);
         instance.setDepartureTime(expResult);
-        Calendar result = instance.getDepartureTime();
+        Calendar result = instance.getDepartureTime();    
         assertEquals(expResult, result);
     }
 
@@ -86,7 +86,7 @@ public class StopTest {
     @Test
     public void testEquals01() {
         System.out.println("equals");
-        Object obj = new Stop(new Airport(), 20, new GregorianCalendar(), new GregorianCalendar());
+        Object obj = new Stop(new Airport(), 10, new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
         boolean expResult = false;
         boolean result = instance.equals(obj);
         assertEquals(expResult, result);
@@ -99,10 +99,8 @@ public class StopTest {
     @Test
     public void testEquals02() {
         System.out.println("equals");
-        Object obj = new Stop();
-        boolean expResult = true;
-        boolean result = instance.equals(obj);
-        assertEquals(expResult, result);
+        Object obj = new Stop(new Airport(), 1, new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
+        assertTrue(instance.equals(obj));
     }
 
 }
