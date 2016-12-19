@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -43,7 +44,7 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
      * The controller to copy project.
      */
     private final CopyProjectController controller;
-    
+
     /**
      * The selected project.
      */
@@ -193,7 +194,6 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
         return buttonsPanel;
     }
 
-
     /**
      * Creates the copy project label.
      *
@@ -206,7 +206,28 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
         copyProjectButton.setPreferredSize(BUTTON_PREFERED_SIZE);
 
         copyProjectButton.addActionListener((ActionEvent ae) -> {
-            //TODO
+            try {
+                if (!(controller.setCopyProjectData(nameTextField.getText(), descriptionTextField.getText()))) {
+                    throw new IllegalArgumentException("The given name already exists or is invalid. Please try again!");
+                } else if (!controller.addProjectCopy()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            "A project with the same serie number already exists!",
+                            "Copy Project",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            "Project successfully copied!",
+                            "Copy Project",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                dispose();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        ex.getMessage(),
+                        "Erro",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         copyProjectLabel.add(copyProjectButton);

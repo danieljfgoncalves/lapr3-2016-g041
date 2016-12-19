@@ -25,35 +25,43 @@ public class CopyProjectController {
     /**
      * The simulator.
      */
-    private final FlightSimulator simulator;
+    private final FlightSimulator flightSimulator;
 
     /**
      * Creates an instance of the controller.
      *
-     * @param simulator the simulator
+     * @param flightSimulator the simulator
      * @param project the selected project
      */
-    public CopyProjectController(FlightSimulator simulator, Project project) {
-        this.simulator = simulator;
+    public CopyProjectController(FlightSimulator flightSimulator, Project project) {
+        this.flightSimulator = flightSimulator;
         projectCopy = new Project(project);
     }
 
     /**
-     * Sets additional project data.
+     * Sets the project's copy name and description.
      *
      * @param name the name of the project copy
      * @param description the description of the project copy
-     * @return true if the project's copy is added to the project list and false
-     * otherwise
+     * @return true if the name is not empty and if a project with the same name
+     * does not exist, false otherwise
      */
     public boolean setCopyProjectData(String name, String description) {
-        if (projectCopy.validate(name, description)) {
+        if (projectCopy.validate(name) && !flightSimulator.validateNameExists(name)) {
             projectCopy.setName(name);
             projectCopy.setDescription(description);
-            //validação geral
-            simulator.getProjects().add(projectCopy);
             return true;
         }
         return false;
+    }
+
+    /**
+     * Validates if the project does not exist in the flight simulator.
+     *
+     * @return true if the project does not exist and is added to the project
+     * list, false otherwise
+     */
+    public boolean addProjectCopy() {
+        return flightSimulator.validateProject(projectCopy) ? flightSimulator.addProject(projectCopy) : false;
     }
 }
