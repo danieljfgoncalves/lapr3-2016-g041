@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aircraft_list>
+  <aircraft model_ID="Dummy 01" description= "Dummy teste aircraft 01">
+		<maker>Boeing</maker>
+    <type>passenger</type>
+		<motorization>
+      <number_motors>4</number_motors>
+      <motor>GE CF6-80C2B1F</motor>
+      <motor_type>turbofan</motor_type>
+      <regime_list>
+        <regime ID="Cruise">
+          <TSFC>0.564 US</TSFC>
+          <speed>0.85 M</speed>
+          <thrust>12820 US</thrust>
+          <altitude>45E+03 US</altitude>
+        </regime>
+      </regime_list>
+    </motorization>
+		<EWeight>394.09E+03 US</EWeight>
+    <MTOW>875E+03 US</MTOW>
+    <MZFW>535E+03 US</MZFW>
+    <max_payload>71395 US</max_payload>
+    <fuel_capacity>57285 US</fuel_capacity>
+    <VMO>365 Knot</VMO>
+    <MMO>0.9 M</MMO>
+		<wing_area>512 SI</wing_area>
+    <wing_span>64.8 SI</wing_span>
+    <Cdrag_0>0.025</Cdrag_0>
+    <e>0.95</e>
+  </aircraft>
+</aircraft_list>

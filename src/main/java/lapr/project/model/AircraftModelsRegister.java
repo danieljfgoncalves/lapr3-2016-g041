@@ -106,7 +106,7 @@ public class AircraftModelsRegister implements Importable {
         doc.getDocumentElement().normalize();
 
         // iterate aircraft dom
-        NodeList aircraftsNodeList = doc.getElementsByTagName("aircraft_list");
+        NodeList aircraftsNodeList = doc.getElementsByTagName("aircraft");
         int aircraftsLength = aircraftsNodeList.getLength();
         for (int i = 0; i < aircraftsLength; i++) {
 
@@ -114,7 +114,7 @@ public class AircraftModelsRegister implements Importable {
             if (aircraftNode.getNodeType() == Node.ELEMENT_NODE) {
 
                 Element aircraftElement = (Element) aircraftNode;
-                Integer modelID = Integer.parseInt(aircraftElement.getAttribute("model_ID"));
+                String modelID = aircraftElement.getAttribute("model_ID");
                 String description = aircraftElement.getAttribute("description");
                 String maker = aircraftElement.getElementsByTagName("maker").item(0).getTextContent();
 
@@ -153,10 +153,10 @@ public class AircraftModelsRegister implements Importable {
                 }
 
                 List<Regime> regimes = new ArrayList<>();
-                NodeList regimesNodeList = motorizationElement.getElementsByTagName("aircraft_list");
+                NodeList regimesNodeList = motorizationElement.getElementsByTagName("regime");
                 int regimesLength = regimesNodeList.getLength();
                 for (int j = 0; j < regimesLength; j++) {
-                    Node regimeNode = aircraftsNodeList.item(i);
+                    Node regimeNode = regimesNodeList.item(i);
                     if (regimeNode.getNodeType() == Node.ELEMENT_NODE) {
 
                         Element regimeElement = (Element) regimeNode;
@@ -208,14 +208,15 @@ public class AircraftModelsRegister implements Importable {
                 Double wingSpanValue = Regex.getValue(wingSpanContentor);
                 //String wingSpanUnit = Regex.getUnit(wingSpanContentor);
 
-                //Double dragCoeficient = Double.parseDouble(aircraftElement.getElementsByTagName("Cdrag_0").item(0).getTextContent());
+                Double dragCoeficient = Double.parseDouble(aircraftElement.getElementsByTagName("Cdrag_0").item(0).getTextContent());
                 Double e = Double.parseDouble(aircraftElement.getElementsByTagName("e").item(0).getTextContent());
 
                 // cretes the aircraft with all the gathered information
                 this.aircraftModels.add(new AircraftModel(modelID, type,
                         emptyWeightValue, mtowValue, mzfwValue, wingAreaValue,
                         motorization, description, maker, maxPlayloadValue,
-                        fuelCapacityValue, vmoValue, mmoValue, wingSpanValue, e));
+                        fuelCapacityValue, vmoValue, mmoValue, wingSpanValue,
+                        dragCoeficient, e));
             }
         }
 

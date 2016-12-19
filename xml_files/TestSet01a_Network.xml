@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Network id="TestSet01" description="test set 01">
+  <node_list>
+    <node id="PT01">
+      <latitude>41.2481003</latitude>
+      <longitude>-8.6813898</longitude>
+    </node>
+    <node id="PT02">
+      <latitude>40.7812996</latitude>
+      <longitude>-8.6813898</longitude>
+    </node>
+    <node id="PT03">
+      <latitude>38.7812996</latitude>
+      <longitude>-9.1359196</longitude>
+    </node>
+    <node id="PT04">
+      <latitude>40.7812996</latitude>
+      <longitude>-6.6813898</longitude>
+    </node>
+    <node id="ES01">
+      <latitude>40.4936</latitude>
+      <longitude>-3.56676</longitude>
+    </node>
+    <node id="ES02">
+      <latitude>39.5517006</latitude>
+      <longitude>2.7388101</longitude>
+    </node>
+  </node_list>
+  <segment_list>
+    <segment id="PT01">
+    	<start_node>PT01</start_node>
+    	<end_node>PT02</end_node>
+      <direction>bidirectional</direction>
+      <wind>
+        <wind_intensity>80 knot</wind_intensity>
+        <wind_direction>0</wind_direction>
+      </wind>
+    </segment>
+    <segment id="PT02">
+      <start_node>PT02</start_node>
+    	<end_node>PT03</end_node>
+      <direction>bidirectional</direction>
+      <wind>
+        <wind_intensity>80 knot</wind_intensity>
+        <wind_direction>15</wind_direction>
+      </wind>
+    </segment>
+    <segment id="PT03">
+      <start_node>PT02</start_node>
+    	<end_node>PT04</end_node>
+      <direction>bidirectional</direction>
+      <wind>
+        <wind_intensity>100 knot</wind_intensity>
+        <wind_direction>15</wind_direction>
+      </wind>
+    </segment>
+    <segment id="PT04">
+      <start_node>PT04</start_node>
+    	<end_node>ES01</end_node>
+      <direction>bidirectional</direction>
+      <wind>
+        <wind_intensity>100 knot</wind_intensity>
+        <wind_direction>15</wind_direction>
+      </wind>
+    </segment>
+    <segment id="ES01">
+      <start_node>ES01</start_node>
+    	<end_node>ES02</end_node>
+      <direction>bidirectional</direction>
+      <wind>
+        <wind_intensity>85 knot</wind_intensity>
+        <wind_direction>45</wind_direction>
+      </wind>
+    </segment>
+  </segment_list>
+</Network>
