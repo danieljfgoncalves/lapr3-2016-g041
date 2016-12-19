@@ -24,7 +24,7 @@ public class EditProjectPropertiesController {
 
     public boolean setProjectProperties(String name, String description) {
 
-        if (project.validate(name, description)) {
+        if (project.validate(name)) {
             this.project.setName(name);
             this.project.setDescription(description);
             return true;

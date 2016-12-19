@@ -120,9 +120,8 @@ public class ProjectTest {
     public void testValidate01() {
         System.out.println("validate");
         String name = "";
-        String description = "";
         boolean expResult = false;
-        boolean result = instance.validate(name, description);
+        boolean result = instance.validate(name);
         assertEquals(expResult, result);
     }
 
@@ -133,9 +132,8 @@ public class ProjectTest {
     public void testValidate02() {
         System.out.println("validate");
         String name = "a";
-        String description = "b";
         boolean expResult = true;
-        boolean result = instance.validate(name, description);
+        boolean result = instance.validate(name);
         assertEquals(expResult, result);
     }
 

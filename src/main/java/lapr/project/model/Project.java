@@ -293,15 +293,13 @@ public class Project {
     }
 
     /**
-     * Obtains the validation of name and description(true if name and
-     * description not empty), false otherwise
+     * Obtains the validation of name (true if name is not empty), false otherwise
      *
      * @param name
-     * @param description
      * @return true if validated, false otherwise
      */
-    public boolean validate(String name, String description) {
-        return !name.equals("") && !description.equals("");
+    public boolean validate(String name) {
+        return !name.equals("");
     }
 
     @Override

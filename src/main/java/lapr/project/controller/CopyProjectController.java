@@ -47,13 +47,15 @@ public class CopyProjectController {
      * otherwise
      */
     public boolean setCopyProjectData(String name, String description) {
-        if (projectCopy.validate(name, description)) {
+        if (projectCopy.validate(name)) {
             projectCopy.setName(name);
             projectCopy.setDescription(description);
-            //validação geral
-            simulator.getProjects().add(projectCopy);
             return true;
         }
         return false;
+    }
+    
+    public boolean addProjectCopy(){
+        return simulator.addProject(projectCopy);
     }
 }
