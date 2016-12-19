@@ -97,6 +97,34 @@ public class FlightSimulatorTest {
     }
 
     /**
+     * Test of validateNameExists method, of class FlightSimulator.
+     */
+    @Test
+    public void testValidateNameExists01() {
+        System.out.println("validateNameExists");
+
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell", 250);
+        instance.addProject(project);
+        String name = project.getName();
+
+        assertTrue(instance.validateNameExists(name));
+    }
+
+    /**
+     * Test of validateNameExists method, of class FlightSimulator.
+     */
+    @Test
+    public void testValidateNameExists02() {
+        System.out.println("validateNameExists");
+
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell", 250);
+        instance.addProject(project);
+        String name = "Other name";
+
+        assertFalse(instance.validateNameExists(name));
+    }
+
+    /**
      * Test of equals method, of class FlightSimulator.
      */
     @Test

@@ -208,8 +208,13 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
         copyProjectButton.addActionListener((ActionEvent ae) -> {
             try {
                 if (!(controller.setCopyProjectData(nameTextField.getText(), descriptionTextField.getText()))) {
-                    throw new IllegalArgumentException("Please insert a valid name!");
-                } else if (controller.addProjectCopy()) {
+                    throw new IllegalArgumentException("The given name already exists or is invalid. Please try again!");
+                } else if (!controller.addProjectCopy()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            "A project with the same serie number already exists!",
+                            "Copy Project",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
                     JOptionPane.showMessageDialog(rootPane,
                             "Project successfully copied!",
                             "Copy Project",
