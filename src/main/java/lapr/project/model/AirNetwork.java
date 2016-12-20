@@ -237,7 +237,7 @@ public class AirNetwork implements Importable {
     @Override
     public boolean importXml(File fileToImport)
             throws SAXException, IOException, ParserConfigurationException,
-            IllegalArgumentException, NumberFormatException {
+            NumberFormatException {
 
         String filename = fileToImport.getName();
         int dotIndex = filename.lastIndexOf('.');
@@ -271,7 +271,7 @@ public class AirNetwork implements Importable {
                 coordinate.setLongitude(Double.parseDouble(aElement.getElementsByTagName("longitude").item(0).getTextContent()));
 
                 if (!addJunction(coordinate)) {
-                    throw new IllegalArgumentException(String.format("Node #%d: already inserted or malformed.", i));
+                    System.out.printf("Coordinate #%d: already inserted or malformed.%n", i);
                 }
 
             }
@@ -308,10 +308,10 @@ public class AirNetwork implements Importable {
                     boolean dir = addSegment(startID, endID, segment);
                     boolean inverseDir = addSegment(endID, startID, segment);
                     if (!dir || !inverseDir) {
-                        throw new IllegalArgumentException(String.format("Segment #%d: already inserted or malformed.", i));
+                        System.out.printf("Segment #%d: already inserted or malformed.%n", i);
                     }
                 } else if (!addSegment(startID, endID, segment)) {
-                    throw new IllegalArgumentException(String.format("Segment #%d: already inserted or malformed.", i));
+                    System.out.printf("Segment #%d: already inserted or malformed.%n", i);
                 }
             }
         }

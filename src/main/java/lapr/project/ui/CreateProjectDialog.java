@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
@@ -199,9 +200,8 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
 
         // Airnetwork Import Listener
         importAirNetworkButton.addActionListener((ActionEvent e) -> {
-            // TODO: Implement new project method in constructor
-            Project p = new Project();
-            ImportAirNetworkUI importUI = new ImportAirNetworkUI(p);
+            // Imports the network file to newly created project
+            ImportAirNetworkUI importUI = new ImportAirNetworkUI(controller.getCreatedProject());
             importUI.setSettings();
         });
 
