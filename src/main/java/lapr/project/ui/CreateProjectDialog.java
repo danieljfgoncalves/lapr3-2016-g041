@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
@@ -199,14 +198,11 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
         importAirNetworkButton.setPreferredSize(BUTTON_PREFERED_SIZE);
 
         // Airnetwork Import Listener
-        importAirNetworkButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                
-                // TODO: Implement new project method in constructor
-                ImportAirNetworkUI importUI = new ImportAirNetworkUI(new Project());
-                importUI.setSettings();
-            }
+        importAirNetworkButton.addActionListener((ActionEvent e) -> {
+            // TODO: Implement new project method in constructor
+            Project p = new Project();
+            ImportAirNetworkUI importUI = new ImportAirNetworkUI(p);
+            importUI.setSettings();
         });
 
         JButton importAirportsButton = new JButton("Import Airports");

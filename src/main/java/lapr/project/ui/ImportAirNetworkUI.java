@@ -67,13 +67,13 @@ public class ImportAirNetworkUI extends JFileChooser {
         try {
             // Import selected File
             controller.importAirNetwork(getSelectedFile());
-            
-        } catch (SAXException | IOException | ParserConfigurationException ex) {
-            
+
+        } catch (SAXException | IOException | NumberFormatException | ParserConfigurationException ex) {
+
             JOptionPane.showMessageDialog(this,
-                        "Invalid File!.%nPlease select a different file",
-                        "Invalid file",
-                        JOptionPane.ERROR_MESSAGE);
+                    "Invalid File!.%nPlease select a different file",
+                    "Invalid file",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

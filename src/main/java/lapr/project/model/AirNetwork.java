@@ -3,12 +3,14 @@
  */
 package lapr.project.model;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
-import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.utils.Importable;
 import lapr.project.utils.matrix.graph.MatrixGraph;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import java.io.*;
+import java.util.Iterator;
+import lapr.project.utils.Regex;
 import org.xml.sax.SAXException;
 
 /**
@@ -131,6 +133,45 @@ public class AirNetwork implements Importable {
     }
 
     /**
+     * Adds a new segment to the network (from A -> B)
+     *
+     * @param coordIdA starting coordinate id
+     * @param coordIdB ending coordinate id
+     * @param newSegment info of the new segment to add
+     * @return true if segments is sucessfully added
+     */
+    public boolean addSegment(String coordIdA, String coordIdB, Segment newSegment) {
+
+        // if same abort
+        if (network.numVertices() < 2 || coordIdA.equalsIgnoreCase(coordIdB)) {
+            return false;
+        }
+
+        Iterator<Coordinate> it = network.vertices().iterator();
+        Coordinate coordinateA = null;
+        Coordinate coordinateB = null;
+        // iterate through vertices
+        while (it.hasNext() && (coordinateA == null || coordinateB == null)) {
+
+            Coordinate temp = it.next();
+
+            if (temp.getId().equalsIgnoreCase(coordIdA)) {
+
+                coordinateA = temp;
+
+            } else if (temp.getId().equalsIgnoreCase(coordIdB)) {
+                coordinateB = temp;
+            }
+        }
+        // if either don't exist abort
+        if (coordinateA == null || coordinateB == null) {
+            return false;
+        }
+
+        return this.network.insertEdge(coordinateA, coordinateB, newSegment);
+    }
+
+    /**
      * Removes a new segment to the network (from A -> B)
      *
      * @param coordinateA starting coordinate
@@ -194,8 +235,88 @@ public class AirNetwork implements Importable {
     }
 
     @Override
-    public boolean importXml(File fileToImport) throws SAXException, IOException, ParserConfigurationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean importXml(File fileToImport)
+            throws SAXException, IOException, ParserConfigurationException,
+            IllegalArgumentException, NumberFormatException {
+
+        String filename = fileToImport.getName();
+        int dotIndex = filename.lastIndexOf('.');
+
+        if (dotIndex == -1 || !filename.substring(dotIndex).equalsIgnoreCase(".xml")) {
+            return false;
+        }
+
+        // Set up XML Dom
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document root = dBuilder.parse(fileToImport);
+        root.getDocumentElement().normalize();
+
+        // Iterate nodes (graph vertices)
+        NodeList verticesNL = root.getElementsByTagName("node");
+
+        for (int i = 0; i < verticesNL.getLength(); i++) {
+
+            Node node = verticesNL.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                Element aElement = (Element) node;
+
+                Coordinate coordinate = new Coordinate();
+                // Set ID
+                coordinate.setId(aElement.getAttribute("id"));
+                // Set lat
+                coordinate.setLatitude(Double.parseDouble(aElement.getElementsByTagName("latitude").item(0).getTextContent()));
+                // Set lon
+                coordinate.setLongitude(Double.parseDouble(aElement.getElementsByTagName("longitude").item(0).getTextContent()));
+
+                if (!addJunction(coordinate)) {
+                    throw new IllegalArgumentException(String.format("Node #%d: already inserted or malformed.", i));
+                }
+
+            }
+        }
+
+        // Iterate segments (graph edges)
+        NodeList edgesNL = root.getElementsByTagName("segment");
+
+        for (int i = 0; i < edgesNL.getLength(); i++) {
+
+            Node node = edgesNL.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                Element aElement = (Element) node;
+
+                Segment segment = new Segment();
+                // Set ID
+                segment.setIdentification(aElement.getAttribute("id"));
+                // Set wind
+                Element windElement = (Element) aElement.getElementsByTagName("wind").item(0);
+                // Set wind direction
+                String windDirection = windElement.getElementsByTagName("wind_direction").item(0).getTextContent();
+                segment.setWindDirection(Regex.getValue(windDirection));
+                // Set wind intensity
+                String windIntensity = windElement.getElementsByTagName("wind_intensity").item(0).getTextContent();
+                segment.setWindDirection(Regex.getValue(windIntensity));
+                // Get start & end of segment
+                String startID = aElement.getElementsByTagName("start_node").item(0).getTextContent();
+                String endID = aElement.getElementsByTagName("end_node").item(0).getTextContent();
+                // Add uni/bi-directional edges
+                String direction = aElement.getElementsByTagName("direction").item(0).getTextContent();
+                if (direction.equalsIgnoreCase("bidirectional")) {
+                    // add both directions
+                    boolean dir = addSegment(startID, endID, segment);
+                    boolean inverseDir = addSegment(endID, startID, segment);
+                    if (!dir || !inverseDir) {
+                        throw new IllegalArgumentException(String.format("Segment #%d: already inserted or malformed.", i));
+                    }
+                } else if (!addSegment(startID, endID, segment)) {
+                    throw new IllegalArgumentException(String.format("Segment #%d: already inserted or malformed.", i));
+                }
+            }
+        }
+
+        return true;
     }
 
 }
