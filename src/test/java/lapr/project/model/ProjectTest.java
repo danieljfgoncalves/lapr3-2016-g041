@@ -147,7 +147,8 @@ public class ProjectTest {
         Object obj = null;
         assertFalse(instance.equals(obj));
         obj = new Project();
+        ((Project)obj).setSerieNumber(1);
+        instance.setSerieNumber(1);
         assertTrue(instance.equals(obj));
-
     }
 }

@@ -31,7 +31,7 @@ public class Project {
     /**
      * Serie Number of the Project
      */
-    private int serieNumber;
+    private Integer serieNumber;
 
     /**
      * The airNetwork of the project.
@@ -63,15 +63,15 @@ public class Project {
     private final static String DEFAULT_NAME = "Untitled";
 
     /**
-     * Default value for Serie Number
+     * Counter to increment serie number.
      */
-    private final static int DEFAULT_SERIE_NUMBER = 0;
+    private static Integer counter = 0;
 
     /**
      * Creates an instance of project with its default values
      */
     public Project() {
-        this.serieNumber = DEFAULT_SERIE_NUMBER;
+        this.serieNumber = counter++;
         this.name = DEFAULT_NAME;
         this.description = DEFAULT_DESCRIPTION;
         this.airNetwork = new AirNetwork();
@@ -91,8 +91,7 @@ public class Project {
      * @param simulations the given simulations
      */
     public Project(String name, String description, AirNetwork airNetwork, List<Airport> airports, List<AircraftModel> aircraftModels, List<Simulation> simulations) {
-        final int lower = 1, upper = Integer.MAX_VALUE;
-        this.serieNumber = (int) (Math.random() * (upper - lower)) + lower;
+        this.serieNumber = counter++;
         this.name = name;
         this.description = description;
         this.airNetwork = airNetwork;
@@ -102,14 +101,14 @@ public class Project {
     }
 
     /**
-     * Creates an instance of a Project, receiving only the name and description.
-     * 
+     * Creates an instance of a Project, receiving only the name and
+     * description.
+     *
      * @param name the given name
      * @param description the given description
      */
     public Project(String name, String description) {
-        final int lower = 1, upper = Integer.MAX_VALUE;
-        this.serieNumber = (int) (Math.random() * (upper - lower)) + lower;
+        this.serieNumber = counter++;
         this.name = name;
         this.description = description;
         this.airNetwork = new AirNetwork();
@@ -140,26 +139,12 @@ public class Project {
     }
 
     /**
-     * Creates a project with a given name, description and serieNumber.
-     *
-     * @param name the given name
-     * @param description the given description
-     * @param serieNumber the given serieNumber
-     */
-    public Project(String name, String description, int serieNumber) {
-        this.name = name;
-        this.description = description;
-        this.serieNumber = serieNumber;
-    }
-
-    /**
      * Creates a project receiving another project
      *
      * @param otherProject other project to copy
      */
     public Project(Project otherProject) {
-        final int lower = 1, upper = Integer.MAX_VALUE;
-        this.serieNumber = (int) (Math.random() * (upper - lower)) + lower;
+        this.serieNumber = counter++;
         this.airNetwork = otherProject.airNetwork;
         this.airports = otherProject.airports;
         this.aircraftModels = otherProject.aircraftModels;
@@ -293,7 +278,8 @@ public class Project {
     }
 
     /**
-     * Obtains the validation of name (true if name is not empty), false otherwise
+     * Obtains the validation of name (true if name is not empty), false
+     * otherwise
      *
      * @param name
      * @return true if validated, false otherwise

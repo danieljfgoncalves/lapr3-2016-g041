@@ -34,7 +34,7 @@ public class CopyProjectControllerIT {
     @Before
     public void setUp() {
         flightSimulator = DefaultInstantiator.createSimulator();
-        Project projectToCopy = new Project("Simullations Europe", "Flight routes of europe.", 915);
+        Project projectToCopy = new Project("Simullations Europe", "Flight routes of europe.");
         instance = new CopyProjectController(flightSimulator, projectToCopy);
     }
 
