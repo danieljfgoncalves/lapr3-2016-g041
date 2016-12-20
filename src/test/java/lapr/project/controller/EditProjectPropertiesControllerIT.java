@@ -3,6 +3,7 @@
  */
 package lapr.project.controller;
 
+import lapr.project.model.FlightSimulator;
 import lapr.project.model.Project;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,12 +21,14 @@ import static org.junit.Assert.*;
 public class EditProjectPropertiesControllerIT {
 
     private EditProjectPropertiesController instance;
+    private FlightSimulator flightSimulator;
     private Project project;
 
     @Before
     public void setUp() {
+        flightSimulator = new FlightSimulator();
         project = new Project();
-        instance = new EditProjectPropertiesController(project);
+        instance = new EditProjectPropertiesController(flightSimulator, project);
     }
 
     /**

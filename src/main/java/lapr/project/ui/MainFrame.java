@@ -80,4 +80,8 @@ public class MainFrame extends JFrame implements ProjectHandler {
         JOptionPane.showMessageDialog(this,
                 "The project was activated!");
     }
+    
+    public Project getActiveProject(){
+        return this.activeProject;
+    }
 }

@@ -10,7 +10,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import lapr.project.model.FlightSimulator;
+import lapr.project.model.Project;
 import lapr.project.ui.CreateProjectDialog;
+import lapr.project.ui.EditProjectPropertiesDialog;
 import lapr.project.ui.MainFrame;
 
 /**
@@ -32,6 +34,8 @@ public class CustomMenuBar extends JMenuBar {
      * The simulator.
      */
     private final FlightSimulator simulator;
+    
+    private final Project activeProject;
 
     /**
      * Creates an instance of the CustomMenuBar.
@@ -43,6 +47,7 @@ public class CustomMenuBar extends JMenuBar {
 
         this.mainFrame = mainFrame;
         this.simulator = simulator;
+        this.activeProject = mainFrame.getActiveProject();
 
         add(createMenuFile());
         add(createMenuSimulations());
@@ -121,7 +126,8 @@ public class CustomMenuBar extends JMenuBar {
         JMenuItem item = new JMenuItem("Edit Properties", 'E');
         item.setAccelerator(KeyStroke.getKeyStroke("ctrl E"));
         item.addActionListener((ActionEvent e) -> {
-            // TODO
+            EditProjectPropertiesDialog editProjectPropertiesDialog = new EditProjectPropertiesDialog(mainFrame, simulator, activeProject);
+            editProjectPropertiesDialog.setVisible(true);
         });
         return item;
     }

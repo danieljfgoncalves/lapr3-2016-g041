@@ -226,7 +226,9 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         editProjectButton = new JButton("Edit Project");
 
         editProjectButton.addActionListener((ActionEvent ae) -> {
-            // TODO
+            project = (Project)projectsList.getSelectedValue();
+            EditProjectPropertiesDialog editProjectPropertiesDialog = new EditProjectPropertiesDialog(this, simulator, project);
+            editProjectPropertiesDialog.setVisible(true);
         });
 
         editProjectButton.setEnabled(false);
