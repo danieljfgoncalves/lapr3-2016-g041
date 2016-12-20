@@ -67,7 +67,9 @@ public class FlightSimulatorTest {
         String description = "The safest routes in a nutshell";
 
         Project result = instance.createProject(name, description);
-        Project expResult = new Project(name, description, result.getSerieNumber());
+        result.setSerieNumber(1);
+        Project expResult = new Project(name, description);
+        expResult.setSerieNumber(1);
 
         assertEquals(expResult, result);
     }
@@ -79,7 +81,7 @@ public class FlightSimulatorTest {
     public void testValidateProject() {
         System.out.println("validateProject");
 
-        Project project = new Project("Fly Safe", "The safest routes in a nutshell", 101);
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
 
         assertTrue(instance.validateProject(project));
     }
@@ -91,9 +93,37 @@ public class FlightSimulatorTest {
     public void testAddProject() {
         System.out.println("addProject");
 
-        Project project = new Project("Fly Safe", "The safest routes in a nutshell", 250);
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
 
         assertTrue(instance.addProject(project));
+    }
+
+    /**
+     * Test of validateNameExists method, of class FlightSimulator.
+     */
+    @Test
+    public void testValidateNameExists01() {
+        System.out.println("validateNameExists");
+
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
+        instance.addProject(project);
+        String name = project.getName();
+
+        assertTrue(instance.validateNameExists(name));
+    }
+
+    /**
+     * Test of validateNameExists method, of class FlightSimulator.
+     */
+    @Test
+    public void testValidateNameExists02() {
+        System.out.println("validateNameExists");
+
+        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
+        instance.addProject(project);
+        String name = "Other name";
+
+        assertFalse(instance.validateNameExists(name));
     }
 
     /**

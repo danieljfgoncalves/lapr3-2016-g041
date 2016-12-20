@@ -34,19 +34,6 @@ public class AircraftModelTest {
     }
 
     /**
-     * Test of getRegistration method and setRegistration, of class
-     * AircraftModel.
-     */
-    @Test
-    public void testGetSetRegistration() {
-        System.out.println("getRegistration and setRegistration");
-        Integer expResult = 10;
-        instance.setModelID(expResult);
-        Integer result = instance.getModelID();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of getType and setType method, of class AircraftModel.
      */
     @Test
@@ -125,10 +112,11 @@ public class AircraftModelTest {
     @Test
     public void testGetSetModelID() {
         System.out.println("getSetModelID");
-        Integer expResult = 10;
-        instance.setModelID(expResult);
-        Integer result = instance.getModelID();
-        assertEquals(expResult, result);
+
+        String modelID = "33BOING474";
+        instance.setModelID(modelID);
+
+        assertEquals(instance.getModelID(), modelID);
     }
 
     /**
@@ -234,12 +222,11 @@ public class AircraftModelTest {
     @Test
     public void testEquals01() {
         System.out.println("equals");
-        Motorization m = new Motorization();
-        AircraftModel obj = new AircraftModel(1, AircraftType.MIXED, 1.0, 1.0, 1.0, 1.0, m, "motor1",
-                "Boeing Vertol Company (United States)", 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-        boolean expResult = false;
-        boolean result = instance.equals(obj);
-        assertEquals(expResult, result);
+
+        AircraftModel obj = new AircraftModel("30BOING474", AircraftType.MIXED, 1.0, 1.0, 1.0, 1.0, new Motorization(), "motor1",
+                "Boeing Vertol Company (United States)", 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+
+        assertFalse(instance.equals(obj));
     }
 
     /**

@@ -24,7 +24,7 @@ public class CreateProjectController {
     /**
      * The created project.
      */
-    private Project createdProject;
+    private final Project createdProject;
 
     /**
      * Creates an instance of the controller.
@@ -33,17 +33,20 @@ public class CreateProjectController {
      */
     public CreateProjectController(FlightSimulator simulator) {
         this.simulator = simulator;
+        this.createdProject = new Project();
     }
 
     /**
-     * Creates a new project
+     * Creates a new project.
      *
      * @param name project's name
      * @param description project's description
      * @return true if the project is successfully added, false otherwise
      */
     public boolean newProject(String name, String description) {
-        createdProject = simulator.createProject(name, description);
+
+        createdProject.setName(name);
+        createdProject.setDescription(description);
 
         return simulator.validateProject(createdProject) ? simulator.addProject(createdProject) : false;
     }

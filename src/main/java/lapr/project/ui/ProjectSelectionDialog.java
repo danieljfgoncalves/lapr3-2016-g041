@@ -207,7 +207,6 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
 
         copyProjectButton.addActionListener((ActionEvent ae) -> {
             project = (Project)projectsList.getSelectedValue();
-            this.setVisible(false);
             CopyProjectDialog copyProjectDialog = new CopyProjectDialog(this, simulator, project);
             copyProjectDialog.setVisible(true);
         });
@@ -226,7 +225,9 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         editProjectButton = new JButton("Edit Project");
 
         editProjectButton.addActionListener((ActionEvent ae) -> {
-            // TODO
+            project = (Project)projectsList.getSelectedValue();
+            EditProjectPropertiesDialog editProjectPropertiesDialog = new EditProjectPropertiesDialog(this, simulator, project);
+            editProjectPropertiesDialog.setVisible(true);
         });
 
         editProjectButton.setEnabled(false);

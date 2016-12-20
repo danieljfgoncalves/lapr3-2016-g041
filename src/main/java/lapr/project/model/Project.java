@@ -31,7 +31,7 @@ public class Project {
     /**
      * Serie Number of the Project
      */
-    private int serieNumber;
+    private Integer serieNumber;
 
     /**
      * The airNetwork of the project.
@@ -44,9 +44,9 @@ public class Project {
     private List<Airport> airports;
 
     /**
-     * The project's aircraft models.
+     * The project's aircraft models register.
      */
-    private List<AircraftModel> aircraftModels;
+    private AircraftModelsRegister aircraftModelsRegister;
 
     /**
      * The project's simulations.
@@ -63,20 +63,20 @@ public class Project {
     private final static String DEFAULT_NAME = "Untitled";
 
     /**
-     * Default value for Serie Number
+     * Counter to increment serie number.
      */
-    private final static int DEFAULT_SERIE_NUMBER = 0;
+    private static Integer counter = 1;
 
     /**
      * Creates an instance of project with its default values
      */
     public Project() {
-        this.serieNumber = DEFAULT_SERIE_NUMBER;
+        this.serieNumber = counter++;
         this.name = DEFAULT_NAME;
         this.description = DEFAULT_DESCRIPTION;
         this.airNetwork = new AirNetwork();
         this.airports = new ArrayList();
-        this.aircraftModels = new ArrayList();
+        this.aircraftModelsRegister = new AircraftModelsRegister();
         this.simulations = new ArrayList();
     }
 
@@ -87,34 +87,33 @@ public class Project {
      * @param description the given project's description
      * @param airNetwork the given air network
      * @param airports the given airport list
-     * @param aircraftModels the given aircraft models list
+     * @param aircraftModelsRegister the given aircraft models register
      * @param simulations the given simulations
      */
-    public Project(String name, String description, AirNetwork airNetwork, List<Airport> airports, List<AircraftModel> aircraftModels, List<Simulation> simulations) {
-        final int lower = 1, upper = Integer.MAX_VALUE;
-        this.serieNumber = (int) (Math.random() * (upper - lower)) + lower;
+    public Project(String name, String description, AirNetwork airNetwork, List<Airport> airports, AircraftModelsRegister aircraftModelsRegister, List<Simulation> simulations) {
+        this.serieNumber = counter++;
         this.name = name;
         this.description = description;
         this.airNetwork = airNetwork;
         this.airports = airports;
-        this.aircraftModels = aircraftModels;
+        this.aircraftModelsRegister = aircraftModelsRegister;
         this.simulations = simulations;
     }
 
     /**
-     * Creates an instance of a Project, receiving only the name and description.
-     * 
+     * Creates an instance of a Project, receiving only the name and
+     * description.
+     *
      * @param name the given name
      * @param description the given description
      */
     public Project(String name, String description) {
-        final int lower = 1, upper = Integer.MAX_VALUE;
-        this.serieNumber = (int) (Math.random() * (upper - lower)) + lower;
+        this.serieNumber = counter++;
         this.name = name;
         this.description = description;
         this.airNetwork = new AirNetwork();
         this.airports = new ArrayList();
-        this.aircraftModels = new ArrayList();
+        this.aircraftModelsRegister = new AircraftModelsRegister();
         this.simulations = new ArrayList();
     }
 
@@ -126,30 +125,17 @@ public class Project {
      * @param serieNumber the serie number of the project
      * @param airNetwork the air network of the project
      * @param airports the airports of the project
-     * @param aircraftModels the aircraft models of the project
+     * @param aircraftModelsRegister the aircraft models register of the project
      * @param simulations the simulations of the project
      */
-    public Project(String name, String description, int serieNumber, AirNetwork airNetwork, List<Airport> airports, List<AircraftModel> aircraftModels, List<Simulation> simulations) {
+    public Project(String name, String description, int serieNumber, AirNetwork airNetwork, List<Airport> airports, AircraftModelsRegister aircraftModelsRegister, List<Simulation> simulations) {
         this.serieNumber = serieNumber;
         this.name = name;
         this.description = description;
         this.airNetwork = airNetwork;
         this.airports = airports;
-        this.aircraftModels = aircraftModels;
+        this.aircraftModelsRegister = aircraftModelsRegister;
         this.simulations = simulations;
-    }
-
-    /**
-     * Creates a project with a given name, description and serieNumber.
-     *
-     * @param name the given name
-     * @param description the given description
-     * @param serieNumber the given serieNumber
-     */
-    public Project(String name, String description, int serieNumber) {
-        this.name = name;
-        this.description = description;
-        this.serieNumber = serieNumber;
     }
 
     /**
@@ -158,11 +144,10 @@ public class Project {
      * @param otherProject other project to copy
      */
     public Project(Project otherProject) {
-        final int lower = 1, upper = Integer.MAX_VALUE;
-        this.serieNumber = (int) (Math.random() * (upper - lower)) + lower;
+        this.serieNumber = counter++;
         this.airNetwork = otherProject.airNetwork;
         this.airports = otherProject.airports;
-        this.aircraftModels = otherProject.aircraftModels;
+        this.aircraftModelsRegister = new AircraftModelsRegister(otherProject.aircraftModelsRegister);
         //simulations are not supposed to be copied
     }
 
@@ -257,21 +242,21 @@ public class Project {
     }
 
     /**
-     * Gets the project's aircraft models.
+     * Gets the project's aircraft models register.
      *
-     * @return the aircraftModels
+     * @return the aircraftModelsRegister
      */
-    public List<AircraftModel> getAircraftModels() {
-        return aircraftModels;
+    public AircraftModelsRegister getAircraftModelsRegister() {
+        return aircraftModelsRegister;
     }
 
     /**
-     * Modifies the project's aircraft models.
+     * Modifies the project's aircraft models register.
      *
-     * @param aircraftModels the aircraftModels to set
+     * @param aircraftModelsRegister the aircraftModels to set
      */
-    public void setAircraftModels(List<AircraftModel> aircraftModels) {
-        this.aircraftModels = aircraftModels;
+    public void setAircraftModelsRegister(AircraftModelsRegister aircraftModelsRegister) {
+        this.aircraftModelsRegister = aircraftModelsRegister;
     }
 
     /**
@@ -293,15 +278,14 @@ public class Project {
     }
 
     /**
-     * Obtains the validation of name and description(true if name and
-     * description not empty), false otherwise
+     * Obtains the validation of name (true if name is not empty), false
+     * otherwise
      *
      * @param name
-     * @param description
      * @return true if validated, false otherwise
      */
-    public boolean validate(String name, String description) {
-        return !name.equals("") && !description.equals("");
+    public boolean validate(String name) {
+        return !name.equals("");
     }
 
     @Override
@@ -325,7 +309,7 @@ public class Project {
             return false;
         }
         final Project other = (Project) obj;
-        return this.serieNumber == (other.serieNumber);
+        return this.serieNumber.equals(other.serieNumber);
     }
 
     @Override
@@ -336,7 +320,7 @@ public class Project {
                 + "Air Network: %s\n"
                 + "Airports: %s\n"
                 + "Aircraft Models: %s\n"
-                + "Simulations: %s", serieNumber, name, description, airNetwork, airports, aircraftModels, simulations);
+                + "Simulations: %s", serieNumber, name, description, airNetwork, airports, aircraftModelsRegister, simulations);
     }
 
 }

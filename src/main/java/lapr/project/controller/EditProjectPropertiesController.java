@@ -3,6 +3,7 @@
  */
 package lapr.project.controller;
 
+import lapr.project.model.FlightSimulator;
 import lapr.project.model.Project;
 
 /**
@@ -16,15 +17,29 @@ import lapr.project.model.Project;
  */
 public class EditProjectPropertiesController {
 
-    Project project;
+    /**
+     * The project to edit it's properties
+     */
+    private final Project project;
+    
+    /**
+     * The simulator.
+     */
+    private final FlightSimulator flightSimulator;
 
-    public EditProjectPropertiesController(Project projectSelected) {
+    public EditProjectPropertiesController(FlightSimulator flightSimulator, Project projectSelected) {
+        this.flightSimulator = flightSimulator;
         this.project = projectSelected;
     }
 
+    /**
+     * Changes name and description of the project selected and validate
+     * if the project does not have the same name in the flight simulator.
+     *
+     * @return true if the project's properties are edited successfully, false otherwise
+     */
     public boolean setProjectProperties(String name, String description) {
-
-        if (project.validate(name, description)) {
+        if (project.validate(name) && !flightSimulator.validateNameExists(name)) {
             this.project.setName(name);
             this.project.setDescription(description);
             return true;
