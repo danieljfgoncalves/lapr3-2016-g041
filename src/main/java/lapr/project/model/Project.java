@@ -44,9 +44,9 @@ public class Project {
     private List<Airport> airports;
 
     /**
-     * The project's aircraft models.
+     * The project's aircraft models register.
      */
-    private List<AircraftModel> aircraftModels;
+    private AircraftModelsRegister aircraftModelsRegister;
 
     /**
      * The project's simulations.
@@ -76,7 +76,7 @@ public class Project {
         this.description = DEFAULT_DESCRIPTION;
         this.airNetwork = new AirNetwork();
         this.airports = new ArrayList();
-        this.aircraftModels = new ArrayList();
+        this.aircraftModelsRegister = new AircraftModelsRegister();
         this.simulations = new ArrayList();
     }
 
@@ -87,16 +87,16 @@ public class Project {
      * @param description the given project's description
      * @param airNetwork the given air network
      * @param airports the given airport list
-     * @param aircraftModels the given aircraft models list
+     * @param aircraftModelsRegister the given aircraft models register
      * @param simulations the given simulations
      */
-    public Project(String name, String description, AirNetwork airNetwork, List<Airport> airports, List<AircraftModel> aircraftModels, List<Simulation> simulations) {
+    public Project(String name, String description, AirNetwork airNetwork, List<Airport> airports, AircraftModelsRegister aircraftModelsRegister, List<Simulation> simulations) {
         this.serieNumber = counter++;
         this.name = name;
         this.description = description;
         this.airNetwork = airNetwork;
         this.airports = airports;
-        this.aircraftModels = aircraftModels;
+        this.aircraftModelsRegister = aircraftModelsRegister;
         this.simulations = simulations;
     }
 
@@ -113,7 +113,7 @@ public class Project {
         this.description = description;
         this.airNetwork = new AirNetwork();
         this.airports = new ArrayList();
-        this.aircraftModels = new ArrayList();
+        this.aircraftModelsRegister = new AircraftModelsRegister();
         this.simulations = new ArrayList();
     }
 
@@ -125,16 +125,16 @@ public class Project {
      * @param serieNumber the serie number of the project
      * @param airNetwork the air network of the project
      * @param airports the airports of the project
-     * @param aircraftModels the aircraft models of the project
+     * @param aircraftModelsRegister the aircraft models register of the project
      * @param simulations the simulations of the project
      */
-    public Project(String name, String description, int serieNumber, AirNetwork airNetwork, List<Airport> airports, List<AircraftModel> aircraftModels, List<Simulation> simulations) {
+    public Project(String name, String description, int serieNumber, AirNetwork airNetwork, List<Airport> airports, AircraftModelsRegister aircraftModelsRegister, List<Simulation> simulations) {
         this.serieNumber = serieNumber;
         this.name = name;
         this.description = description;
         this.airNetwork = airNetwork;
         this.airports = airports;
-        this.aircraftModels = aircraftModels;
+        this.aircraftModelsRegister = aircraftModelsRegister;
         this.simulations = simulations;
     }
 
@@ -147,7 +147,7 @@ public class Project {
         this.serieNumber = counter++;
         this.airNetwork = otherProject.airNetwork;
         this.airports = otherProject.airports;
-        this.aircraftModels = otherProject.aircraftModels;
+        this.aircraftModelsRegister = new AircraftModelsRegister(otherProject.aircraftModelsRegister);
         //simulations are not supposed to be copied
     }
 
@@ -242,21 +242,21 @@ public class Project {
     }
 
     /**
-     * Gets the project's aircraft models.
+     * Gets the project's aircraft models register.
      *
-     * @return the aircraftModels
+     * @return the aircraftModelsRegister
      */
-    public List<AircraftModel> getAircraftModels() {
-        return aircraftModels;
+    public AircraftModelsRegister getAircraftModelsRegister() {
+        return aircraftModelsRegister;
     }
 
     /**
-     * Modifies the project's aircraft models.
+     * Modifies the project's aircraft models register.
      *
-     * @param aircraftModels the aircraftModels to set
+     * @param aircraftModelsRegister the aircraftModels to set
      */
-    public void setAircraftModels(List<AircraftModel> aircraftModels) {
-        this.aircraftModels = aircraftModels;
+    public void setAircraftModelsRegister(AircraftModelsRegister aircraftModelsRegister) {
+        this.aircraftModelsRegister = aircraftModelsRegister;
     }
 
     /**
@@ -309,7 +309,7 @@ public class Project {
             return false;
         }
         final Project other = (Project) obj;
-        return this.serieNumber == (other.serieNumber);
+        return this.serieNumber.equals(other.serieNumber);
     }
 
     @Override
@@ -320,7 +320,7 @@ public class Project {
                 + "Air Network: %s\n"
                 + "Airports: %s\n"
                 + "Aircraft Models: %s\n"
-                + "Simulations: %s", serieNumber, name, description, airNetwork, airports, aircraftModels, simulations);
+                + "Simulations: %s", serieNumber, name, description, airNetwork, airports, aircraftModelsRegister, simulations);
     }
 
 }

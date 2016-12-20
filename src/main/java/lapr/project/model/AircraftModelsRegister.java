@@ -54,6 +54,16 @@ public class AircraftModelsRegister implements Importable {
     }
 
     /**
+     * Creates an instance of aircraft model register copying another aircraft
+     * register.
+     *
+     * @param otherAircraftModelsRegister another aircraft register
+     */
+    public AircraftModelsRegister(AircraftModelsRegister otherAircraftModelsRegister) {
+        this.aircraftModels = new ArrayList<>(otherAircraftModelsRegister.aircraftModels);
+    }
+
+    /**
      * Gets the aircraft models.
      *
      * @return aircraft models

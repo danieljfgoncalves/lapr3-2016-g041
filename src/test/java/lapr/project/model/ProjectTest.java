@@ -91,15 +91,18 @@ public class ProjectTest {
     }
 
     /**
-     * Test of getAircraftModels and setAircraftModels method, of class Project.
+     * Test of getAircraftModelsRegister and setAircraftModelsRegister method,
+     * of class Project.
      */
     @Test
-    public void testGetSetAircraftModels() {
-        System.out.println("getAircraftModels");
+    public void testGetSetAircraftModelsRegister() {
+        System.out.println("getAircraftModelsRegister");
 
         List<AircraftModel> aircraftModels = new ArrayList();
-        instance.setAircraftModels(aircraftModels);
-        assertEquals(aircraftModels, instance.getAircraftModels());
+        AircraftModelsRegister aircraftModelsRegister = new AircraftModelsRegister(aircraftModels);
+        instance.setAircraftModelsRegister(aircraftModelsRegister);
+
+        assertEquals(aircraftModelsRegister, instance.getAircraftModelsRegister());
     }
 
     /**
@@ -108,7 +111,7 @@ public class ProjectTest {
     @Test
     public void testGetSetSimulations() {
         System.out.println("getSimulations");
-        
+
         List<Simulation> simulations = new ArrayList();
         assertEquals(simulations, instance.getSimulations());
     }
@@ -147,7 +150,7 @@ public class ProjectTest {
         Object obj = null;
         assertFalse(instance.equals(obj));
         obj = new Project();
-        ((Project)obj).setSerieNumber(1);
+        ((Project) obj).setSerieNumber(1);
         instance.setSerieNumber(1);
         assertTrue(instance.equals(obj));
     }
