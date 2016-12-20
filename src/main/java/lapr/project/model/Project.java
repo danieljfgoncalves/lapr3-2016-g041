@@ -65,7 +65,7 @@ public class Project {
     /**
      * Counter to increment serie number.
      */
-    private static Integer counter = 0;
+    private static Integer counter = 1;
 
     /**
      * Creates an instance of project with its default values
