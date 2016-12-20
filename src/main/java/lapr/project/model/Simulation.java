@@ -3,6 +3,10 @@
  */
 package lapr.project.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 /**
  * Represents a simulation.
  *
@@ -14,4 +18,67 @@ package lapr.project.model;
  */
 public class Simulation {
 
+    /**
+     * The list of flights.
+     */
+    private List<Flight> flights;
+
+    /**
+     * Creates an instance of simulation with their default values.
+     */
+    public Simulation() {
+        this.flights = new ArrayList<>();
+    }
+
+    /**
+     * Creates an simulation receiving their flights.
+     *
+     * @param flights flights
+     */
+    public Simulation(List<Flight> flights) {
+        this.flights = flights;
+    }
+
+    /**
+     * Gets the flights.
+     *
+     * @return flights
+     */
+    public List<Flight> getFlights() {
+        return flights;
+    }
+
+    /**
+     * Sets the flights.
+     *
+     * @param flights flights
+     */
+    public void setFlights(List<Flight> flights) {
+        this.flights = flights;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 13 * hash + Objects.hashCode(this.flights);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final Simulation other = (Simulation) obj;
+        return this.flights.equals(other.flights);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Simulation{flights=%s}", this.flights);
+    }
 }

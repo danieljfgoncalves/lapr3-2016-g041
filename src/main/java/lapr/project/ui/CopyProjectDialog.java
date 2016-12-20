@@ -189,7 +189,7 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
     private JPanel createButtonsPanel() {
         JPanel buttonsPanel = new JPanel(new BorderLayout(10, 10));
 
-        buttonsPanel.add(createCopyProjectLabel(), BorderLayout.CENTER);
+        buttonsPanel.add(createCopyProjectPanel(), BorderLayout.CENTER);
 
         return buttonsPanel;
     }
@@ -199,8 +199,8 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
      *
      * @return copy project label
      */
-    private JPanel createCopyProjectLabel() {
-        JPanel copyProjectLabel = new JPanel();
+    private JPanel createCopyProjectPanel() {
+        JPanel copyProjectPanel = new JPanel();
 
         JButton copyProjectButton = new JButton("Copy Project");
         copyProjectButton.setPreferredSize(BUTTON_PREFERED_SIZE);
@@ -225,14 +225,14 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
                 JOptionPane.showMessageDialog(
                         null,
                         ex.getMessage(),
-                        "Erro",
+                        "Error",
                         JOptionPane.WARNING_MESSAGE);
             }
         });
 
-        copyProjectLabel.add(copyProjectButton);
+        copyProjectPanel.add(copyProjectButton);
 
-        return copyProjectLabel;
+        return copyProjectPanel;
     }
 
     /**

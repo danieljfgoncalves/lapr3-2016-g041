@@ -19,74 +19,79 @@ import java.util.Objects;
 public class AircraftModel {
 
     /**
-     * AircraftType's modelID
+     * AircraftType's modelID.
      */
-    private Integer modelID;
+    private String modelID;
 
     /**
-     * AircraftType's type
+     * AircraftType's type.
      */
     private AircraftType type;
 
     /**
-     * AircraftType's empty weight (EWeight)
+     * AircraftType's empty weight (EWeight).
      */
     private Double emptyWeight;
 
     /**
-     * AircraftType's Maximum take-off weight
+     * AircraftType's Maximum take-off weight.
      */
     private Double mtow;
 
     /**
-     * AircraftType's Maximum Zero Fuel Weight
+     * AircraftType's Maximum Zero Fuel Weight.
      */
     private Double mzfw;
 
     /**
-     * AircraftType's wing area
+     * AircraftType's wing area.
      */
     private Double wingArea;
 
     /**
-     * AircraftType's motorization
+     * AircraftType's motorization.
      */
     private Motorization motorization;
 
     /**
-     * AircraftType's description;
+     * AircraftType's description.
      */
     private String description;
 
     /**
-     * AircraftType's maker
+     * AircraftType's maker.
      */
     private String maker;
 
     /**
-     * AircraftType's maxPayload
+     * AircraftType's maxPayload.
      */
     private Double maxPayload;
 
     /**
-     * AircraftType's maxFuelCapacity
+     * AircraftType's maxFuelCapacity.
      */
     private Double maxFuelCapacity;
 
     /**
-     * AircraftType's maxOperatingSpeed (VMO)
+     * AircraftType's maxOperatingSpeed (VMO).
      */
     private Double vmo;
 
     /**
-     * AircraftType's maxMachOperatingSpeed (MMO)
+     * AircraftType's maxMachOperatingSpeed (MMO).
      */
     private Double mmo;
 
     /**
-     * AircraftType's wingSpan
+     * AircraftType's wingSpan.
      */
     private Double wingSpan;
+
+    /**
+     * The aircraft drag coefficient.
+     */
+    private Double dragCoefficient;
 
     /**
      * AircraftType's e
@@ -99,72 +104,77 @@ public class AircraftModel {
     private static final Double EPSILON = 0.01d;
 
     /**
-     * The AircraftType's modelID by default
+     * The AircraftType's modelID by default.
      */
-    private static final Integer MODEL_ID_BY_DEFAULT = 0;
+    private static final String MODEL_ID_BY_DEFAULT = "01Boing474";
 
     /**
-     * The AircraftType's type by default
+     * The AircraftType's type by default.
      */
     private static final AircraftType TYPE_BY_DEFAULT = AircraftType.PASSENGER;
 
     /**
-     * The AircraftType's empty weight by default
+     * The AircraftType's empty weight by default.
      */
     private static final Double EMPTY_WEIGHT_BY_DEFAULT = 0.0d;
 
     /**
-     * The AircraftType's mtow by default
+     * The AircraftType's mtow by default.
      */
     private static final Double MTOW_BY_DEFAULT = 0.0d;
 
     /**
-     * The AircraftType's mzfw by default
+     * The AircraftType's mzfw by default.
      */
     private static final Double MZFW_BY_DEFAULT = 0.0d;
 
     /**
-     * The AircraftType's wing area by default
+     * The AircraftType's wing area by default.
      */
     private static final Double WING_AREA_BY_DEFAULT = 0.0d;
 
     /**
-     * The AircraftType's description by default
+     * The AircraftType's description by default.
      */
     private static final String DESCRIPTION_BY_DEFAULT = "DefaultDescription";
 
     /**
-     * The AircraftType's maker by default
+     * The AircraftType's maker by default.
      */
     private static final String MAKER_BY_DEFAULT = "DefaultMaker";
 
     /**
-     * The AircraftType's max payload by default
+     * The AircraftType's max payload by default.
      */
     private static final Double MAX_PAYLOAD_BY_DEFAULT = 0.0;
 
     /**
-     * The AircraftType's max fuel capacity by default
+     * The AircraftType's max fuel capacity by default.
      */
     private static final Double MAX_FUEL_CAPACITY_BY_DEFAULT = 0.0;
 
     /**
-     * The AircraftType's VMO (maxOperatingSpeed) by default
+     * The AircraftType's VMO (maxOperatingSpeed) by default.
      */
     private static final Double VMO_BY_DEFAULT = 0.0;
 
     /**
-     * The AircraftType's MMO (maxMachOperatingSpeed) by default
+     * The AircraftType's MMO (maxMachOperatingSpeed) by default.
      */
     private static final Double MMO_BY_DEFAULT = 0.0;
 
     /**
-     * The AircraftType's wing span by default
+     * The AircraftType's wing span by default.
      */
     private static final Double WING_SPAN_BY_DEFAULT = 0.0;
 
     /**
-     * The AircraftType's e by default
+     * The default drag coefficient.
+     */
+    private static final Double DEFAULT_DRAG_COEFFICIENT = 0.025;
+
+    /**
+     * The AircraftType's e by default.
      */
     private static final Double E_BY_DEFAULT = 0.0;
 
@@ -185,9 +195,10 @@ public class AircraftModel {
      * @param vmo the AircraftType's vmo (max operating system velocity)
      * @param mmo the AircraftType's mmo (max mach operating system velocity)
      * @param wingSpan the AircraftType's wing span
+     * @param dragCoefficient drag coefficient
      * @param e the AircraftType's e
      */
-    public AircraftModel(Integer modelID, AircraftType type, Double emptyWheight, Double mtow, Double mzfw, Double wingArea, Motorization motorization, String description, String maker, Double maxPayload, Double maxFuelCapacity, Double vmo, Double mmo, Double wingSpan, Double e) {
+    public AircraftModel(String modelID, AircraftType type, Double emptyWheight, Double mtow, Double mzfw, Double wingArea, Motorization motorization, String description, String maker, Double maxPayload, Double maxFuelCapacity, Double vmo, Double mmo, Double wingSpan, Double dragCoefficient, Double e) {
         this.modelID = modelID;
         this.type = type;
         this.emptyWeight = emptyWheight;
@@ -202,6 +213,7 @@ public class AircraftModel {
         this.vmo = vmo;
         this.mmo = mmo;
         this.wingSpan = wingSpan;
+        this.dragCoefficient = dragCoefficient;
         this.e = e;
     }
 
@@ -224,6 +236,7 @@ public class AircraftModel {
         this.vmo = VMO_BY_DEFAULT;
         this.mmo = MMO_BY_DEFAULT;
         this.wingSpan = WING_SPAN_BY_DEFAULT;
+        this.dragCoefficient = DEFAULT_DRAG_COEFFICIENT;
         this.e = E_BY_DEFAULT;
     }
 
@@ -247,6 +260,7 @@ public class AircraftModel {
         this.vmo = otherAircraftModel.vmo;
         this.mmo = otherAircraftModel.mmo;
         this.wingSpan = otherAircraftModel.wingSpan;
+        this.dragCoefficient = otherAircraftModel.dragCoefficient;
         this.e = otherAircraftModel.e;
     }
 
@@ -255,7 +269,7 @@ public class AircraftModel {
      *
      * @return the modelID
      */
-    public Integer getModelID() {
+    public String getModelID() {
         return this.modelID;
     }
 
@@ -264,7 +278,7 @@ public class AircraftModel {
      *
      * @param modelID the modelID to set
      */
-    public void setModelID(Integer modelID) {
+    public void setModelID(String modelID) {
         this.modelID = modelID;
     }
 

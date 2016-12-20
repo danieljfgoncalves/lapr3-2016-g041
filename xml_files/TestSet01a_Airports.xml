@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Network id="TestSet01" description="test set 01">
+  <airport_list>
+    <airport id="OPO">
+      <name>Francisco de Sá Carneiro Airport</name>
+      <town>Porto</town>
+      <country>Portugal</country>
+    	<location>
+				<latitude>41.2481003</latitude>
+				<longitude>-8.6813898</longitude>
+        <altitude>69 m</altitude>
+			</location>
+    </airport>
+    <airport id="LIS">
+      <name>Humberto Delgado Airport</name>
+      <town>Lisbon</town>
+      <country>Portugal</country>
+      <location>
+        <latitude>38.7812996</latitude>
+        <longitude>-9.1359196</longitude>
+        <altitude>114 m</altitude>
+      </location>
+  </airport>
+    <airport id="MAD">
+      <name>Adolfo Suárez Madrid Barajas International Airport</name>
+      <town>Madrid</town>
+      <country>Spain</country>
+    	<location>
+				<latitude>40.4936</latitude>
+				<longitude>-3.56676</longitude>
+        <altitude>610 m</altitude>
+			</location>
+    </airport>
+    <airport id="PMI">
+      <name>Palma de Mallorca Airport</name>
+      <town>Palma de Mallorca</town>
+      <country>Spain</country>
+    	<location>
+				<latitude>39.5517006</latitude>
+				<longitude>2.7388101</longitude>
+        <altitude>7 m</altitude>
+			</location>
+    </airport>
+    <airport id="FRA">
+      <name>Frankfurt am Main International Airport</name>
+      <town>Frankfurt am Main</town>
+      <country>Germany</country>
+    	<location>
+				<latitude>50.0264015</latitude>
+				<longitude>8.5431299</longitude>
+        <altitude>111 m</altitude>
+			</location>
+    </airport>
+    <airport id="LHR">
+      <name>London Heathrow Airport</name>
+      <town>London</town>
+      <country>UK</country>
+    	<location>
+				<latitude>51.4706001</latitude>
+				<longitude>-0.461941</longitude>
+        <altitude>25 m</altitude>
+			</location>
+    </airport>
+    <airport id="SNN">
+      <name>Shannon Airport</name>
+      <town>Limerick</town>
+      <country>Ireland</country>
+    	<location>
+				<latitude>52.7019997</latitude>
+				<longitude>-8.9248199</longitude>
+        <altitude>14 m</altitude>
+			</location>
+    </airport>
+    <airport id="JFK">
+      <name>John F Kennedy International Airport</name>
+      <town>New York</town>
+      <country>USA</country>
+      <location>
+  			<latitude>40.639801</latitude>
+  			<longitude>-73.7789002</longitude>
+        <altitude>4 m</altitude>
+  		</location>
+    </airport>
+    <airport id="PEK">
+      <name>Beijing Capital International Airport </name>
+      <town>Beijing</town>
+      <country>China</country>
+      <location>
+        <latitude>40.080101</latitude>
+        <longitude>116.5849991</longitude>
+        <altitude>35 m</altitude>
+      </location>
+    </airport>
+    <airport id="IAD">
+      <name>Washington Dulles International Airport</name>
+      <town>Washington DC</town>
+      <country>USA</country>
+      <location>
+        <latitude>38.9445</latitude>
+        <longitude>-77.4558029</longitude>
+        <altitude>95 m</altitude>
+      </location>
+    </airport>
+    <airport id="FCO">
+      <name>Leonardo Da Vinci (Fiumicino) International Airport</name>
+      <town>Rome</town>
+      <country>Italy</country>
+      <location>
+        <latitude>41.8044444</latitude>
+        <longitude>12.2508333</longitude>
+        <altitude>5 m</altitude>
+      </location>
+    </airport>
+  </airport_list>
+</Network>
