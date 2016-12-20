@@ -199,14 +199,10 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
         importAirNetworkButton.setPreferredSize(BUTTON_PREFERED_SIZE);
 
         // Airnetwork Import Listener
-        importAirNetworkButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                
-                // TODO: Implement new project method in constructor
-                ImportAirNetworkUI importUI = new ImportAirNetworkUI(new Project());
-                importUI.setSettings();
-            }
+        importAirNetworkButton.addActionListener((ActionEvent e) -> {
+            // Imports the network file to newly created project
+            ImportAirNetworkUI importUI = new ImportAirNetworkUI(controller.getCreatedProject());
+            importUI.setSettings();
         });
 
         JButton importAirportsButton = new JButton("Import Airports");
