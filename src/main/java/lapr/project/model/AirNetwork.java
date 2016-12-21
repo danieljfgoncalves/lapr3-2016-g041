@@ -10,7 +10,10 @@ import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.Iterator;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
 import lapr.project.utils.Regex;
+import org.jscience.physics.amount.Amount;
 import org.xml.sax.SAXException;
 
 /**
@@ -294,10 +297,13 @@ public class AirNetwork implements Importable {
                 Element windElement = (Element) aElement.getElementsByTagName("wind").item(0);
                 // Set wind direction
                 String windDirection = windElement.getElementsByTagName("wind_direction").item(0).getTextContent();
-                segment.setWindDirection(Regex.getValue(windDirection));
+                Double valueWindD = Regex.getValue(windDirection);
+                segment.setWindDirection(Amount.valueOf(valueWindD, NonSI.DEGREE_ANGLE));
                 // Set wind intensity
                 String windIntensity = windElement.getElementsByTagName("wind_intensity").item(0).getTextContent();
-                segment.setWindIntensity(Regex.getValue(windIntensity));
+                Double valueWindI = Regex.getValue(windIntensity);
+                String unitWindI = Regex.getUnit(windIntensity);
+                segment.setWindIntensity(Amount.valueOf(valueWindI, (unitWindI.equalsIgnoreCase("knot")) ? NonSI.KNOT : SI.METERS_PER_SECOND));
                 // Get start & end of segment
                 String startID = aElement.getElementsByTagName("start_node").item(0).getTextContent();
                 String endID = aElement.getElementsByTagName("end_node").item(0).getTextContent();
