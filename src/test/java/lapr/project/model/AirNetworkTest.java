@@ -3,6 +3,7 @@
  */
 package lapr.project.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -125,6 +126,26 @@ public class AirNetworkTest {
         System.out.println("addSegment");
 
         AirNetwork instance2 = new AirNetwork(testMatrix);
+        String idA = "ID01";
+        String idB = "ID03";
+        Segment newSegment = new Segment("SG01", new ArrayList<>(), 1.0, 1.0);
+        boolean result = instance2.addSegment(idA, idB, newSegment);
+        assertTrue(result);
+        // Adding the same segment should return false
+        boolean result2 = instance2.addSegment(idA, idB, newSegment);
+        assertFalse(result2);
+        // Verify if network contains segment
+        assertEquals(new Segment("SG01", new ArrayList<>(), 1.0, 1.0), instance2.getSegments().iterator().next());
+    }
+
+    /**
+     * Test of addSegment method, of class AirNetwork.
+     */
+    @Test
+    public void testAddSegment_CoordinateIDs() {
+        System.out.println("addSegment_with_coordinateIDs");
+
+        AirNetwork instance2 = new AirNetwork(testMatrix);
         Coordinate coordinateA = new Coordinate("ID01", 1.0, 1.0);
         Coordinate coordinateB = new Coordinate("ID03", 3.0, 3.0);
         Segment newSegment = new Segment("SG01", new ArrayList<>(), 1.0, 1.0);
@@ -210,6 +231,76 @@ public class AirNetworkTest {
         instance.removeJunction(junction);
         int expResult = 2;
         int result = instance.getNumJunctions();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of importXml method, of class AirNetwork.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testImportXml01() throws Exception {
+        System.out.println("importXml");
+
+        File fileToImport = new File("xml_files" + File.separator + "TestSet01a_Network.xml");
+        instance = new AirNetwork();
+
+        assertTrue(instance.importXml(fileToImport));
+    }
+
+    /**
+     * Test of importXml method, of class AirNetwork.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testImportXml02() throws Exception {
+        System.out.println("importXml");
+
+        File fileToImport = new File("xml_files" + File.separator + "Wrong");
+        instance = new AirNetwork();
+
+        assertFalse(instance.importXml(fileToImport));
+    }
+
+    /**
+     * Test of importXml method, of class AirNetwork.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testImportXml03() throws Exception {
+        System.out.println("importXml");
+
+        File fileToImport = new File("xml_files" + File.separator + "TestSet01a_Network.xml");
+        AirNetwork expResult = new AirNetwork();
+
+        expResult.addJunction(new Coordinate("PT01", 41.2481003, -8.6813898));
+        expResult.addJunction(new Coordinate("PT02", 40.7812996, -8.6813898));
+        expResult.addJunction(new Coordinate("PT03", 38.7812996, -9.1359196));
+        expResult.addJunction(new Coordinate("PT04", 40.7812996, -6.6813898));
+        expResult.addJunction(new Coordinate("ES01", 40.4936, -3.56676));
+        expResult.addJunction(new Coordinate("ES02", 39.5517006, 2.7388101));
+
+        expResult.addSegment("PT01", "PT02", new Segment("PT01", new ArrayList(), 0.0, 80.0));
+        expResult.addSegment("PT02", "PT01", new Segment("PT01", new ArrayList(), 0.0, 80.0));
+
+        expResult.addSegment("PT02", "PT03", new Segment("PT02", new ArrayList(), 15.0, 80.0));
+        expResult.addSegment("PT03", "PT02", new Segment("PT02", new ArrayList(), 15.0, 80.0));
+
+        expResult.addSegment("PT02", "PT04", new Segment("PT03", new ArrayList(), 15.0, 100.0));
+        expResult.addSegment("PT04", "PT02", new Segment("PT03", new ArrayList(), 15.0, 100.0));
+
+        expResult.addSegment("PT04", "ES01", new Segment("PT04", new ArrayList(), 15.0, 100.0));
+        expResult.addSegment("ES01", "PT04", new Segment("PT04", new ArrayList(), 15.0, 100.0));
+
+        expResult.addSegment("ES01", "ES02", new Segment("ES01", new ArrayList(), 45.0, 85.0));
+        expResult.addSegment("ES02", "ES01", new Segment("ES01", new ArrayList(), 45.0, 85.0));
+
+        AirNetwork result = new AirNetwork();
+        result.importXml(fileToImport);
+
         assertEquals(expResult, result);
     }
 
