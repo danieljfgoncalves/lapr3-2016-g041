@@ -6,6 +6,8 @@ package lapr.project.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.measure.unit.SI;
+import org.jscience.physics.amount.Amount;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -41,7 +43,7 @@ public class AirportsRegisterTest {
         System.out.println("getAirports");
 
         List<Airport> airports = new ArrayList<>();
-        airports.add(new Airport("Francisco Sá Carneiro", "Porto", "Portugal", "OPO", 41.2481003d, -8.6813898d, 69.0d));
+        airports.add(new Airport("Francisco Sá Carneiro", "Porto", "Portugal", "OPO", 1.0d, 1.1d, Amount.valueOf(100.0d, SI.METER)));
         instance.setAirports(airports);
         assertEquals(airports, instance.getAirports());
     }

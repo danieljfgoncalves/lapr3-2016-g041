@@ -6,6 +6,10 @@ package lapr.project.model;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Objects;
+import javax.measure.quantity.Duration;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import org.jscience.physics.amount.Amount;
 
 /**
  * Represents a stop of a flight
@@ -24,9 +28,9 @@ public class Stop {
     private Airport airport;
 
     /**
-     * Stop's minimum stop minutes
+     * Stop's minimum stop (SI: s)
      */
-    private Integer minimumStopMinutes;
+    private Amount<Duration> minimumStop;
 
     /**
      * Stop's schedule arrival
@@ -41,19 +45,19 @@ public class Stop {
     /**
      * Stop's minimum stop minutes by default
      */
-    private static final Integer MINIMUM_STOP_MINUTES_BY_DEFAULT = 0;
+    private static final Amount<Duration> DEFAULT_MINIMUM_STOP = Amount.valueOf(0d, SI.SECOND);
 
     /**
      * Constructs an instance of Stop
      *
      * @param airport the stop's airport
-     * @param minimumStopMinutes the stop's minimum stop minutes
+     * @param minimumStop the stop's minimum stop minutes
      * @param scheduleArrival the stop's schedule arrival
      * @param departureTime the stop's departure time
      */
-    public Stop(Airport airport, Integer minimumStopMinutes, Calendar scheduleArrival, Calendar departureTime) {
+    public Stop(Airport airport, Amount<Duration> minimumStop, Calendar scheduleArrival, Calendar departureTime) {
         this.airport = airport;
-        this.minimumStopMinutes = minimumStopMinutes;
+        this.minimumStop = minimumStop;
         this.scheduleArrival = scheduleArrival;
         this.departureTime = departureTime;
     }
@@ -63,7 +67,7 @@ public class Stop {
      */
     public Stop() {
         this.airport = new Airport();
-        this.minimumStopMinutes = MINIMUM_STOP_MINUTES_BY_DEFAULT;
+        this.minimumStop = DEFAULT_MINIMUM_STOP;
         this.scheduleArrival = new GregorianCalendar();
         this.departureTime = new GregorianCalendar();
     }
@@ -75,7 +79,7 @@ public class Stop {
      */
     public Stop(Stop otherStop) {
         this.airport = otherStop.airport;
-        this.minimumStopMinutes = otherStop.minimumStopMinutes;
+        this.minimumStop = otherStop.minimumStop;
         this.scheduleArrival = otherStop.scheduleArrival;
         this.departureTime = otherStop.departureTime;
     }
@@ -103,17 +107,17 @@ public class Stop {
      *
      * @return the minimum stop minutes
      */
-    public Integer getMinimumStopMinutes() {
-        return minimumStopMinutes;
+    public Amount<Duration> getMinimumStop() {
+        return minimumStop;
     }
 
     /**
      * Modifies the Stop's minimum stop minutes
      *
-     * @param minimumStopMinutes the Stop's minimum stop minutes to set
+     * @param minimumStop the Stop's minimum stop minutes to set
      */
-    public void setMinimumStopMinutes(Integer minimumStopMinutes) {
-        this.minimumStopMinutes = minimumStopMinutes;
+    public void setMinimumStop(Amount<Duration> minimumStop) {
+        this.minimumStop = minimumStop;
     }
 
     /**
@@ -156,7 +160,7 @@ public class Stop {
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.airport);
-        hash = 97 * hash + Objects.hashCode(this.minimumStopMinutes);
+        hash = 97 * hash + Objects.hashCode(this.minimumStop);
         hash = 97 * hash + Objects.hashCode(this.scheduleArrival);
         hash = 97 * hash + Objects.hashCode(this.departureTime);
         return hash;
@@ -175,13 +179,13 @@ public class Stop {
 
         return this.airport.equals(other.airport)
                 && this.departureTime.equals(other.departureTime)
-                && this.minimumStopMinutes.equals(other.minimumStopMinutes)
+                && this.minimumStop.equals(other.minimumStop)
                 && this.scheduleArrival.equals(other.scheduleArrival);
     }
 
     @Override
     public String toString() {
         return String.format("Stop{airport=%s, minumum stop minutes=%d, schedule arrival=%s, departure time=%s",
-                this.airport, this.minimumStopMinutes, this.scheduleArrival, this.departureTime);
+                this.airport, this.minimumStop.longValue(NonSI.MINUTE), this.scheduleArrival, this.departureTime);
     }
 }

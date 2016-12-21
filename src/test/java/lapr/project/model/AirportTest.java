@@ -3,6 +3,9 @@
  */
 package lapr.project.model;
 
+import javax.measure.quantity.Length;
+import javax.measure.unit.SI;
+import org.jscience.physics.amount.Amount;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -115,10 +118,9 @@ public class AirportTest {
     public void testGetSetAltitude() {
         System.out.println("getAltitude");
 
-        Double altitude = 50.0d;
+        Amount<Length> altitude = Amount.valueOf(50d, SI.METER);
         instance.setAltitude(altitude);
         assertEquals(altitude, instance.getAltitude());
-
     }
 
     /**

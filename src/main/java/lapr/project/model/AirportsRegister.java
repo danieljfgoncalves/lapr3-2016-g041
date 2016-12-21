@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.measure.unit.SI;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.utils.Importable;
 import lapr.project.utils.Regex;
+import org.jscience.physics.amount.Amount;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -136,7 +138,7 @@ public class AirportsRegister implements Importable {
                 Double doubleAltitude = Regex.getValue(altitude);
 
                 // creates the airport
-                this.airports.add(new Airport(name, town, country, IATA, latitude, longitude, doubleAltitude));
+                this.airports.add(new Airport(name, town, country, IATA, latitude, longitude, Amount.valueOf(doubleAltitude, SI.METER)));
             }
         }
         return true;
