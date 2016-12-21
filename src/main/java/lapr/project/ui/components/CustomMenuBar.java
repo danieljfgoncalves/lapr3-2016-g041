@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import lapr.project.model.FlightSimulator;
 import lapr.project.model.Project;
+import lapr.project.ui.CopyProjectDialog;
 import lapr.project.ui.CreateProjectDialog;
 import lapr.project.ui.EditProjectPropertiesDialog;
 import lapr.project.ui.MainFrame;
@@ -163,7 +164,8 @@ public class CustomMenuBar extends JMenuBar {
         JMenuItem item = new JMenuItem("Copy Project", 'C');
         item.setAccelerator(KeyStroke.getKeyStroke("ctrl C"));
         item.addActionListener((ActionEvent e) -> {
-            // TODO
+            CopyProjectDialog copyProjectDialog = new CopyProjectDialog(mainFrame, simulator, mainFrame.getActiveProject());
+            copyProjectDialog.setVisible(true);
         });
         return item;
     }

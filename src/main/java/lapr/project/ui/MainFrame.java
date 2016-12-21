@@ -85,7 +85,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         // Set simulator
         this.simulator = simulator;
         // Instanciate active project
-        this.activeProject = null;
+        this.activeProject = new Project();
 
         // Set Custom Menu Bar
         CustomMenuBar customMenuBar = new CustomMenuBar(this, simulator);

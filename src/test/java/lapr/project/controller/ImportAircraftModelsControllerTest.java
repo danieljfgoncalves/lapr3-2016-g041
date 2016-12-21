@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class ImportAircraftModelsControllerIT {
+public class ImportAircraftModelsControllerTest {
 
     /**
      * The controller instance to be set.

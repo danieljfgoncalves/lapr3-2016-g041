@@ -226,6 +226,8 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
                             "Copy Project",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
+                
+                parentWindow.activateProject(project);
                 dispose();
 
                 if (parentWindow instanceof ProjectSelectionDialog) {
