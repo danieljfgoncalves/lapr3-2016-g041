@@ -38,6 +38,11 @@
             <artifactId>xmlunit</artifactId>
             <version>1.6</version>
         </dependency>
+        <dependency>
+            <groupId>org.jscience</groupId>
+            <artifactId>jscience</artifactId>
+            <version>4.3.1</version>
+        </dependency>
     </dependencies>
 
 </project>
