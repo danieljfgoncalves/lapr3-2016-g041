@@ -297,7 +297,7 @@ public class AirNetwork implements Importable {
                 segment.setWindDirection(Regex.getValue(windDirection));
                 // Set wind intensity
                 String windIntensity = windElement.getElementsByTagName("wind_intensity").item(0).getTextContent();
-                segment.setWindDirection(Regex.getValue(windIntensity));
+                segment.setWindIntensity(Regex.getValue(windIntensity));
                 // Get start & end of segment
                 String startID = aElement.getElementsByTagName("start_node").item(0).getTextContent();
                 String endID = aElement.getElementsByTagName("end_node").item(0).getTextContent();
