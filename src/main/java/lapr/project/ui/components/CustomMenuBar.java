@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import lapr.project.model.FlightSimulator;
 import lapr.project.model.Project;
@@ -126,8 +127,15 @@ public class CustomMenuBar extends JMenuBar {
         JMenuItem item = new JMenuItem("Edit Properties", 'E');
         item.setAccelerator(KeyStroke.getKeyStroke("ctrl E"));
         item.addActionListener((ActionEvent e) -> {
-            EditProjectPropertiesDialog editProjectPropertiesDialog = new EditProjectPropertiesDialog(mainFrame, simulator, activeProject);
-            editProjectPropertiesDialog.setVisible(true);
+            if (mainFrame.getActiveProject() != null) {
+                EditProjectPropertiesDialog editProjectPropertiesDialog = new EditProjectPropertiesDialog(mainFrame, simulator, mainFrame.getActiveProject());
+                editProjectPropertiesDialog.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(mainFrame,
+                        "There is no project selected!\nPlease select a project first.",
+                        "Invalid Project",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         });
         return item;
     }
