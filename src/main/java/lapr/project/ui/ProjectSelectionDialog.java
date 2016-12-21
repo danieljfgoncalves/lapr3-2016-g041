@@ -6,6 +6,7 @@ package lapr.project.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -132,7 +133,8 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
     private JPanel createListPanel() {
         JPanel listPanel = new JPanel();
 
-        projectsList = new JList(new ListModelProject(this.projects));
+        Collections.sort(projects);
+        projectsList = new JList(new ListModelProject(projects));
         projectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         projectsList.setCellRenderer(new ListCellRendererProject());
 
@@ -243,5 +245,15 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
     public void activateProject(Project project) {
         dispose();
         mainFrame.activateProject(project);
+    }
+
+    /**
+     * Refresh a given projec list.
+     *
+     * @param projects the projects to update
+     */
+    public void refreshProjectsList(List<Project> projects) {
+        Collections.sort(projects);
+        projectsList.setModel(new ListModelProject(projects)); // TODO
     }
 }

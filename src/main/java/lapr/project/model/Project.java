@@ -16,7 +16,7 @@ import java.util.Objects;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class Project {
+public class Project implements Comparable<Project> {
 
     /**
      * Description of the Project
@@ -330,6 +330,11 @@ public class Project {
                 + "Airports: %s\n"
                 + "Aircraft Models: %s\n"
                 + "Simulations: %s", serieNumber, name, description, airNetwork, airports, aircraftModelsRegister, simulations);
+    }
+
+    @Override
+    public int compareTo(Project otherProject) {
+        return this.name.equals(otherProject.name) ? this.serieNumber.compareTo(otherProject.serieNumber) : this.name.compareToIgnoreCase(otherProject.name);
     }
 
 }

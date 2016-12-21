@@ -51,6 +51,11 @@ public class EditProjectPropertiesDialog<T extends Window & ProjectHandler> exte
     private final Project project;
 
     /**
+     * The flight simulator.
+     */
+    private final FlightSimulator flightSimulator;
+
+    /**
      * The name text field;
      */
     private JTextField nameTextField;
@@ -89,7 +94,7 @@ public class EditProjectPropertiesDialog<T extends Window & ProjectHandler> exte
      * Creates an instance of edit properties project dialog.
      *
      * @param parentWindow the parent window
-     * @param simulator the simulator
+     * @param flightSimulator the simulator
      * @param project the selected project
      */
     public EditProjectPropertiesDialog(T parentWindow, FlightSimulator flightSimulator, Project project) {
@@ -99,6 +104,7 @@ public class EditProjectPropertiesDialog<T extends Window & ProjectHandler> exte
         this.parentWindow = parentWindow;
         this.controller = new EditProjectPropertiesController(flightSimulator, project);
         this.project = project;
+        this.flightSimulator = flightSimulator;
 
         createComponents();
         createWindowClosingListener();
@@ -215,7 +221,12 @@ public class EditProjectPropertiesDialog<T extends Window & ProjectHandler> exte
                             "Edit project properties",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
+
+                if (parentWindow instanceof ProjectSelectionDialog) {
+                    ((ProjectSelectionDialog) parentWindow).refreshProjectsList(flightSimulator.getProjects());
+                }
                 dispose();
+
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(
                         null,
