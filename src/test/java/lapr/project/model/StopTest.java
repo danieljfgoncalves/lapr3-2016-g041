@@ -40,8 +40,7 @@ public class StopTest {
     @Test
     public void testGetSetAirport() {
         System.out.println("getSetAirport");
-        Coordinate coordinates = new Coordinate();
-        Airport expResult = new Airport("Sá carneiro", "Porto", "Portugal", "OPO", coordinates, Amount.valueOf(10d, SI.METER));
+        Airport expResult = new Airport("Sá carneiro", "Porto", "Portugal", "OPO", 1.0d, -1.0d, Amount.valueOf(10d, SI.METER));
         instance.setAirport(expResult);
         Airport result = instance.getAirport();
         assertEquals(expResult, result);

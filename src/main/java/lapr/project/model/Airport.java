@@ -40,9 +40,14 @@ public class Airport {
     private String IATA;
 
     /**
-     * The coordinates of the airport.
+     * The latitude of the airport.
      */
-    private Coordinate coordinates;
+    private Double latitude;
+
+    /**
+     * The longitude of the airport.
+     */
+    private Double longitude;
 
     /**
      * The altitude of the airport.
@@ -70,9 +75,14 @@ public class Airport {
     private final static String DEFAULT_IATA = "Default IATA";
 
     /**
-     * The default coordinate of the airport.
+     * The default latitude of the airport.
      */
-    private final static Coordinate DEFAULT_COORDINATE = new Coordinate();
+    private final static Double DEFAULT_LATITUDE = 0.0d;
+
+    /**
+     * The defaults longitude of the airport.
+     */
+    private final static Double DEFAULT_LONGITUDE = 0.0d;
 
     /**
      * The default altitude of the airport (SI: m).
@@ -86,15 +96,17 @@ public class Airport {
      * @param town the airport's town
      * @param country the airport's country
      * @param IATA the aiports IATA code
-     * @param coordinates the aiport's coordinates
+     * @param latitude the airport's latitude
+     * @param longitude the airport's longitude
      * @param altitude the airport's altitude
      */
-    public Airport(String name, String town, String country, String IATA, Coordinate coordinates, Amount<Length> altitude) {
+    public Airport(String name, String town, String country, String IATA, Double latitude, Double longitude, Amount<Length> altitude) {
         this.name = name;
         this.town = town;
         this.country = country;
         this.IATA = IATA;
-        this.coordinates = coordinates;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.altitude = altitude;
     }
 
@@ -106,7 +118,8 @@ public class Airport {
         this.town = DEFAULT_TOWN;
         this.country = DEFAULT_COUNTRY;
         this.IATA = DEFAULT_IATA;
-        this.coordinates = DEFAULT_COORDINATE;
+        this.latitude = DEFAULT_LATITUDE;
+        this.longitude = DEFAULT_LONGITUDE;
         this.altitude = DEFAULT_ALTITUDE;
     }
 
@@ -120,7 +133,8 @@ public class Airport {
         this.town = other.town;
         this.country = other.country;
         this.IATA = other.IATA;
-        this.coordinates = new Coordinate(other.coordinates);
+        this.latitude = other.latitude;
+        this.longitude = other.longitude;
         this.altitude = other.altitude;
     }
 
@@ -197,21 +211,39 @@ public class Airport {
     }
 
     /**
-     * Gets the coordinates of the airport.
+     * Gets the latitude of the airport.
      *
-     * @return the coordinates
+     * @return the latitude
      */
-    public Coordinate getCoordinates() {
-        return coordinates;
+    public Double getLatitude() {
+        return latitude;
     }
 
     /**
-     * Modifies the coordinates of the airport.
+     * Modifies the latitude of the airport.
      *
-     * @param coordinates the coordinates to set
+     * @param latitude the latitude code to set
      */
-    public void setCoordinates(Coordinate coordinates) {
-        this.coordinates = coordinates;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * Gets the longitude of the airport.
+     *
+     * @return the longitude
+     */
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * Modifies the longitude of the airport.
+     *
+     * @param longitude the longitude code to set
+     */
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     /**
@@ -260,8 +292,9 @@ public class Airport {
                 + "Town: %s\n"
                 + "Country: %s\n"
                 + "IATA code: %s\n"
-                + "Coordinates: %s\n"
-                + "Altitude: %.2f\n", name, town, country, IATA, coordinates, altitude);
+                + "Latitude: %.6f\n"
+                + "Longitude: %.6f\n"
+                + "Altitude: %.2f\n", name, town, country, IATA, latitude, longitude, altitude);
     }
 
 }

@@ -3,9 +3,23 @@
  */
 package lapr.project.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.measure.unit.SI;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import lapr.project.utils.Importable;
+import lapr.project.utils.Regex;
+import org.jscience.physics.amount.Amount;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Represents an register for aircraft models.
@@ -16,7 +30,7 @@ import java.util.Objects;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class AirportsRegister {
+public class AirportsRegister implements Importable {
 
     /**
      * The list of airports.
@@ -88,6 +102,46 @@ public class AirportsRegister {
     @Override
     public String toString() {
         return String.format("Airports: %s", airports);
+    }
+
+    @Override
+    public boolean importXml(File fileToImport) throws SAXException, IOException, ParserConfigurationException {
+
+        // set up dom
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(fileToImport);
+        doc.getDocumentElement().normalize();
+
+        // iterate airports dom
+        NodeList airportsNodeList = doc.getElementsByTagName("airport");
+        int airportsLength = airportsNodeList.getLength();
+        for (int i = 0; i < airportsLength; i++) {
+
+            Node airportNode = airportsNodeList.item(i);
+            if (airportNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                // airport
+                Element airportElement = (Element) airportNode;
+                String IATA = airportElement.getAttribute("id");
+                String name = airportElement.getElementsByTagName("name").item(0).getTextContent();
+                String town = airportElement.getElementsByTagName("town").item(0).getTextContent();
+                String country = airportElement.getElementsByTagName("country").item(0).getTextContent();
+
+                // location
+                Element locationElement = (Element) airportElement.getElementsByTagName("location").item(0);
+
+                Double latitude = (Double.parseDouble(locationElement.getElementsByTagName("latitude").item(0).getTextContent()));
+                Double longitude = (Double.parseDouble(locationElement.getElementsByTagName("longitude").item(0).getTextContent()));
+
+                String altitude = locationElement.getElementsByTagName("altitude").item(0).getTextContent();
+                Double doubleAltitude = Regex.getValue(altitude);
+
+                // creates the airport
+                this.airports.add(new Airport(name, town, country, IATA, latitude, longitude, Amount.valueOf(doubleAltitude, SI.METER)));
+            }
+        }
+        return true;
     }
 
 }

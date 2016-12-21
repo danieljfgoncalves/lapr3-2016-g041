@@ -88,15 +88,27 @@ public class AirportTest {
     }
 
     /**
-     * Test of getCoordinates and setCoordinates methods, of class Airport.
+     * Test of getLatitude and setLatitude methods, of class Airport.
      */
     @Test
-    public void testGetSetCoordinates() {
-        System.out.println("getCoordinates");
+    public void testGetSetLatitude() {
+        System.out.println("getLatitude and setLatitude");
 
-        Coordinate coordinate = new Coordinate("testLocation", 41.2481003, -8.6813898);
-        instance.setCoordinates(coordinate);
-        assertEquals(coordinate, instance.getCoordinates());
+        Double latitude = 41.248100d;
+        instance.setLatitude(latitude);
+        assertEquals(latitude, instance.getLatitude());
+    }
+
+    /**
+     * Test of getLongitude and setLongitude methods, of class Airport.
+     */
+    @Test
+    public void testGetSetLongitude() {
+        System.out.println("getLongitude and setLongitude");
+
+        Double longitude = -8.681389d;
+        instance.setLongitude(longitude);
+        assertEquals(longitude, instance.getLongitude());
     }
 
     /**

@@ -51,6 +51,11 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
     private final Project project;
 
     /**
+     * The flight simulator.
+     */
+    private final FlightSimulator flightSimulator;
+
+    /**
      * The name text field;
      */
     private JTextField nameTextField;
@@ -97,6 +102,7 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
         setModal(true);
 
         this.parentWindow = parentWindow;
+        this.flightSimulator = simulator;
         this.controller = new CopyProjectController(simulator, project);
         this.project = project;
 
@@ -221,6 +227,11 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
                             JOptionPane.INFORMATION_MESSAGE);
                 }
                 dispose();
+
+                if (parentWindow instanceof ProjectSelectionDialog) {
+                    ((ProjectSelectionDialog) parentWindow).refreshProjectsList(this.flightSimulator.getProjects());
+                }
+
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(
                         null,
