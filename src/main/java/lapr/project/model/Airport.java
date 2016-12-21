@@ -4,6 +4,9 @@
 package lapr.project.model;
 
 import java.util.Objects;
+import javax.measure.quantity.Length;
+import javax.measure.unit.SI;
+import org.jscience.physics.amount.Amount;
 
 /**
  * Represents an Airport class.
@@ -44,7 +47,7 @@ public class Airport {
     /**
      * The altitude of the airport.
      */
-    private Double altitude;
+    private Amount<Length> altitude;
 
     /**
      * The default name of the airport.
@@ -72,9 +75,9 @@ public class Airport {
     private final static Coordinate DEFAULT_COORDINATE = new Coordinate();
 
     /**
-     * The default altitude of the airport.
+     * The default altitude of the airport (SI: m).
      */
-    private final static Double DEFAULT_ALTITUDE = 0.0;
+    private final static Amount<Length> DEFAULT_ALTITUDE = Amount.valueOf(0d, SI.METER);
 
     /**
      * Creates an Airport receiving its attributes.
@@ -86,7 +89,7 @@ public class Airport {
      * @param coordinates the aiport's coordinates
      * @param altitude the airport's altitude
      */
-    public Airport(String name, String town, String country, String IATA, Coordinate coordinates, Double altitude) {
+    public Airport(String name, String town, String country, String IATA, Coordinate coordinates, Amount<Length> altitude) {
         this.name = name;
         this.town = town;
         this.country = country;
@@ -216,7 +219,7 @@ public class Airport {
      *
      * @return the altitude
      */
-    public Double getAltitude() {
+    public Amount<Length> getAltitude() {
         return altitude;
     }
 
@@ -225,7 +228,7 @@ public class Airport {
      *
      * @param altitude the altitude to set
      */
-    public void setAltitude(Double altitude) {
+    public void setAltitude(Amount<Length> altitude) {
         this.altitude = altitude;
     }
 
