@@ -3,12 +3,25 @@
  */
 package lapr.project.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+import lapr.project.model.Flight;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
 import lapr.project.ui.components.CustomMenuBar;
+import lapr.project.ui.components.TableModelFlight;
 
 /**
  * The main frame for the application.
@@ -35,6 +48,31 @@ public class MainFrame extends JFrame implements ProjectHandler {
      * Title for the frame.
      */
     private static final String WINDOW_TITLE = "Flight Simulator";
+
+    /**
+     * Padding border.
+     */
+    private final static EmptyBorder PADDING_BORDER = new EmptyBorder(50, 50, 50, 50);
+
+    /**
+     * Page padding border.
+     */
+    private final static EmptyBorder PAGE_PADDING_BORDER = new EmptyBorder(50, 50, 50, 50);
+
+    /**
+     * The button prefered size.
+     */
+    private final static Dimension BUTTON_PREFERED_SIZE = new Dimension(150, 30);
+
+    /**
+     * The label prefered size.
+     */
+    private final static Dimension LABEL_PREFERED_SIZE = new Dimension(100, 30);
+
+    /**
+     * The label prefered size.
+     */
+    private final static Dimension TEXT_FIELD_PREFERED_SIZE = new Dimension(150, 30);
 
     /**
      * Creates an instance of the main frame.
@@ -68,9 +106,17 @@ public class MainFrame extends JFrame implements ProjectHandler {
     /**
      * Creates the components for frame.
      */
-    public void createComponents() {
+    private void createComponents() {
 
         // TODO: Set main panel not visble
+        JPanel componentsPanel = new JPanel(new BorderLayout(10, 10));
+
+        componentsPanel.add(projectInfoPanel(), BorderLayout.NORTH);
+        componentsPanel.add(createTablePanel(), BorderLayout.CENTER);
+        componentsPanel.add(createButtonsPanel(), BorderLayout.SOUTH);
+
+        componentsPanel.setBorder(PAGE_PADDING_BORDER);
+        add(componentsPanel);
     }
 
     @Override
@@ -80,8 +126,70 @@ public class MainFrame extends JFrame implements ProjectHandler {
         JOptionPane.showMessageDialog(this,
                 "The project was activated!");
     }
-    
-    public Project getActiveProject(){
+
+    public Project getActiveProject() {
         return this.activeProject;
+    }
+
+    /**
+     * Creates the project info panel.
+     *
+     * @return project info panel
+     */
+    private JPanel projectInfoPanel() {
+        JPanel projectInfoPanel = new JPanel(new BorderLayout());
+
+        JLabel projectTitleLabel = new JLabel("Project Name Placeholder", SwingConstants.CENTER);
+        projectTitleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        JLabel projectDescriptionLabel = new JLabel("Project Description Placeholder", SwingConstants.CENTER);
+        projectDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+
+        projectInfoPanel.add(projectTitleLabel, BorderLayout.NORTH);
+        projectInfoPanel.add(projectDescriptionLabel, BorderLayout.SOUTH);
+
+        return projectInfoPanel;
+    }
+
+    /**
+     * Creates the table panel.
+     *
+     * @return table panel
+     */
+    private JPanel createTablePanel() {
+        JPanel tablePanel = new JPanel();
+
+        // TODO remove this mock object
+        ArrayList<Flight> flights = new ArrayList<>();
+        flights.add(new Flight());
+
+        JTable simulationsTable = new JTable(new TableModelFlight(flights));
+
+        JScrollPane scrollPane = new JScrollPane(simulationsTable);
+        scrollPane.setBorder(PADDING_BORDER);
+
+        tablePanel.add(scrollPane);
+
+        return tablePanel;
+    }
+
+    /**
+     * Creates the buttons panel.
+     *
+     * @return buttons panel
+     */
+    private JPanel createButtonsPanel() {
+        JPanel buttonsPanel = new JPanel();
+
+        JButton openSimulationButton = new JButton("Open Simulation");
+        openSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+
+        JButton createSimulationButton = new JButton("New Simulation");
+        createSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+
+        buttonsPanel.add(openSimulationButton);
+        buttonsPanel.add(createSimulationButton);
+
+        return buttonsPanel;
     }
 }
