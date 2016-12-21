@@ -278,6 +278,15 @@ public class Project {
     }
 
     /**
+     * Validates the project.
+     *
+     * @return true if it is valid, false otherwise
+     */
+    public boolean validate() {
+        return !this.name.trim().isEmpty();
+    }
+
+    /**
      * Obtains the validation of name (true if name is not empty), false
      * otherwise
      *

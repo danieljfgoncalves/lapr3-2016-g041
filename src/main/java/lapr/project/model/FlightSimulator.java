@@ -107,22 +107,18 @@ public class FlightSimulator {
      * @return true if it is valid, false otherwise
      */
     public boolean validateProject(Project project) {
-        return !this.projects.contains(project);
+        return project.validate() && !this.projects.contains(project);
     }
-    
+
     /**
      * Checks if a project with a specific name already exists.
-     * 
+     *
      * @param name the name to verify
-     * @return true if a project with the given name already exists and false otherwise
+     * @return true if a project with the given name already exists and false
+     * otherwise
      */
-    public boolean validateNameExists(String name){
-        for(Project project : projects){
-            if(project.getName().equalsIgnoreCase(name)){
-                return true;
-            }
-        }
-        return false;
+    public boolean validateNameExists(String name) {
+        return projects.stream().anyMatch((project) -> (project.getName().equalsIgnoreCase(name)));
     }
 
     /**

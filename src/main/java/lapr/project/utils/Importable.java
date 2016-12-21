@@ -26,7 +26,7 @@ public interface Importable {
      * @throws javax.xml.parsers.ParserConfigurationException configurations
      * errors
      * @throws java.io.IOException invalid file or path
-     * @throws org.xml.sax.SAXException
+     * @throws org.xml.sax.SAXException parser error
      */
     boolean importXml(File fileToImport) throws SAXException, IOException, ParserConfigurationException;
 }

@@ -117,6 +117,30 @@ public class ProjectTest {
     }
 
     /**
+     * Test 1 of validate method, of class Project.
+     */
+    @Test
+    public void testValidateNoParamter1() {
+        System.out.println("validate without parameters 1");
+
+        instance.setName("Europe Flights");
+
+        assertTrue(instance.validate());
+    }
+
+    /**
+     * Test 2 of validate method, of class Project.
+     */
+    @Test
+    public void testValidateNoParamter2() {
+        System.out.println("validate without parameters 2");
+
+        instance.setName("   ");
+
+        assertFalse(instance.validate());
+    }
+
+    /**
      * Test of validate method, of class Project.
      */
     @Test

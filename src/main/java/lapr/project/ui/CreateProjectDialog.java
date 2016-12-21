@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
@@ -21,7 +20,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import lapr.project.controller.CreateProjectController;
 import lapr.project.model.FlightSimulator;
-import lapr.project.model.Project;
 
 /**
  * The frame to create project.
@@ -69,7 +67,7 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
     /**
      * The button prefered size.
      */
-    private final static Dimension BUTTON_PREFERED_SIZE = new Dimension(150, 30);
+    private final static Dimension BUTTON_PREFERED_SIZE = new Dimension(180, 30);
 
     /**
      * The label prefered size.
@@ -197,10 +195,7 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
 
         JButton importAirNetworkButton = new JButton("Import Air Network");
         importAirNetworkButton.setPreferredSize(BUTTON_PREFERED_SIZE);
-
-        // Airnetwork Import Listener
         importAirNetworkButton.addActionListener((ActionEvent e) -> {
-            // Imports the network file to newly created project
             ImportAirNetworkUI importUI = new ImportAirNetworkUI(controller.getCreatedProject());
             importUI.setSettings();
         });
@@ -208,8 +203,12 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
         JButton importAirportsButton = new JButton("Import Airports");
         importAirportsButton.setPreferredSize(BUTTON_PREFERED_SIZE);
 
-        JButton importAircraftsButton = new JButton("Import Aircrafts");
+        JButton importAircraftsButton = new JButton("Import Aircraft Models");
         importAircraftsButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        importAircraftsButton.addActionListener((ActionEvent ae) -> {
+            ImportAircraftModelsUI importAircraftModelsUI = new ImportAircraftModelsUI(controller.getCreatedProject());
+            importAircraftModelsUI.setSettings();
+        });
 
         importsPanel.add(importAirNetworkButton);
         importsPanel.add(importAirportsButton);
