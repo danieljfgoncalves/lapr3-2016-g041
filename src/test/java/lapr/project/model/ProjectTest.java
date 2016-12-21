@@ -112,7 +112,7 @@ public class ProjectTest {
     public void testGetSetSimulations() {
         System.out.println("getSimulations");
 
-        List<Simulation> simulations = new ArrayList();
+        Simulation simulations = new Simulation();
         assertEquals(simulations, instance.getSimulations());
     }
 

@@ -51,7 +51,7 @@ public class Project {
     /**
      * The project's simulations.
      */
-    private List<Simulation> simulations;
+    private Simulation simulations;
 
     /**
      * Default value for Description
@@ -77,7 +77,7 @@ public class Project {
         this.airNetwork = new AirNetwork();
         this.airports = new ArrayList();
         this.aircraftModelsRegister = new AircraftModelsRegister();
-        this.simulations = new ArrayList();
+        this.simulations = new Simulation();
     }
 
     /**
@@ -90,7 +90,7 @@ public class Project {
      * @param aircraftModelsRegister the given aircraft models register
      * @param simulations the given simulations
      */
-    public Project(String name, String description, AirNetwork airNetwork, List<Airport> airports, AircraftModelsRegister aircraftModelsRegister, List<Simulation> simulations) {
+    public Project(String name, String description, AirNetwork airNetwork, List<Airport> airports, AircraftModelsRegister aircraftModelsRegister, Simulation simulations) {
         this.serieNumber = counter++;
         this.name = name;
         this.description = description;
@@ -114,7 +114,7 @@ public class Project {
         this.airNetwork = new AirNetwork();
         this.airports = new ArrayList();
         this.aircraftModelsRegister = new AircraftModelsRegister();
-        this.simulations = new ArrayList();
+        this.simulations = new Simulation();
     }
 
     /**
@@ -128,7 +128,7 @@ public class Project {
      * @param aircraftModelsRegister the aircraft models register of the project
      * @param simulations the simulations of the project
      */
-    public Project(String name, String description, int serieNumber, AirNetwork airNetwork, List<Airport> airports, AircraftModelsRegister aircraftModelsRegister, List<Simulation> simulations) {
+    public Project(String name, String description, int serieNumber, AirNetwork airNetwork, List<Airport> airports, AircraftModelsRegister aircraftModelsRegister, Simulation simulations) {
         this.serieNumber = serieNumber;
         this.name = name;
         this.description = description;
@@ -148,7 +148,7 @@ public class Project {
         this.airNetwork = otherProject.airNetwork;
         this.airports = otherProject.airports;
         this.aircraftModelsRegister = new AircraftModelsRegister(otherProject.aircraftModelsRegister);
-        //simulations are not supposed to be copied
+        this.simulations = new Simulation(); // simulations are not supposed to be copied
     }
 
     /**
@@ -264,7 +264,7 @@ public class Project {
      *
      * @return the simulations
      */
-    public List<Simulation> getSimulations() {
+    public Simulation getSimulations() {
         return simulations;
     }
 
@@ -273,7 +273,7 @@ public class Project {
      *
      * @param simulations the simulations to set
      */
-    public void setSimulations(List<Simulation> simulations) {
+    public void setSimulations(Simulation simulations) {
         this.simulations = simulations;
     }
 
