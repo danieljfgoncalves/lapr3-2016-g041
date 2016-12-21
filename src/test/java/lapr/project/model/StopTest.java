@@ -5,6 +5,10 @@ package lapr.project.model;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import javax.measure.quantity.Duration;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import org.jscience.physics.amount.Amount;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -27,7 +31,7 @@ public class StopTest {
 
     @Before
     public void setUp() {
-        instance = new Stop(new Airport(), 1, new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
+        instance = new Stop(new Airport(), Amount.valueOf(1d, NonSI.MINUTE), new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
     }
 
     /**
@@ -36,8 +40,7 @@ public class StopTest {
     @Test
     public void testGetSetAirport() {
         System.out.println("getSetAirport");
-
-        Airport expResult = new Airport("Sá carneiro", "Porto", "Portugal", "OPO", 1.0d, -1.0d, 100.0d);
+        Airport expResult = new Airport("Sá carneiro", "Porto", "Portugal", "OPO", 1.0d, -1.0d, Amount.valueOf(10d, SI.METER));
         instance.setAirport(expResult);
         Airport result = instance.getAirport();
         assertEquals(expResult, result);
@@ -47,11 +50,11 @@ public class StopTest {
      * Test of getSetMinimumStopMinutes method, of class Stop.
      */
     @Test
-    public void testGetSetMinimumStopMinutes() {
+    public void testGetSetMinimumStop() {
         System.out.println("getSetMinimumStopMinutes");
-        Integer expResult = 10;
-        instance.setMinimumStopMinutes(10);
-        Integer result = instance.getMinimumStopMinutes();
+        Amount<Duration> expResult = Amount.valueOf(10d, NonSI.MINUTE);
+        instance.setMinimumStop(expResult);
+        Amount<Duration> result = instance.getMinimumStop();
         assertEquals(expResult, result);
     }
 
@@ -86,7 +89,7 @@ public class StopTest {
     @Test
     public void testEquals01() {
         System.out.println("equals");
-        Object obj = new Stop(new Airport(), 10, new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
+        Object obj = new Stop(new Airport(), Amount.valueOf(10d, NonSI.MINUTE), new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
         boolean expResult = false;
         boolean result = instance.equals(obj);
         assertEquals(expResult, result);
@@ -99,7 +102,7 @@ public class StopTest {
     @Test
     public void testEquals02() {
         System.out.println("equals");
-        Object obj = new Stop(new Airport(), 1, new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
+        Object obj = new Stop(new Airport(), Amount.valueOf(1d, NonSI.MINUTE), new GregorianCalendar(2016, 12, 25, 10, 10, 10), new GregorianCalendar(2016, 12, 25, 10, 10, 10));
         assertTrue(instance.equals(obj));
     }
 
