@@ -202,6 +202,10 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
 
         JButton importAirportsButton = new JButton("Import Airports");
         importAirportsButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        importAirportsButton.addActionListener((ActionEvent ae) -> {
+            ImportAirportsUI importAirportsUI = new ImportAirportsUI(controller.getCreatedProject());
+            importAirportsUI.setSettings();
+        });
 
         JButton importAircraftsButton = new JButton("Import Aircraft Models");
         importAircraftsButton.setPreferredSize(BUTTON_PREFERED_SIZE);
