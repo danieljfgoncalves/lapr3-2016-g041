@@ -34,7 +34,7 @@ public class CustomMenuBar extends JMenuBar {
      * The simulator.
      */
     private final FlightSimulator simulator;
-    
+
     private final Project activeProject;
 
     /**
@@ -138,10 +138,10 @@ public class CustomMenuBar extends JMenuBar {
      * @return Switch Project menu item
      */
     private JMenuItem createSwitchProjectItem() {
-        JMenuItem item = new JMenuItem("Switch Project", 'S');
-        item.setAccelerator(KeyStroke.getKeyStroke("ctrl S"));
+        JMenuItem item = new JMenuItem("Switch Project", 'O');
+        item.setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
         item.addActionListener((ActionEvent e) -> {
-            // TODO
+            mainFrame.openProjectSelection();
         });
         return item;
     }

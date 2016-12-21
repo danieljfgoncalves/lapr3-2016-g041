@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
+import lapr.project.controller.OpenProjectController;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
 import lapr.project.ui.components.ListCellRendererProject;
@@ -45,12 +46,12 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
      * List of the selected projects.
      */
     private final List<Project> projects;
-    
+
     /**
      * The selected Project.
      */
     private Project project;
-    
+
     /**
      * The JList for the list of projects.
      */
@@ -189,7 +190,10 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         openProjectButton = new JButton("Open Project");
 
         openProjectButton.addActionListener((ActionEvent ae) -> {
-            // TODO
+            OpenProjectController openProjectController = new OpenProjectController(simulator);
+            openProjectController.activeProjects((Project) projectsList.getSelectedValue());
+            dispose();
+            mainFrame.activateProject((Project) projectsList.getSelectedValue());
         });
 
         openProjectButton.setEnabled(false);
@@ -206,7 +210,7 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         copyProjectButton = new JButton("Copy Project");
 
         copyProjectButton.addActionListener((ActionEvent ae) -> {
-            project = (Project)projectsList.getSelectedValue();
+            project = (Project) projectsList.getSelectedValue();
             CopyProjectDialog copyProjectDialog = new CopyProjectDialog(this, simulator, project);
             copyProjectDialog.setVisible(true);
         });
@@ -225,7 +229,7 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         editProjectButton = new JButton("Edit Project");
 
         editProjectButton.addActionListener((ActionEvent ae) -> {
-            project = (Project)projectsList.getSelectedValue();
+            project = (Project) projectsList.getSelectedValue();
             EditProjectPropertiesDialog editProjectPropertiesDialog = new EditProjectPropertiesDialog(this, simulator, project);
             editProjectPropertiesDialog.setVisible(true);
         });
