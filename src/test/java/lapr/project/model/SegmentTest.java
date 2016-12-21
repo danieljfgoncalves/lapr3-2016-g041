@@ -5,6 +5,12 @@ package lapr.project.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.measure.quantity.Angle;
+import javax.measure.quantity.Length;
+import javax.measure.quantity.Velocity;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import org.jscience.physics.amount.Amount;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -24,11 +30,6 @@ public class SegmentTest {
      * The instance to be tested.
      */
     private Segment instance;
-
-    /**
-     * The epsilon of the allowed error.
-     */
-    private final static Double EPSILON = 0.01d;
 
     @Before
     public void setUp() {
@@ -55,10 +56,10 @@ public class SegmentTest {
     public void testGetSetAllowedAltitudes() {
         System.out.println("setAllowedAltitudes");
 
-        List<Double> allowedAltitudes = new ArrayList<>();
-        allowedAltitudes.add(100d);
-        allowedAltitudes.add(125d);
-        allowedAltitudes.add(145.55d);
+        List<Amount<Length>> allowedAltitudes = new ArrayList<>();
+        allowedAltitudes.add(Amount.valueOf(100d, SI.METER));
+        allowedAltitudes.add(Amount.valueOf(125d, SI.METER));
+        allowedAltitudes.add(Amount.valueOf(145.55d, SI.METER));
 
         instance.setAllowedAltitudes(allowedAltitudes);
 
@@ -72,11 +73,11 @@ public class SegmentTest {
     public void testGetSetWindDirection() {
         System.out.println("get and setWindDirection");
 
-        Double windDirection = 75.5d;
+        Amount<Angle> windDirection = Amount.valueOf(75.5d, NonSI.DEGREE_ANGLE);
 
         instance.setWindDirection(windDirection);
 
-        assertEquals(instance.getWindDirection(), windDirection, EPSILON);
+        assertTrue(instance.getWindDirection().approximates(windDirection));
     }
 
     /**
@@ -86,11 +87,11 @@ public class SegmentTest {
     public void testGetSetWindSpeed() {
         System.out.println("get and setWindSpeed");
 
-        Double windSpeed = 113.13d;
+        Amount<Velocity> windSpeed = Amount.valueOf(113.13d, NonSI.KNOT);
 
         instance.setWindIntensity(windSpeed);
 
-        assertEquals(instance.getWindIntensity(), windSpeed, EPSILON);
+        assertTrue(instance.getWindIntensity().approximates(windSpeed));
     }
 
     /**
