@@ -4,9 +4,11 @@
 package lapr.project.model;
 
 import javax.measure.quantity.Angle;
+import javax.measure.quantity.Area;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
+import javax.measure.quantity.Mass;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
@@ -28,6 +30,46 @@ import static org.junit.Assert.*;
 public class CalculusTest {
 
     private static final double EPSILON = 0.1d;
+
+    /**
+     * Test of getLiftForce method, of class Calculus.
+     */
+    @Test
+    public void testGetLiftForce() {
+        System.out.println("getLiftForce");
+
+        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
+        Amount<Mass> mass = Amount.valueOf(372800, SI.KILOGRAM);
+        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
+        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+
+        Amount<Force> expResult = Amount.valueOf(3655919.12, SI.NEWTON);
+        Amount<Force> result = Calculus.getLiftForce(altitude, mass, wingsArea, machNumber, windSpeed, angleRelativeToY);
+
+        assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
+    }
+
+    /**
+     * Test of getLiftCoefficient method, of class Calculus.
+     */
+    @Test
+    public void testGetLiftCoefficient() {
+        System.out.println("getLiftCoefficient");
+
+        Amount<Length> altitude = Amount.valueOf(35000, NonSI.FOOT);
+        Amount<Mass> mass = Amount.valueOf(372800, SI.KILOGRAM);
+        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
+        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+
+        Amount<Dimensionless> expResult = Amount.valueOf(0.5, Unit.ONE);
+        Amount<Dimensionless> result = Calculus.getLiftCoefficient(altitude, mass, wingsArea, machNumber, windSpeed, angleRelativeToY);
+
+        assertEquals(expResult.doubleValue(Unit.ONE), result.doubleValue(Unit.ONE), EPSILON);
+    }
 
     /**
      * Test 1 of getObjectSpeed method, of class Calculus.
@@ -87,7 +129,7 @@ public class CalculusTest {
         System.out.println("getAirDensity 1");
 
         Amount<Length> altitude = Amount.valueOf(7499, SI.METER);
-        Amount<VolumetricDensity> expResult = (Amount<VolumetricDensity>) Amount.valueOf(5.900, SI.KILOGRAM.divide(SI.CUBIC_METRE));
+        Amount<VolumetricDensity> expResult = (Amount<VolumetricDensity>) Amount.valueOf(5.900e-1, SI.KILOGRAM.divide(SI.CUBIC_METRE));
         Amount<VolumetricDensity> result = Calculus.getAirDensity(altitude);
 
         assertTrue(expResult.approximates(result));
@@ -101,7 +143,7 @@ public class CalculusTest {
         System.out.println("getAirDensity 2");
 
         Amount<Length> altitude = Amount.valueOf(7501, SI.METER);
-        Amount<VolumetricDensity> expResult = (Amount<VolumetricDensity>) Amount.valueOf(5.258, SI.KILOGRAM.divide(SI.CUBIC_METRE));
+        Amount<VolumetricDensity> expResult = (Amount<VolumetricDensity>) Amount.valueOf(5.258e-1, SI.KILOGRAM.divide(SI.CUBIC_METRE));
         Amount<VolumetricDensity> result = Calculus.getAirDensity(altitude);
 
         assertTrue(expResult.approximates(result));
@@ -115,7 +157,7 @@ public class CalculusTest {
         System.out.println("getAirDensity 3");
 
         Amount<Length> altitude = Amount.valueOf(10, SI.METER);
-        Amount<VolumetricDensity> expResult = (Amount<VolumetricDensity>) Amount.valueOf(12.25, SI.KILOGRAM.divide(SI.CUBIC_METRE));
+        Amount<VolumetricDensity> expResult = (Amount<VolumetricDensity>) Amount.valueOf(12.25e-1, SI.KILOGRAM.divide(SI.CUBIC_METRE));
         Amount<VolumetricDensity> result = Calculus.getAirDensity(altitude);
 
         assertTrue(expResult.approximates(result));
@@ -129,7 +171,7 @@ public class CalculusTest {
         System.out.println("getAirDensity 4");
 
         Amount<Length> altitude = Amount.valueOf(991231, SI.METER);
-        Amount<VolumetricDensity> expResult = (Amount<VolumetricDensity>) Amount.valueOf(0.0001846, SI.KILOGRAM.divide(SI.CUBIC_METRE));
+        Amount<VolumetricDensity> expResult = (Amount<VolumetricDensity>) Amount.valueOf(0.0001846e-1, SI.KILOGRAM.divide(SI.CUBIC_METRE));
         Amount<VolumetricDensity> result = Calculus.getAirDensity(altitude);
 
         assertTrue(expResult.approximates(result));
@@ -198,15 +240,18 @@ public class CalculusTest {
     public void testGetDragCoefficient() {
         System.out.println("getDragCoefficient");
 
-        Amount<Dimensionless> expResult = Amount.valueOf((0.025001861949660857), Unit.ONE);
+        Amount<Dimensionless> expResult = Amount.valueOf((0.02500308652765414), Unit.ONE);
         Amount<Dimensionless> result = Calculus.getDragCoefficient(Amount.valueOf(69.0, SI.METER),
                 Amount.valueOf(250000, SI.KILOGRAM),
                 Amount.valueOf(0.025, Unit.ONE),
                 Amount.valueOf(64.8, SI.METER),
                 Amount.valueOf(512, SI.SQUARE_METRE),
-                Amount.valueOf(0.95, Unit.ONE));
+                Amount.valueOf(0.95, Unit.ONE),
+                Amount.valueOf(0.85, NonSI.MACH),
+                Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
+                Amount.valueOf(15, NonSI.DEGREE_ANGLE));
 
-        assertTrue(expResult.approximates(result));
+        assertEquals(expResult.doubleValue(Unit.ONE), result.doubleValue(Unit.ONE), EPSILON);
     }
 
     /**
@@ -216,16 +261,19 @@ public class CalculusTest {
     public void testGetDragForce() {
         System.out.println("testGetDragForce");
 
-        Amount<Force> expResult = Amount.valueOf((886691.0981119929), SI.NEWTON);
+        Amount<Force> expResult = Amount.valueOf((89757.14351788367), SI.NEWTON);
         Amount<Force> result = Calculus.getDragForce(Amount.valueOf(69.0, SI.METER),
                 Amount.valueOf(250000, SI.KILOGRAM),
                 Amount.valueOf(0.025, Unit.ONE),
                 Amount.valueOf(64.8, SI.METER),
                 Amount.valueOf(512, SI.SQUARE_METRE),
                 Amount.valueOf(0.95, Unit.ONE),
-                Amount.valueOf(50, SI.SQUARE_METRE));
+                Amount.valueOf(50, SI.SQUARE_METRE),
+                Amount.valueOf(0.85, NonSI.MACH),
+                Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
+                Amount.valueOf(15, NonSI.DEGREE_ANGLE));
 
-        assertTrue(expResult.approximates(result));
+        assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
     }
 
 }
