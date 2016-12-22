@@ -3,15 +3,18 @@
  */
 package lapr.project.model;
 
+import javax.measure.quantity.Area;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
+import javax.measure.quantity.Mass;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import org.jscience.physics.amount.Amount;
+import org.jscience.physics.amount.Constants;
 
 /**
  * Resposible to make calculations related to model business.
@@ -27,19 +30,25 @@ public class Calculus {
     /**
      * Gets the lift force.
      *
-     * @return lift force
+     * @param altitude the altitude
+     * @param initialWeight the initial weight
+     * @param wingsArea the wings area
+     * @return lift force the lift force
      */
-    public static Amount<Force> getLiftForce() {
-        return Amount.valueOf(-1, SI.NEWTON);
+    public static Amount<Force> getLiftForce(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Area> wingsArea) {
+        return (Amount<Force>) getLiftCoefficient(altitude, initialWeight, wingsArea).times(getAirDensity(altitude)).times(getSpeedOfSound(altitude).pow(2)).times(wingsArea).divide(Amount.valueOf(2, Unit.ONE));
     }
 
     /**
-     * Gets the liftCoeficient
+     * Gets the liftCoefficient.
      *
-     * @return lift coeficient
+     * @param altitude the altitude
+     * @param initialWeight the initial weight
+     * @param wingsArea the wings area
+     * @return lift coefficient the lift coefficient
      */
-    public static Amount<Dimensionless> getLiftCoeficient() {
-        return Amount.valueOf(-1, Unit.ONE);
+    public static Amount<Dimensionless> getLiftCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Area> wingsArea) {
+        return (Amount<Dimensionless>) Amount.valueOf(2, Unit.ONE).times(initialWeight).times(Constants.g).divide(getAirDensity(altitude).times(wingsArea).times(getSpeedOfSound(altitude).pow(2)));
     }
 
     /**
@@ -51,7 +60,7 @@ public class Calculus {
     public static Amount<VolumetricDensity> getAirDensity(Amount<Length> altitude) {
 
         // first colmumn = altitude above sea level (m)
-        // second column = speed of sound (m/s)
+        // second column = air density (kg/(m^3))
         final double table[][] = {
             {-1000, 13.47},
             {0, 12.25},
