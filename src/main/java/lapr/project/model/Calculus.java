@@ -204,6 +204,28 @@ public class Calculus {
         Amount<Dimensionless> cl2 = (Amount<Dimensionless>) cl.pow(2);
         Amount<Dimensionless> aspectRatio = (Amount<Dimensionless>) (wingSpan.times(wingSpan)).divide(wingArea);
         return (Amount<Dimensionless>) (cl2.divide(aspectRatio.times(Constants.π).times(e))).plus(dragCoefficient0);
+
     }
 
+    /**
+     * Gets the Drag Force.
+     *
+     * @param altitude the altitude in meters
+     * @param initialWeight the initial weight in kg
+     * @param dragCoefficient0
+     * @param wingSpan the wingSpan e meters
+     * @param wingArea the wings area in square meters
+     * @param e
+     * @param referenceAircraftArea reference aircraft area in square meters
+     * @return the calculated drag force
+     */
+    public static Amount<Force> getDragForce(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Dimensionless> dragCoefficient0,
+            Amount<Length> wingSpan, Amount<Area> wingArea, Amount<Dimensionless> e, Amount<Area> referenceAircraftArea) {
+        return (Amount<Force>) getDragCoefficient(altitude, initialWeight, dragCoefficient0, wingSpan, wingArea, e)
+                .times(getAirDensity(altitude))
+                .times(getSpeedOfSound(altitude).pow(2))
+                .times(referenceAircraftArea)
+                .divide(Amount.valueOf(2, Unit.ONE));
+
+    }
 }

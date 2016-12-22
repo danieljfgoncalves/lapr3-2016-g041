@@ -5,6 +5,7 @@ package lapr.project.model;
 
 import javax.measure.quantity.Angle;
 import javax.measure.quantity.Dimensionless;
+import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
@@ -204,6 +205,25 @@ public class CalculusTest {
                 Amount.valueOf(64.8, SI.METER),
                 Amount.valueOf(512, SI.SQUARE_METRE),
                 Amount.valueOf(0.95, Unit.ONE));
+
+        assertTrue(expResult.approximates(result));
+    }
+
+    /**
+     * Test of getDragCoefficient method, of class Calculus.
+     */
+    @Test
+    public void testGetDragForce() {
+        System.out.println("testGetDragForce");
+
+        Amount<Force> expResult = Amount.valueOf((886691.0981119929), SI.NEWTON);
+        Amount<Force> result = Calculus.getDragForce(Amount.valueOf(69.0, SI.METER),
+                Amount.valueOf(250000, SI.KILOGRAM),
+                Amount.valueOf(0.025, Unit.ONE),
+                Amount.valueOf(64.8, SI.METER),
+                Amount.valueOf(512, SI.SQUARE_METRE),
+                Amount.valueOf(0.95, Unit.ONE),
+                Amount.valueOf(50, SI.SQUARE_METRE));
 
         assertTrue(expResult.approximates(result));
     }
