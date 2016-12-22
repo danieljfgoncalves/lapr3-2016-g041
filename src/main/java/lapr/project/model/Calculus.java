@@ -238,9 +238,8 @@ public class Calculus {
             Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
         return (Amount<Force>) getDragCoefficient(altitude, initialWeight, dragCoefficient0, wingSpan, wingArea, e, machNumber, windSpeed, angleRelativeToY)
                 .times(getAirDensity(altitude))
-                .times(getSpeedOfSound(altitude).pow(2))
+                .times((getTAS(altitude, machNumber, windSpeed, angleRelativeToY)).pow(2))
                 .times(referenceAircraftArea)
                 .divide(Amount.valueOf(2, Unit.ONE));
-
     }
 }

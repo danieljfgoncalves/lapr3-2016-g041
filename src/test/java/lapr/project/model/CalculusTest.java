@@ -240,9 +240,9 @@ public class CalculusTest {
     public void testGetDragCoefficient() {
         System.out.println("getDragCoefficient");
 
-        Amount<Dimensionless> expResult = Amount.valueOf((0.02500308652765414), Unit.ONE);
-        Amount<Dimensionless> result = Calculus.getDragCoefficient(Amount.valueOf(69.0, SI.METER),
-                Amount.valueOf(250000, SI.KILOGRAM),
+        Amount<Dimensionless> expResult = Amount.valueOf((0.035), Unit.ONE);
+        Amount<Dimensionless> result = Calculus.getDragCoefficient(Amount.valueOf(10668.0, SI.METER),
+                Amount.valueOf(372800, SI.KILOGRAM),
                 Amount.valueOf(0.025, Unit.ONE),
                 Amount.valueOf(64.8, SI.METER),
                 Amount.valueOf(512, SI.SQUARE_METRE),
@@ -251,7 +251,7 @@ public class CalculusTest {
                 Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
                 Amount.valueOf(15, NonSI.DEGREE_ANGLE));
 
-        assertEquals(expResult.doubleValue(Unit.ONE), result.doubleValue(Unit.ONE), EPSILON);
+        assertEquals(expResult.doubleValue(Unit.ONE), result.doubleValue(Unit.ONE), 0.001d);
     }
 
     /**
@@ -261,9 +261,9 @@ public class CalculusTest {
     public void testGetDragForce() {
         System.out.println("testGetDragForce");
 
-        Amount<Force> expResult = Amount.valueOf((89757.14351788367), SI.NEWTON);
-        Amount<Force> result = Calculus.getDragForce(Amount.valueOf(69.0, SI.METER),
-                Amount.valueOf(250000, SI.KILOGRAM),
+        Amount<Force> expResult = Amount.valueOf((25058.4), SI.NEWTON);
+        Amount<Force> result = Calculus.getDragForce(Amount.valueOf(10668.0, SI.METER),
+                Amount.valueOf(372800, SI.KILOGRAM),
                 Amount.valueOf(0.025, Unit.ONE),
                 Amount.valueOf(64.8, SI.METER),
                 Amount.valueOf(512, SI.SQUARE_METRE),
@@ -272,7 +272,7 @@ public class CalculusTest {
                 Amount.valueOf(0.85, NonSI.MACH),
                 Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
                 Amount.valueOf(15, NonSI.DEGREE_ANGLE));
-
+        
         assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
     }
 
