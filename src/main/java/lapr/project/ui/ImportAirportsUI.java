@@ -6,13 +6,13 @@ package lapr.project.ui;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
-import lapr.project.controller.ImportAircraftModelsController;
+import lapr.project.controller.ImportAirportsController;
 import lapr.project.model.Project;
 import lapr.project.ui.components.ImportFileChooser;
 import org.xml.sax.SAXException;
 
 /**
- * Import Air Network UI.
+ * Import Airports UI.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
@@ -20,21 +20,21 @@ import org.xml.sax.SAXException;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class ImportAircraftModelsUI extends ImportFileChooser {
+public class ImportAirportsUI extends ImportFileChooser {
 
     /**
      * Selected Project.
      */
-    private final Project project;
+    private final Project activeProject;
 
     /**
      * Creates an instance of the custom file chooser.
      *
      * @param project
      */
-    public ImportAircraftModelsUI(Project project) {
+    public ImportAirportsUI(Project project) {
 
-        this.project = project;
+        this.activeProject = project;
     }
 
     @Override
@@ -42,14 +42,14 @@ public class ImportAircraftModelsUI extends ImportFileChooser {
         super.approveSelection();
 
         // Create import controller
-        ImportAircraftModelsController controller = new ImportAircraftModelsController(project);
+        ImportAirportsController controller = new ImportAirportsController(activeProject);
 
         try {
             // Import selected File
             controller.importFile(getSelectedFile());
             // If no critical error
             JOptionPane.showMessageDialog(this.getParent(),
-                    "The air network was successfully added!",
+                    "The airports were successfully added!",
                     "Import Successful",
                     JOptionPane.INFORMATION_MESSAGE);
 
@@ -61,5 +61,4 @@ public class ImportAircraftModelsUI extends ImportFileChooser {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }

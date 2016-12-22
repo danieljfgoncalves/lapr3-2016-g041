@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Integration tests for create project controller.
+ * Tests for create project controller.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
@@ -17,8 +17,11 @@ import static org.junit.Assert.*;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class CreateProjectControllerIT {
+public class CreateProjectControllerTest {
 
+    /**
+     * Instance to be tested.
+     */
     private CreateProjectController instance;
 
     @Before

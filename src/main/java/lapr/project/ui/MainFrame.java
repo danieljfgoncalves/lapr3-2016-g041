@@ -4,6 +4,8 @@
 package lapr.project.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import lapr.project.model.Flight;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
@@ -67,7 +71,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
     /**
      * The label prefered size.
      */
-    private final static Dimension LABEL_PREFERED_SIZE = new Dimension(100, 30);
+    private final static Dimension CELL_PREFERED_SIZE = new Dimension(100, 50);
 
     /**
      * The label prefered size.
@@ -85,7 +89,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         // Set simulator
         this.simulator = simulator;
         // Instanciate active project
-        this.activeProject = null;
+        this.activeProject = new Project();
 
         // Set Custom Menu Bar
         CustomMenuBar customMenuBar = new CustomMenuBar(this, simulator);
@@ -157,10 +161,14 @@ public class MainFrame extends JFrame implements ProjectHandler {
      * @return table panel
      */
     private JPanel createTablePanel() {
-        JPanel tablePanel = new JPanel();
+        JPanel tablePanel = new JPanel(new BorderLayout());
 
         // TODO remove this mock object
         ArrayList<Flight> flights = new ArrayList<>();
+        flights.add(new Flight());
+        flights.add(new Flight());
+        flights.add(new Flight());
+        flights.add(new Flight());
         flights.add(new Flight());
 
         JTable simulationsTable = new JTable(new TableModelFlight(flights));

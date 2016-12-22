@@ -64,4 +64,13 @@ public class CopyProjectController {
     public boolean addProjectCopy() {
         return flightSimulator.validateProject(projectCopy) ? flightSimulator.addProject(projectCopy) : false;
     }
+
+    /**
+     * Get the copied project.
+     *
+     * @return copied project
+     */
+    public Project getCopiedProject() {
+        return this.projectCopy;
+    }
 }

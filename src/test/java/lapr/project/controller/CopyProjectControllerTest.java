@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Integration tests for copy project controller.
+ * Tests for copy project controller.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class CopyProjectControllerIT {
+public class CopyProjectControllerTest {
 
     /**
      * The instance to test.
@@ -90,9 +90,9 @@ public class CopyProjectControllerIT {
     public void testAddProjectCopy() {
         System.out.println("addProjectCopy");
 
-        boolean expResult = true; // flighSimulator does not contain project (different serie number)
-        boolean result = instance.addProjectCopy();
-        assertEquals(expResult, result);
+        instance.setCopyProjectData("New copied project!asb!asb!", "Hello copied project ");
+
+        assertTrue(instance.addProjectCopy());
     }
 
 }

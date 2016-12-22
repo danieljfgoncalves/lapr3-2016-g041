@@ -85,9 +85,9 @@ public class ProjectTest {
     public void testGetSetAirports() {
         System.out.println("getAirports");
 
-        List<Airport> airports = new ArrayList();
-        instance.setAirports(airports);
-        assertEquals(airports, instance.getAirports());
+        AirportsRegister airports = new AirportsRegister();
+        instance.setAirportsRegister(airports);
+        assertEquals(airports, instance.getAirportsRegister());
     }
 
     /**
