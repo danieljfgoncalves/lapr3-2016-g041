@@ -3,11 +3,8 @@
  */
 package lapr.project.model;
 
-import javax.measure.quantity.Angle;
-import javax.measure.quantity.Area;
-import javax.measure.quantity.Force;
+import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Length;
-import javax.measure.quantity.Mass;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
@@ -136,6 +133,24 @@ public class CalculusTest {
         Amount<Length> altitude = Amount.valueOf(-10000, NonSI.FOOT);
         Amount<Velocity> expResult = Amount.valueOf(340.3, SI.METERS_PER_SECOND);
         Amount<Velocity> result = Calculus.getSpeedOfSound(altitude);
+
+        assertTrue(expResult.approximates(result));
+    }
+
+    /**
+     * Test of getDragCoefficient method, of class Calculus.
+     */
+    @Test
+    public void testGetDragCoefficient() {
+        System.out.println("getDragCoefficient");
+
+        Amount<Dimensionless> expResult = Amount.valueOf((0.025001861949660857), Unit.ONE);
+        Amount<Dimensionless> result = Calculus.getDragCoefficient(Amount.valueOf(69.0, SI.METER),
+                Amount.valueOf(250000, SI.KILOGRAM),
+                Amount.valueOf(0.025, Unit.ONE),
+                Amount.valueOf(64.8, SI.METER),
+                Amount.valueOf(512, SI.SQUARE_METRE),
+                Amount.valueOf(0.95, Unit.ONE));
 
         assertTrue(expResult.approximates(result));
     }

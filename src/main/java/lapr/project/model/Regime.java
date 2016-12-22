@@ -4,6 +4,15 @@
 package lapr.project.model;
 
 import java.util.Objects;
+import javax.measure.quantity.Force;
+import javax.measure.quantity.Length;
+import javax.measure.quantity.Power;
+import javax.measure.quantity.Quantity;
+import javax.measure.quantity.Velocity;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import lapr.project.utils.CustomUnits;
+import org.jscience.physics.amount.Amount;
 
 /**
  * Represents a Regime class.
@@ -24,22 +33,22 @@ public class Regime {
     /**
      * The tsfc (thrust specific fuel consumption).
      */
-    private Double tsfc;
+    private Amount tsfc;
 
     /**
-     * The speed.
+     * The speed (Mach).
      */
-    private Double speed;
+    private Amount<Velocity> speed;
 
     /**
-     * The thrust.
+     * The thrust (SI: N).
      */
-    private Double thrust;
+    private Amount<Force> thrust;
 
     /**
-     * The altitude.
+     * The altitude (SI: m).
      */
-    private Double altitude;
+    private Amount<Length> altitude;
 
     /**
      * The default regimeID.
@@ -49,27 +58,22 @@ public class Regime {
     /**
      * The default tsfc (thrust specific fuel consumption).
      */
-    private static final Double DEFAULT_TSFC = 0.1d;
+    private static final Amount DEFAULT_TSFC = Amount.valueOf(0d, CustomUnits.TSFC_SI);
 
     /**
      * The default speed.
      */
-    private static final Double DEFAULT_SPEED = 0.1d;
+    private static final Amount<Velocity> DEFAULT_SPEED = Amount.valueOf(0d, NonSI.MACH);
 
     /**
      * The default thrust.
      */
-    private static final Double DEFAULT_THRUST = 1.0d;
+    private static final Amount<Force> DEFAULT_THRUST = Amount.valueOf(0d, SI.NEWTON);
 
     /**
      * The default altitude.
      */
-    private static final Double DEFAULT_ALTITUDE = 100.0d;
-
-    /**
-     * The epsilon of the allowed error.
-     */
-    private final static Double EPSILON = 0.0001d;
+    private static final Amount<Length> DEFAULT_ALTITUDE = Amount.valueOf(100d, SI.METER);
 
     /**
      * Creates an instance of Regime with given attributes.
@@ -80,7 +84,7 @@ public class Regime {
      * @param thrust the given thrust
      * @param altitude the given altitude
      */
-    public Regime(String regimeID, Double tsfc, Double speed, Double thrust, Double altitude) {
+    public Regime(String regimeID, Amount tsfc, Amount<Velocity> speed, Amount<Force> thrust, Amount<Length> altitude) {
         this.regimeID = regimeID;
         this.tsfc = tsfc;
         this.speed = speed;
@@ -135,7 +139,7 @@ public class Regime {
      *
      * @return the tsfc
      */
-    public Double getTsfc() {
+    public Amount getTsfc() {
         return tsfc;
     }
 
@@ -144,7 +148,7 @@ public class Regime {
      *
      * @param tsfc the tsfc to set
      */
-    public void setTsfc(Double tsfc) {
+    public void setTsfc(Amount tsfc) {
         this.tsfc = tsfc;
     }
 
@@ -153,7 +157,7 @@ public class Regime {
      *
      * @return the speed
      */
-    public Double getSpeed() {
+    public Amount<Velocity> getSpeed() {
         return speed;
     }
 
@@ -162,7 +166,7 @@ public class Regime {
      *
      * @param speed the speed to set
      */
-    public void setSpeed(Double speed) {
+    public void setSpeed(Amount<Velocity> speed) {
         this.speed = speed;
     }
 
@@ -171,7 +175,7 @@ public class Regime {
      *
      * @return the thrust
      */
-    public Double getThrust() {
+    public Amount<Force> getThrust() {
         return thrust;
     }
 
@@ -180,7 +184,7 @@ public class Regime {
      *
      * @param thrust the thrust to set
      */
-    public void setThrust(Double thrust) {
+    public void setThrust(Amount<Force> thrust) {
         this.thrust = thrust;
     }
 
@@ -189,7 +193,7 @@ public class Regime {
      *
      * @return the altitude
      */
-    public Double getAltitude() {
+    public Amount<Length> getAltitude() {
         return altitude;
     }
 
@@ -198,7 +202,7 @@ public class Regime {
      *
      * @param altitude the altitude to set
      */
-    public void setAltitude(Double altitude) {
+    public void setAltitude(Amount<Length> altitude) {
         this.altitude = altitude;
     }
 
@@ -225,19 +229,19 @@ public class Regime {
         final Regime other = (Regime) obj;
 
         return this.regimeID.equals(other.regimeID)
-                && Math.abs(this.tsfc - other.tsfc) < EPSILON
-                && Math.abs(this.speed - other.speed) < EPSILON
-                && Math.abs(this.thrust - other.thrust) < EPSILON
-                && Math.abs(this.altitude - other.altitude) < EPSILON;
+                && this.tsfc.approximates(other.tsfc)
+                && this.speed.approximates(other.speed)
+                && this.thrust.approximates(other.thrust)
+                && this.altitude.approximates(other.altitude);
     }
 
     @Override
     public String toString() {
         return String.format("Regime ID: %s\n"
-                + "TSFC: %.3f\n"
-                + "Speed: %.2f\n"
-                + "Thrust: %.1f\n"
-                + "Altitude: %.1f", regimeID, tsfc, speed, thrust, altitude);
+                + "TSFC: %s\n"
+                + "Speed: %s\n"
+                + "Thrust: %s\n"
+                + "Altitude: %s", regimeID, tsfc, speed, thrust, altitude);
     }
 
 }

@@ -3,6 +3,16 @@
  */
 package lapr.project.model;
 
+import javax.measure.quantity.Area;
+import javax.measure.quantity.Dimensionless;
+import javax.measure.quantity.Length;
+import javax.measure.quantity.Mass;
+import javax.measure.quantity.Velocity;
+import javax.measure.quantity.Volume;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
+import org.jscience.physics.amount.Amount;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -22,11 +32,6 @@ public class AircraftModelTest {
      * The instance to be tested.
      */
     private AircraftModel instance;
-
-    /**
-     * The epsilon of the allowed error.
-     */
-    private final static Double EPSILON = 0.01d;
 
     @Before
     public void setUp() {
@@ -51,10 +56,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetEmptyWeight() {
         System.out.println("getEmptyWeight");
-        Double expResult = 4000.0;
+        Amount<Mass> expResult = Amount.valueOf(4000d, SI.KILOGRAM);
         instance.setEmptyWeight(expResult);
-        Double result = instance.getEmptyWeight();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Mass> result = instance.getEmptyWeight();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -63,10 +68,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetMtow() {
         System.out.println("getMtow and setMtow");
-        Double expResult = 100000000.0;
+        Amount<Mass> expResult = Amount.valueOf(1000000d, SI.KILOGRAM);
         instance.setMtow(expResult);
-        Double result = instance.getMtow();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Mass> result = instance.getMtow();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -75,10 +80,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetMzfw() {
         System.out.println("getMzfw and setMzfw");
-        Double expResult = 20000.0;
+        Amount<Mass> expResult = Amount.valueOf(200000d, SI.KILOGRAM);
         instance.setMzfw(expResult);
-        Double result = instance.getMzfw();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Mass> result = instance.getMzfw();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -87,10 +92,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetWingArea() {
         System.out.println("getWingArea and setWingArea");
-        Double expResult = 124.60; // 124.60 m2 wing area of Boeing 737
+        Amount<Area> expResult = Amount.valueOf(124.6d, SI.SQUARE_METRE); // 124.60 m2 wing area of Boeing 737
         instance.setWingArea(expResult);
-        Double result = instance.getWingArea();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Area> result = instance.getWingArea();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -149,10 +154,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetMaxPayload() {
         System.out.println("getSetMaxPayload");
-        Double expResult = 100000000.0;
+        Amount<Mass> expResult = Amount.valueOf(100d, SI.KILO(SI.KILOGRAM));
         instance.setMaxPayload(expResult);
-        Double result = instance.getMaxPayload();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Mass> result = instance.getMaxPayload();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -161,10 +166,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetMaxFuelCapacity() {
         System.out.println("getSetMaxFuelCapacity");
-        Double expResult = 29666.27; //max fuel capacity of Boeing 737-900ER in liters
+        Amount<Volume> expResult = Amount.valueOf(29666.27, SI.CUBIC_METRE); //max fuel capacity of Boeing 737-900ER in liters
         instance.setMaxFuelCapacity(expResult);
-        Double result = instance.getMaxFuelCapacity();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Volume> result = instance.getMaxFuelCapacity();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -173,10 +178,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetVmo() {
         System.out.println("getSetVmo");
-        Double expResult = 340.0; // max operating speed of boeing 700 = 340.0kt
+        Amount<Velocity> expResult = Amount.valueOf(340d, NonSI.KNOT); // max operating speed of boeing 700 = 340.0kt
         instance.setVmo(expResult);
-        Double result = instance.getVmo();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Velocity> result = instance.getVmo();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -185,10 +190,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetMmo() {
         System.out.println("getSetMmo");
-        Double expResult = 0.82; // max mach operating speed for boeing 700 = 0.82 Mach
+        Amount<Velocity> expResult = Amount.valueOf(0.82d, NonSI.MACH); // max mach operating speed for boeing 700 = 0.82 Mach
         instance.setMmo(expResult);
-        Double result = instance.getMmo();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Velocity> result = instance.getMmo();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -197,10 +202,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetWingSpan() {
         System.out.println("getSetWingSpan");
-        Double expResult = 35.79; // 35.79 m with winglets(little wings) for Boeing 737 without winglets: 34.32 m
+        Amount<Length> expResult = Amount.valueOf(35.79d, SI.METER); // 35.79 m with winglets(little wings) for Boeing 737 without winglets: 34.32 m
         instance.setWingSpan(expResult);
-        Double result = instance.getWingSpan();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Length> result = instance.getWingSpan();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -209,10 +214,10 @@ public class AircraftModelTest {
     @Test
     public void testGetSetE() {
         System.out.println("getSetE");
-        Double expResult = 10.0;
+        Amount<Dimensionless> expResult = Amount.valueOf(0.90d, Unit.ONE);
         instance.setE(expResult);
-        Double result = instance.getE();
-        assertEquals(expResult, result, EPSILON);
+        Amount<Dimensionless> result = instance.getE();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -223,8 +228,14 @@ public class AircraftModelTest {
     public void testEquals01() {
         System.out.println("equals");
 
-        AircraftModel obj = new AircraftModel("30BOING474", AircraftType.MIXED, 1.0, 1.0, 1.0, 1.0, new Motorization(), "motor1",
-                "Boeing Vertol Company (United States)", 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+        AircraftModel obj = new AircraftModel("30BOING474", AircraftType.MIXED, 
+                Amount.valueOf(10d, SI.KILOGRAM), Amount.valueOf(10d, SI.KILOGRAM), 
+                Amount.valueOf(10d, SI.KILOGRAM), Amount.valueOf(10d, SI.SQUARE_METRE), 
+                new Motorization(), "motor1",
+                "Boeing Vertol Company (United States)", 
+                Amount.valueOf(10d, SI.KILOGRAM), Amount.valueOf(10d, SI.CUBIC_METRE), 
+                Amount.valueOf(10d, NonSI.KNOT), Amount.valueOf(10d, NonSI.MACH), Amount.valueOf(10d, SI.METER), 
+                Amount.valueOf(10d, Unit.ONE), Amount.valueOf(10d, Unit.ONE));
 
         assertFalse(instance.equals(obj));
     }

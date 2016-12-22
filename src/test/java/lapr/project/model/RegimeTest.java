@@ -3,6 +3,12 @@
  */
 package lapr.project.model;
 
+import javax.measure.quantity.Force;
+import javax.measure.quantity.Length;
+import javax.measure.quantity.Velocity;
+import javax.measure.unit.NonSI;
+import lapr.project.utils.CustomUnits;
+import org.jscience.physics.amount.Amount;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -47,7 +53,7 @@ public class RegimeTest {
     public void testGetSetTsfc() {
         System.out.println("getTsfc");
 
-        Double tsfc = 0.600d;
+        Amount tsfc = Amount.valueOf(0.6, CustomUnits.TSFC_US);
         instance.setTsfc(tsfc);
         assertEquals(tsfc, instance.getTsfc());
     }
@@ -59,7 +65,7 @@ public class RegimeTest {
     public void testGetSetSpeed() {
         System.out.println("getSpeed");
 
-        Double speed = 0.90d;
+        Amount<Velocity> speed = Amount.valueOf(0.9, NonSI.MACH);
         instance.setSpeed(speed);
         assertEquals(speed, instance.getSpeed());
     }
@@ -71,7 +77,7 @@ public class RegimeTest {
     public void testGetSetThrust() {
         System.out.println("getThrust");
 
-        Double thrust = 10250.0d;
+        Amount<Force> thrust = Amount.valueOf(10250d, NonSI.POUND_FORCE);
         instance.setThrust(thrust);
         assertEquals(thrust, instance.getThrust());
     }
@@ -83,7 +89,7 @@ public class RegimeTest {
     public void testGetSetAltitude() {
         System.out.println("getAltitude");
 
-        Double altitude = 30000.0d;
+        Amount<Length> altitude = Amount.valueOf(30000d, NonSI.FOOT);
         instance.setAltitude(altitude);
         assertEquals(altitude, instance.getAltitude());
     }

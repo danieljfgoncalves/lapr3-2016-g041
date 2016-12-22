@@ -29,6 +29,39 @@ import org.jscience.physics.amount.Constants;
 public class Calculus {
 
     /**
+     * Gets the lift force.
+     *
+     * @param altitude the altitude
+     * @param initialWeight the initial weight
+     * @param wingsArea the wings area
+     * @return lift force the lift force
+     */
+    public static Amount<Force> getLiftForce(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Area> wingsArea) {
+        return (Amount<Force>) getLiftCoefficient(altitude, initialWeight, wingsArea)
+                .times(getAirDensity(altitude))
+                .times(getSpeedOfSound(altitude).pow(2))
+                .times(wingsArea)
+                .divide(Amount.valueOf(2, Unit.ONE));
+    }
+
+    /**
+     * Gets the liftCoefficient.
+     *
+     * @param altitude the altitude
+     * @param initialWeight the initial weight
+     * @param wingsArea the wings area
+     * @return lift coefficient the lift coefficient
+     */
+    public static Amount<Dimensionless> getLiftCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Area> wingsArea) {
+        return (Amount<Dimensionless>) Amount.valueOf(2, Unit.ONE)
+                .times(initialWeight)
+                .times(Constants.g)
+                .divide(getAirDensity(altitude)
+                        .times(wingsArea)
+                        .times(getSpeedOfSound(altitude).pow(2)));
+    }
+
+    /**
      * Get the air density (tabulated value) of a given altitude.
      *
      * @param altitude the altitude above sea level
@@ -152,4 +185,25 @@ public class Calculus {
         Double portionWindSpeed = windSpeed1 * Math.cos(90 - angleRelativeToY1);
         return Amount.valueOf(portionWindSpeed, SI.METERS_PER_SECOND);
     }
+
+    /**
+     * Gets the drag coefficient.
+     *
+     * @param altitude in meters
+     * @param initialWeight of the aircraft in kg
+     * @param dragCoefficient0
+     * @param wingSpan in meters
+     * @param wingArea in square meters
+     * @param e
+     * @return the calculated drag coefficient
+     */
+    public static Amount<Dimensionless> getDragCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Dimensionless> dragCoefficient0,
+            Amount<Length> wingSpan, Amount<Area> wingArea, Amount<Dimensionless> e) {
+
+        Amount<Dimensionless> cl = getLiftCoefficient(altitude, initialWeight, wingArea);
+        Amount<Dimensionless> cl2 = (Amount<Dimensionless>) cl.pow(2);
+        Amount<Dimensionless> aspectRatio = (Amount<Dimensionless>) (wingSpan.times(wingSpan)).divide(wingArea);
+        return (Amount<Dimensionless>) (cl2.divide(aspectRatio.times(Constants.π).times(e))).plus(dragCoefficient0);
+    }
+
 }
