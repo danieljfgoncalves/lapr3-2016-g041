@@ -29,40 +29,6 @@ import static org.junit.Assert.*;
 public class CalculusTest {
 
     /**
-     * Test of getLiftForce method, of class Calculus.
-     */
-    @Test
-    public void testGetLiftForce() {
-        System.out.println("getLiftForce");
-
-        Amount<Length> altitude = Amount.valueOf(10678, SI.METER);
-        Amount<Mass> mass = Amount.valueOf(372800, SI.KILOGRAM);
-        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
-        
-        Amount<Dimensionless> expResult = Amount.valueOf(3.6E6, Unit.ONE);
-        Amount<Force> result = Calculus.getLiftForce(altitude, mass, wingsArea);
-
-        assertTrue(expResult.approximates(result));
-    }
-
-    /**
-     * Test of getLiftCoefficient method, of class Calculus.
-     */
-    @Test
-    public void testGetLiftCoefficient() {
-        System.out.println("getLiftCoefficient");
-
-        Amount<Length> altitude = Amount.valueOf(10678, SI.METER);
-        Amount<Mass> mass = Amount.valueOf(372800, SI.KILOGRAM);
-        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
-
-        Amount<Dimensionless> expResult = Amount.valueOf(0.50, Unit.ONE);
-        Amount<Dimensionless> result = Calculus.getLiftCoefficient(altitude, mass, wingsArea);
-
-        assertTrue(expResult.approximates(result));
-    }
-
-    /**
      * Test 1 of getAirDensity method, of class Calculus.
      */
     @Test

@@ -3,6 +3,7 @@
  */
 package lapr.project.model;
 
+import javax.measure.quantity.Angle;
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
@@ -133,5 +134,46 @@ public class Calculus {
         }
 
         return Amount.valueOf(table[index][1], SI.METERS_PER_SECOND);
+    }
+
+    /**
+     * Obtains object speed (ground speed)
+     *
+     * @param altitude altitute of aircraft in cruise travel above sea level
+     * @param machNumber mach number
+     * @return the object speed (ground speed)
+     */
+    public static Amount<Velocity> getObjectSpeed(Amount<Length> altitude, Amount<Velocity> machNumber) {
+        Amount<Velocity> speedOfSound = getSpeedOfSound(altitude);
+        return (Amount<Velocity>) speedOfSound.times(machNumber);
+    }
+
+    /**
+     * Obtains True Air Speed (TAS)(velocity of aircraft relative to the
+     * air(m/s)
+     *
+     * @param altitude altitute of aircraft in cruise travel above sea level
+     * @param machNumber mach number
+     * @return the True Air Speed (TAS) (velocity of aircraft relative to the
+     * air)
+     */
+    public static Amount<Velocity> getTAS(Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
+        Amount<Velocity> objectSpeed = getObjectSpeed(altitude, machNumber);
+        Amount<Velocity> portionWindSpeed = getPortionWindSpeed(windSpeed, angleRelativeToY);
+        return objectSpeed.plus(portionWindSpeed);
+    }
+
+    /**
+     * Obtains wind speed portion (vx)
+     *
+     * @param windSpeed wind speed
+     * @param angleRelativeToY angle relative to Y in degrees
+     * @return the wind speed portion (vx)
+     */
+    public static Amount<Velocity> getPortionWindSpeed(Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
+        Double angleRelativeToY1 = angleRelativeToY.doubleValue(NonSI.DEGREE_ANGLE);
+        Double windSpeed1 = windSpeed.doubleValue(SI.METERS_PER_SECOND);
+        Double portionWindSpeed = windSpeed1 * Math.cos(90 - angleRelativeToY1);
+        return Amount.valueOf(portionWindSpeed, SI.METERS_PER_SECOND);
     }
 }
