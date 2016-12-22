@@ -3,13 +3,8 @@
  */
 package lapr.project.model;
 
-import static javafx.scene.input.KeyCode.Q;
-import javax.measure.quantity.Area;
 import javax.measure.quantity.Dimensionless;
-import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
-import javax.measure.quantity.Mass;
-import javax.measure.quantity.Quantity;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
@@ -150,14 +145,55 @@ public class CalculusTest {
         System.out.println("getDragCoefficient");
 
         Amount<Dimensionless> expResult = Amount.valueOf((0.025003301540594155), Unit.ONE);
-        Amount<Dimensionless> result = Calculus.getDragCoefficient(Amount.valueOf(69.0, SI.METER), 
+        Amount<Dimensionless> result = Calculus.getDragCoefficient(Amount.valueOf(69.0, SI.METER),
                 Amount.valueOf(250000, SI.KILOGRAM),
-                Amount.valueOf(0.025, Unit.ONE), 
-                Amount.valueOf(64.8,SI.METER), 
-                Amount.valueOf(512, SI.SQUARE_METRE), 
+                Amount.valueOf(0.025, Unit.ONE),
+                Amount.valueOf(64.8, SI.METER),
+                Amount.valueOf(512, SI.SQUARE_METRE),
                 Amount.valueOf(0.95, Unit.ONE));
 
         assertTrue(expResult.approximates(result));
     }
 
+    /**
+     * Test of distance method, of class Calculus.
+     */
+    @Test
+    public void testDistance01() {
+        System.out.println("distance01");
+        Coordinate first = new Coordinate("01", 43.6426, -79.3871);
+        Coordinate second = new Coordinate("02", 38.6916, -9.2160);
+        Amount<Length> altitude = Amount.valueOf(0.0, SI.METER);
+        double expResult = 5722d; // KM
+        double result = Calculus.distance(first, second, altitude).doubleValue(SI.KILOMETER);
+        assertEquals(expResult, result, 1);
+    }
+
+    /**
+     * Test of distance method, of class Calculus.
+     */
+    @Test
+    public void testDistance02() {
+        System.out.println("distance02");
+        Coordinate first = new Coordinate("01", 43.6426, -79.3871);
+        Coordinate second = new Coordinate("02", 38.6916, -9.2160);
+        Amount<Length> altitude = Amount.valueOf(0.0, SI.METER);
+        double expResult = 3555.486d; // Mile
+        double result = Calculus.distance(first, second, altitude).doubleValue(NonSI.MILE);
+        assertEquals(expResult, result, 1);
+    }
+
+    /**
+     * Test of distance method, of class Calculus.
+     */
+    @Test
+    public void testDistance03() {
+        System.out.println("distance03");
+        Coordinate first = new Coordinate("01", 43.6426, -79.3871);
+        Coordinate second = new Coordinate("02", 38.6916, -9.2160);
+        Amount<Length> altitude = Amount.valueOf(0.0, SI.METER);
+        double expResult = 5722d; // KM
+        double result = Calculus.distance(first, second, altitude).doubleValue(NonSI.MILE); // Returns in Miles
+        assertFalse(Math.abs(expResult - result) < 1);
+    }
 }

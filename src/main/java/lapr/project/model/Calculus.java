@@ -9,7 +9,6 @@ import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
-import javax.measure.quantity.Quantity;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
@@ -28,6 +27,11 @@ import org.jscience.physics.amount.Constants;
  * @author Tiago Correia - 1151031
  */
 public class Calculus {
+
+    /**
+     * Eath radius in meters (Assuming that Earth is perfect sphere)
+     */
+    private static final double EARTH_RADIUS = 6371e3;
 
     /**
      * Gets the lift force.
@@ -180,22 +184,57 @@ public class Calculus {
 
     /**
      * Gets the drag coefficient.
-     * 
+     *
      * @param altitude in meters
      * @param initialWeight of the aircraft in kg
      * @param dragCoefficient0
-     * @param wingSpan in meters 
+     * @param wingSpan in meters
      * @param wingArea in square meters
      * @param e
      * @return the calculated drag coefficient
      */
-    public static Amount<Dimensionless> getDragCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Dimensionless> dragCoefficient0, 
+    public static Amount<Dimensionless> getDragCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Dimensionless> dragCoefficient0,
             Amount<Length> wingSpan, Amount<Area> wingArea, Amount<Dimensionless> e) {
-        
+
         Amount<Dimensionless> cl = getLiftCoefficient(altitude, initialWeight, wingArea);
         Amount<Dimensionless> cl2 = (Amount<Dimensionless>) cl.pow(2);
         Amount<Dimensionless> aspectRatio = (Amount<Dimensionless>) (wingSpan.times(wingSpan)).divide(wingArea);
         return (Amount<Dimensionless>) (cl2.divide(aspectRatio.times(Constants.π).times(e))).plus(dragCoefficient0);
+    }
+
+    /**
+     * Calculate the great circle distance between two numerical coordinates (Haversine Formula).
+     * 
+     * @param first first coordinate
+     * @param second second coordinate
+     * @param altitude average flight altitude
+     * @return an length amount (conversionable to m, ft, etc.)
+     */
+    public static Amount<Length> distance(Coordinate first, Coordinate second, Amount<Length> altitude) {
+
+        // Haversine:
+        // a = sin²(Δφ/2) + cos φ1 x cos φ2 x sin²(Δλ/2)
+        // c = 2 x atan2( √a, √(1−a) )
+        // d = R x c
+        // Earth radius plus airport altitude.
+        double radius = EARTH_RADIUS + altitude.doubleValue(SI.METER);
+
+        // Stores lat/lon pairs in degrees
+        Amount<Angle> lat1 = Amount.valueOf(first.getLatitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lat2 = Amount.valueOf(second.getLatitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lon1 = Amount.valueOf(first.getLongitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lon2 = Amount.valueOf(second.getLongitude(), NonSI.DEGREE_ANGLE);
+        // Variation of lat/lat & lon/lon pairs in radians
+        double deltaLat = lat2.minus(lat1).doubleValue(SI.RADIAN);
+        double deltaLon = lon2.minus(lon1).doubleValue(SI.RADIAN);
+
+        double a = (Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2))
+                + Math.cos(lat1.doubleValue(SI.RADIAN)) * Math.cos(lat2.doubleValue(SI.RADIAN))
+                * (Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return Amount.valueOf(radius * c, SI.METER);
     }
 
 }
