@@ -29,30 +29,6 @@ import org.jscience.physics.amount.Constants;
 public class Calculus {
 
     /**
-     * Gets the lift force.
-     *
-     * @param altitude the altitude
-     * @param initialWeight the initial weight
-     * @param wingsArea the wings area
-     * @return lift force the lift force
-     */
-    public static Amount<Force> getLiftForce(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Area> wingsArea) {
-        return (Amount<Force>) getLiftCoefficient(altitude, initialWeight, wingsArea).times(getAirDensity(altitude)).times(getSpeedOfSound(altitude).pow(2)).times(wingsArea).divide(Amount.valueOf(2, Unit.ONE));
-    }
-
-    /**
-     * Gets the liftCoefficient.
-     *
-     * @param altitude the altitude
-     * @param initialWeight the initial weight
-     * @param wingsArea the wings area
-     * @return lift coefficient the lift coefficient
-     */
-    public static Amount<Dimensionless> getLiftCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Area> wingsArea) {
-        return (Amount<Dimensionless>) Amount.valueOf(2, Unit.ONE).times(initialWeight).times(Constants.g).divide(getAirDensity(altitude).times(wingsArea).times(getSpeedOfSound(altitude).pow(2)));
-    }
-
-    /**
      * Get the air density (tabulated value) of a given altitude.
      *
      * @param altitude the altitude above sea level
@@ -112,14 +88,14 @@ public class Calculus {
         // second column = speed of sound (m/s)
         final double table[][] = {
             {0, 340.3},
-            {5, 334.4},
-            {10, 328.4},
-            {15, 322.2},
-            {20, 316.0},
-            {25, 309.6},
-            {30, 303.1},
-            {35, 295.4},
-            {40, 294.9}
+            {5000, 334.4},
+            {10000, 328.4},
+            {15000, 322.2},
+            {20000, 316.0},
+            {25000, 309.6},
+            {30000, 303.1},
+            {35000, 295.4},
+            {40000, 294.9}
         };
 
         double altitudeInFeet = altitude.doubleValue(NonSI.FOOT), minimumDifference = Double.MAX_VALUE;

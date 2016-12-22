@@ -3,8 +3,8 @@
  */
 package lapr.project.model;
 
+import javax.measure.quantity.Angle;
 import javax.measure.quantity.Area;
-import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
@@ -91,7 +91,7 @@ public class CalculusTest {
     public void testGetSpeedOfSound1() {
         System.out.println("getSpeedOfSound 1");
 
-        Amount<Length> altitude = Amount.valueOf(23.4, NonSI.FOOT);
+        Amount<Length> altitude = Amount.valueOf(23000.4, NonSI.FOOT);
         Amount<Velocity> expResult = Amount.valueOf(309.6, SI.METERS_PER_SECOND);
         Amount<Velocity> result = Calculus.getSpeedOfSound(altitude);
 
@@ -105,7 +105,7 @@ public class CalculusTest {
     public void testGetSpeedOfSound2() {
         System.out.println("getSpeedOfSound 2");
 
-        Amount<Length> altitude = Amount.valueOf(55, NonSI.FOOT);
+        Amount<Length> altitude = Amount.valueOf(55000, NonSI.FOOT);
         Amount<Velocity> expResult = Amount.valueOf(294.9, SI.METERS_PER_SECOND);
         Amount<Velocity> result = Calculus.getSpeedOfSound(altitude);
 
@@ -119,7 +119,7 @@ public class CalculusTest {
     public void testGetSpeedOfSound3() {
         System.out.println("getSpeedOfSound 3");
 
-        Amount<Length> altitude = Amount.valueOf(21.9, NonSI.FOOT);
+        Amount<Length> altitude = Amount.valueOf(21000.9, NonSI.FOOT);
         Amount<Velocity> expResult = Amount.valueOf(316.0, SI.METERS_PER_SECOND);
         Amount<Velocity> result = Calculus.getSpeedOfSound(altitude);
 
@@ -133,7 +133,7 @@ public class CalculusTest {
     public void testGetSpeedOfSound4() {
         System.out.println("getSpeedOfSound 4");
 
-        Amount<Length> altitude = Amount.valueOf(-10, NonSI.FOOT);
+        Amount<Length> altitude = Amount.valueOf(-10000, NonSI.FOOT);
         Amount<Velocity> expResult = Amount.valueOf(340.3, SI.METERS_PER_SECOND);
         Amount<Velocity> result = Calculus.getSpeedOfSound(altitude);
 
