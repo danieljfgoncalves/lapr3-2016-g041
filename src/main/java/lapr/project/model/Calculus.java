@@ -9,6 +9,7 @@ import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
+import javax.measure.quantity.Quantity;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
@@ -176,4 +177,25 @@ public class Calculus {
         Double portionWindSpeed = windSpeed1 * Math.cos(90 - angleRelativeToY1);
         return Amount.valueOf(portionWindSpeed, SI.METERS_PER_SECOND);
     }
+
+    /**
+     * Gets the drag coefficient.
+     * 
+     * @param altitude in meters
+     * @param initialWeight of the aircraft in kg
+     * @param dragCoefficient0
+     * @param wingSpan in meters 
+     * @param wingArea in square meters
+     * @param e
+     * @return the calculated drag coefficient
+     */
+    public static Amount<Dimensionless> getDragCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Dimensionless> dragCoefficient0, 
+            Amount<Length> wingSpan, Amount<Area> wingArea, Amount<Dimensionless> e) {
+        
+        Amount<Dimensionless> cl = getLiftCoefficient(altitude, initialWeight, wingArea);
+        Amount<Dimensionless> cl2 = (Amount<Dimensionless>) cl.pow(2);
+        Amount<Dimensionless> aspectRatio = (Amount<Dimensionless>) (wingSpan.times(wingSpan)).divide(wingArea);
+        return (Amount<Dimensionless>) (cl2.divide(aspectRatio.times(Constants.π).times(e))).plus(dragCoefficient0);
+    }
+
 }
