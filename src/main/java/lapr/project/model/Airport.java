@@ -294,7 +294,7 @@ public class Airport {
                 + "IATA code: %s\n"
                 + "Latitude: %.6f\n"
                 + "Longitude: %.6f\n"
-                + "Altitude: %.2f\n", name, town, country, IATA, latitude, longitude, altitude);
+                + "Altitude: %s\n", name, town, country, IATA, latitude, longitude, altitude);
     }
 
 }

@@ -4,6 +4,16 @@
 package lapr.project.model;
 
 import java.util.Objects;
+import javax.measure.quantity.Area;
+import javax.measure.quantity.Dimensionless;
+import javax.measure.quantity.Length;
+import javax.measure.quantity.Mass;
+import javax.measure.quantity.Velocity;
+import javax.measure.quantity.Volume;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
+import org.jscience.physics.amount.Amount;
 
 /**
  * Represents an aircraft model (motorized commercial aircraft, there are many
@@ -29,24 +39,24 @@ public class AircraftModel {
     private AircraftType type;
 
     /**
-     * AircraftType's empty weight (EWeight).
+     * AircraftType's empty weight (EWeight) (SI: Kg).
      */
-    private Double emptyWeight;
+    private Amount<Mass> emptyWeight;
 
     /**
-     * AircraftType's Maximum take-off weight.
+     * AircraftType's Maximum take-off weight (SI: Kg).
      */
-    private Double mtow;
+    private Amount<Mass> mtow;
 
     /**
-     * AircraftType's Maximum Zero Fuel Weight.
+     * AircraftType's Maximum Zero Fuel Weight (SI: Kg).
      */
-    private Double mzfw;
+    private Amount<Mass> mzfw;
 
     /**
-     * AircraftType's wing area.
+     * AircraftType's wing area (SI: m2).
      */
-    private Double wingArea;
+    private Amount<Area> wingArea;
 
     /**
      * AircraftType's motorization.
@@ -64,44 +74,39 @@ public class AircraftModel {
     private String maker;
 
     /**
-     * AircraftType's maxPayload.
+     * AircraftType's maxPayload (SI: kg).
      */
-    private Double maxPayload;
+    private Amount<Mass> maxPayload;
 
     /**
-     * AircraftType's maxFuelCapacity.
+     * AircraftType's maxFuelCapacity (SI: m3).
      */
-    private Double maxFuelCapacity;
+    private Amount<Volume> maxFuelCapacity;
 
     /**
-     * AircraftType's maxOperatingSpeed (VMO).
+     * AircraftType's maxOperatingSpeed (VMO) (SI: m/s).
      */
-    private Double vmo;
+    private Amount<Velocity> vmo;
 
     /**
-     * AircraftType's maxMachOperatingSpeed (MMO).
+     * AircraftType's maxMachOperatingSpeed (MMO) (Mach).
      */
-    private Double mmo;
+    private Amount<Velocity> mmo;
 
     /**
-     * AircraftType's wingSpan.
+     * AircraftType's wingSpan (SI: m).
      */
-    private Double wingSpan;
+    private Amount<Length> wingSpan;
 
     /**
      * The aircraft drag coefficient.
      */
-    private Double dragCoefficient;
+    private Amount<Dimensionless> dragCoefficient;
 
     /**
-     * AircraftType's e
+     * AircraftType's e (Efficiency Factor)
      */
-    private Double e;
-
-    /**
-     * The epsilon of the allowed error.
-     */
-    private static final Double EPSILON = 0.01d;
+    private Amount<Dimensionless> e;
 
     /**
      * The AircraftType's modelID by default.
@@ -116,22 +121,22 @@ public class AircraftModel {
     /**
      * The AircraftType's empty weight by default.
      */
-    private static final Double EMPTY_WEIGHT_BY_DEFAULT = 0.0d;
+    private static final Amount<Mass> EMPTY_WEIGHT_BY_DEFAULT = Amount.valueOf(0d, SI.KILOGRAM);
 
     /**
      * The AircraftType's mtow by default.
      */
-    private static final Double MTOW_BY_DEFAULT = 0.0d;
+    private static final Amount<Mass> MTOW_BY_DEFAULT = Amount.valueOf(0d, SI.KILOGRAM);
 
     /**
      * The AircraftType's mzfw by default.
      */
-    private static final Double MZFW_BY_DEFAULT = 0.0d;
+    private static final Amount<Mass> MZFW_BY_DEFAULT = Amount.valueOf(0d, SI.KILOGRAM);
 
     /**
      * The AircraftType's wing area by default.
      */
-    private static final Double WING_AREA_BY_DEFAULT = 0.0d;
+    private static final Amount<Area> WING_AREA_BY_DEFAULT = Amount.valueOf(0d, SI.SQUARE_METRE);
 
     /**
      * The AircraftType's description by default.
@@ -146,37 +151,37 @@ public class AircraftModel {
     /**
      * The AircraftType's max payload by default.
      */
-    private static final Double MAX_PAYLOAD_BY_DEFAULT = 0.0;
+    private static final Amount<Mass> MAX_PAYLOAD_BY_DEFAULT = Amount.valueOf(0d, SI.KILOGRAM);
 
     /**
      * The AircraftType's max fuel capacity by default.
      */
-    private static final Double MAX_FUEL_CAPACITY_BY_DEFAULT = 0.0;
+    private static final Amount<Volume> MAX_FUEL_CAPACITY_BY_DEFAULT = Amount.valueOf(0d, SI.CUBIC_METRE);
 
     /**
      * The AircraftType's VMO (maxOperatingSpeed) by default.
      */
-    private static final Double VMO_BY_DEFAULT = 0.0;
+    private static final Amount<Velocity> VMO_BY_DEFAULT = Amount.valueOf(0d, SI.METERS_PER_SECOND);
 
     /**
      * The AircraftType's MMO (maxMachOperatingSpeed) by default.
      */
-    private static final Double MMO_BY_DEFAULT = 0.0;
+    private static final Amount<Velocity> MMO_BY_DEFAULT = Amount.valueOf(0d, NonSI.MACH);
 
     /**
      * The AircraftType's wing span by default.
      */
-    private static final Double WING_SPAN_BY_DEFAULT = 0.0;
+    private static final Amount<Length> WING_SPAN_BY_DEFAULT = Amount.valueOf(0d, SI.METER);
 
     /**
      * The default drag coefficient.
      */
-    private static final Double DEFAULT_DRAG_COEFFICIENT = 0.025;
+    private static final Amount<Dimensionless> DEFAULT_DRAG_COEFFICIENT = Amount.valueOf(0d, Unit.ONE);
 
     /**
      * The AircraftType's e by default.
      */
-    private static final Double E_BY_DEFAULT = 0.0;
+    private static final Amount<Dimensionless> E_BY_DEFAULT = Amount.valueOf(0d, Unit.ONE);
 
     /**
      * Constructs an instance of AircraftModel receiving it's parameters.
@@ -198,7 +203,11 @@ public class AircraftModel {
      * @param dragCoefficient drag coefficient
      * @param e the AircraftType's e
      */
-    public AircraftModel(String modelID, AircraftType type, Double emptyWheight, Double mtow, Double mzfw, Double wingArea, Motorization motorization, String description, String maker, Double maxPayload, Double maxFuelCapacity, Double vmo, Double mmo, Double wingSpan, Double dragCoefficient, Double e) {
+    public AircraftModel(String modelID, AircraftType type, Amount<Mass> emptyWheight,
+            Amount<Mass> mtow, Amount<Mass> mzfw, Amount<Area> wingArea, Motorization motorization,
+            String description, String maker, Amount<Mass> maxPayload, Amount<Volume> maxFuelCapacity,
+            Amount<Velocity> vmo, Amount<Velocity> mmo, Amount<Length> wingSpan,
+            Amount<Dimensionless> dragCoefficient, Amount<Dimensionless> e) {
         this.modelID = modelID;
         this.type = type;
         this.emptyWeight = emptyWheight;
@@ -305,7 +314,7 @@ public class AircraftModel {
      *
      * @return the emptyWeight
      */
-    public Double getEmptyWeight() {
+    public Amount<Mass> getEmptyWeight() {
         return this.emptyWeight;
     }
 
@@ -314,7 +323,7 @@ public class AircraftModel {
      *
      * @param emptyWheight the emptyWheight to set
      */
-    public void setEmptyWeight(Double emptyWheight) {
+    public void setEmptyWeight(Amount<Mass> emptyWheight) {
         this.emptyWeight = emptyWheight;
     }
 
@@ -323,7 +332,7 @@ public class AircraftModel {
      *
      * @return the mtow
      */
-    public Double getMtow() {
+    public Amount<Mass> getMtow() {
         return this.mtow;
     }
 
@@ -332,7 +341,7 @@ public class AircraftModel {
      *
      * @param mtow the mtow to set
      */
-    public void setMtow(Double mtow) {
+    public void setMtow(Amount<Mass> mtow) {
         this.mtow = mtow;
     }
 
@@ -341,7 +350,7 @@ public class AircraftModel {
      *
      * @return the mzfw
      */
-    public Double getMzfw() {
+    public Amount<Mass> getMzfw() {
         return this.mzfw;
     }
 
@@ -350,7 +359,7 @@ public class AircraftModel {
      *
      * @param mzfw the mzfw to set
      */
-    public void setMzfw(Double mzfw) {
+    public void setMzfw(Amount<Mass> mzfw) {
         this.mzfw = mzfw;
     }
 
@@ -359,7 +368,7 @@ public class AircraftModel {
      *
      * @return the wingArea
      */
-    public Double getWingArea() {
+    public Amount<Area> getWingArea() {
         return this.wingArea;
     }
 
@@ -368,7 +377,7 @@ public class AircraftModel {
      *
      * @param wingArea the wingArea to set
      */
-    public void setWingArea(Double wingArea) {
+    public void setWingArea(Amount<Area> wingArea) {
         this.wingArea = wingArea;
     }
 
@@ -431,7 +440,7 @@ public class AircraftModel {
      *
      * @return the max payload
      */
-    public Double getMaxPayload() {
+    public Amount<Mass> getMaxPayload() {
         return this.maxPayload;
     }
 
@@ -440,7 +449,7 @@ public class AircraftModel {
      *
      * @param maxPayload the max payload to set
      */
-    public void setMaxPayload(Double maxPayload) {
+    public void setMaxPayload(Amount<Mass> maxPayload) {
         this.maxPayload = maxPayload;
     }
 
@@ -449,7 +458,7 @@ public class AircraftModel {
      *
      * @return the max fuel capacity
      */
-    public Double getMaxFuelCapacity() {
+    public Amount<Volume> getMaxFuelCapacity() {
         return this.maxFuelCapacity;
     }
 
@@ -458,7 +467,7 @@ public class AircraftModel {
      *
      * @param maxFuelCapacity the max fuel capacity to set
      */
-    public void setMaxFuelCapacity(Double maxFuelCapacity) {
+    public void setMaxFuelCapacity(Amount<Volume> maxFuelCapacity) {
         this.maxFuelCapacity = maxFuelCapacity;
     }
 
@@ -467,7 +476,7 @@ public class AircraftModel {
      *
      * @return the vmo (max operating speed)
      */
-    public Double getVmo() {
+    public Amount<Velocity> getVmo() {
         return this.vmo;
     }
 
@@ -476,7 +485,7 @@ public class AircraftModel {
      *
      * @param vmo the vmo (max operating speed) to set
      */
-    public void setVmo(Double vmo) {
+    public void setVmo(Amount<Velocity> vmo) {
         this.vmo = vmo;
     }
 
@@ -485,7 +494,7 @@ public class AircraftModel {
      *
      * @return the mmo (max mach operating speed)
      */
-    public Double getMmo() {
+    public Amount<Velocity> getMmo() {
         return this.mmo;
     }
 
@@ -494,7 +503,7 @@ public class AircraftModel {
      *
      * @param mmo the mmo (max mach operating system) to set
      */
-    public void setMmo(Double mmo) {
+    public void setMmo(Amount<Velocity> mmo) {
         this.mmo = mmo;
     }
 
@@ -503,7 +512,7 @@ public class AircraftModel {
      *
      * @return the wing span
      */
-    public Double getWingSpan() {
+    public Amount<Length> getWingSpan() {
         return wingSpan;
     }
 
@@ -512,7 +521,7 @@ public class AircraftModel {
      *
      * @param wingSpan the wing span to set
      */
-    public void setWingSpan(Double wingSpan) {
+    public void setWingSpan(Amount<Length> wingSpan) {
         this.wingSpan = wingSpan;
     }
 
@@ -521,7 +530,7 @@ public class AircraftModel {
      *
      * @return the e
      */
-    public Double getE() {
+    public Amount<Dimensionless> getE() {
         return e;
     }
 
@@ -530,7 +539,7 @@ public class AircraftModel {
      *
      * @param e e to set
      */
-    public void setE(Double e) {
+    public void setE(Amount<Dimensionless> e) {
         this.e = e;
     }
 

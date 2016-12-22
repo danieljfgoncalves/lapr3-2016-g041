@@ -5,6 +5,10 @@ package lapr.project.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import lapr.project.utils.CustomUnits;
+import org.jscience.physics.amount.Amount;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -25,7 +29,9 @@ public class MotorizationTest {
     @Before
     public void setUp() {
         ArrayList<Regime> regimes = new ArrayList<>();
-        regimes.add(new Regime("Cruise", 0.564d, 0.85d, 12820d, 45e3));
+        regimes.add(new Regime("Cruise", Amount.valueOf(0.564d, CustomUnits.TSFC_US),
+                Amount.valueOf(0.85d, NonSI.MACH), Amount.valueOf(12820d, NonSI.POUND_FORCE),
+                Amount.valueOf(45e3, SI.METER)));
         instance = new Motorization(4, "GE CF6-80C2B1F", MotorType.TURBOFAN, regimes);
     }
 
@@ -94,7 +100,8 @@ public class MotorizationTest {
         assertFalse(instance.equals(obj));
 
         ArrayList<Regime> regimes = new ArrayList<>();
-        regimes.add(new Regime("Cruise", 0.564d, 0.85d, 12820d, 45e3));
+        regimes.add(new Regime("Cruise", Amount.valueOf(0.564d, CustomUnits.TSFC_US),
+                Amount.valueOf(0.85d, NonSI.MACH), Amount.valueOf(12820d, NonSI.POUND_FORCE), Amount.valueOf(45e3, SI.METER)));
         obj = new Motorization(4, "GE CF6-80C2B1F", MotorType.TURBOFAN, regimes);
 
         assertTrue(instance.equals(obj));

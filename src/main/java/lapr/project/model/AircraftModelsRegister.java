@@ -8,11 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import lapr.project.utils.CustomUnits;
 import lapr.project.utils.Importable;
 import lapr.project.utils.Regex;
+import org.jscience.physics.amount.Amount;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -173,60 +178,68 @@ public class AircraftModelsRegister implements Importable {
                         String regimeID = regimeElement.getAttribute("ID");
 
                         String tsfcContentor = regimeElement.getElementsByTagName("TSFC").item(0).getTextContent();
-                        Double tsfcValue = Regex.getValue(tsfcContentor);
-                        //String tsfcUnit = Regex.getUnit(tsfcContentor);
+                        double tsfcValue = Regex.getValue(tsfcContentor);
+                        Unit tsfcUnit = (Regex.getUnit(tsfcContentor).equalsIgnoreCase("SI")) ? CustomUnits.TSFC_SI : CustomUnits.TSFC_US;
                         String speedContentor = regimeElement.getElementsByTagName("speed").item(0).getTextContent();
-                        Double speedValue = Regex.getValue(speedContentor);
-                        //String speedUnit = Regex.getUnit(speedContentor);
+                        double speedValue = Regex.getValue(speedContentor);
                         String thrustContentor = regimeElement.getElementsByTagName("thrust").item(0).getTextContent();
-                        Double thrustValue = Regex.getValue(thrustContentor);
-                        //String thrustUnit = Regex.getUnit(thrustContentor);
+                        double thrustValue = Regex.getValue(thrustContentor);
+                        Unit thrustUnit = Regex.getUnit(thrustContentor).equalsIgnoreCase("SI") ? SI.NEWTON : NonSI.POUND_FORCE;
                         String altitudeContentor = regimeElement.getElementsByTagName("altitude").item(0).getTextContent();
-                        Double altitudeValue = Regex.getValue(altitudeContentor);
-                        //String altitudeUnit = Regex.getUnit(altitudeContentor);
+                        double altitudeValue = Regex.getValue(altitudeContentor);
 
-                        regimes.add(new Regime(regimeID, tsfcValue, speedValue, thrustValue, altitudeValue));
+                        regimes.add(new Regime(regimeID, Amount.valueOf(tsfcValue, tsfcUnit), Amount.valueOf(speedValue, NonSI.MACH),
+                                Amount.valueOf(thrustValue, thrustUnit), Amount.valueOf(altitudeValue, NonSI.FOOT)));
                     }
                 }
                 Motorization motorization = new Motorization(numberOfMotors, motor, motorType, regimes);
 
                 String emptyWeightContentor = aircraftElement.getElementsByTagName("EWeight").item(0).getTextContent();
-                Double emptyWeightValue = Regex.getValue(emptyWeightContentor);
-                //String emptyWeightUnit = Regex.getUnit(emptyWeightContentor);
-                String mtowContentor = aircraftElement.getElementsByTagName("MTOW").item(0).getTextContent();
-                Double mtowValue = Regex.getValue(mtowContentor);
-                //String mtowUnit = Regex.getUnit(mtowContentor);
-                String mzfwContentor = aircraftElement.getElementsByTagName("MZFW").item(0).getTextContent();
-                Double mzfwValue = Regex.getValue(mzfwContentor);
-                //String mzfwUnit = Regex.getUnit(mzfwContentor);
-                String maxPlayloadContentor = aircraftElement.getElementsByTagName("max_payload").item(0).getTextContent();
-                Double maxPlayloadValue = Regex.getValue(maxPlayloadContentor);
-                //String maxPlayloadUnit = Regex.getUnit(maxPlayloadContentor);
-                String fuelCapacityContentor = aircraftElement.getElementsByTagName("fuel_capacity").item(0).getTextContent();
-                Double fuelCapacityValue = Regex.getValue(fuelCapacityContentor);
-                //String fuelCapacityUnit = Regex.getUnit(fuelCapacityContentor);
-                String vmoContentor = aircraftElement.getElementsByTagName("VMO").item(0).getTextContent();
-                Double vmoValue = Regex.getValue(vmoContentor);
-                //String vmoUnit = Regex.getUnit(vmoContentor);
-                String mmoContentor = aircraftElement.getElementsByTagName("MMO").item(0).getTextContent();
-                Double mmoValue = Regex.getValue(mmoContentor);
-                //String mmoUnit = Regex.getUnit(mmoContentor);
-                String wingAreaContentor = aircraftElement.getElementsByTagName("wing_area").item(0).getTextContent();
-                Double wingAreaValue = Regex.getValue(wingAreaContentor);
-                //String wingAreaUnit = Regex.getUnit(wingAreaContentor);
-                String wingSpanContentor = aircraftElement.getElementsByTagName("wing_span").item(0).getTextContent();
-                Double wingSpanValue = Regex.getValue(wingSpanContentor);
-                //String wingSpanUnit = Regex.getUnit(wingSpanContentor);
+                double emptyWeightValue = Regex.getValue(emptyWeightContentor);
+                Unit emptyWeightUnit = Regex.getUnit(emptyWeightContentor).equalsIgnoreCase("SI") ? SI.KILOGRAM : NonSI.POUND;
 
-                Double dragCoeficient = Double.parseDouble(aircraftElement.getElementsByTagName("Cdrag_0").item(0).getTextContent());
-                Double e = Double.parseDouble(aircraftElement.getElementsByTagName("e").item(0).getTextContent());
+                String mtowContentor = aircraftElement.getElementsByTagName("MTOW").item(0).getTextContent();
+                double mtowValue = Regex.getValue(mtowContentor);
+                Unit mtowUnit = Regex.getUnit(mtowContentor).equalsIgnoreCase("SI") ? SI.KILOGRAM : NonSI.POUND;
+
+                String mzfwContentor = aircraftElement.getElementsByTagName("MZFW").item(0).getTextContent();
+                double mzfwValue = Regex.getValue(mzfwContentor);
+                Unit mzfwUnit = Regex.getUnit(mzfwContentor).equalsIgnoreCase("SI") ? SI.KILOGRAM : NonSI.POUND;
+
+                String maxPayloadContentor = aircraftElement.getElementsByTagName("max_payload").item(0).getTextContent();
+                double maxPayloadValue = Regex.getValue(maxPayloadContentor);
+                Unit maxPayloadUnit = Regex.getUnit(maxPayloadContentor).equalsIgnoreCase("SI") ? SI.KILOGRAM : NonSI.POUND;
+
+                String fuelCapacityContentor = aircraftElement.getElementsByTagName("fuel_capacity").item(0).getTextContent();
+                double fuelCapacityValue = Regex.getValue(fuelCapacityContentor);
+                Unit fuelCapacityUnit = Regex.getUnit(fuelCapacityContentor).equalsIgnoreCase("SI") ? SI.CUBIC_METRE : NonSI.GALLON_LIQUID_US;
+
+                String vmoContentor = aircraftElement.getElementsByTagName("VMO").item(0).getTextContent();
+                double vmoValue = Regex.getValue(vmoContentor);
+
+                String mmoContentor = aircraftElement.getElementsByTagName("MMO").item(0).getTextContent();
+                double mmoValue = Regex.getValue(mmoContentor);
+
+                String wingAreaContentor = aircraftElement.getElementsByTagName("wing_area").item(0).getTextContent();
+                double wingAreaValue = Regex.getValue(wingAreaContentor);
+                Unit wingAreaUnit = Regex.getUnit(wingAreaContentor).equalsIgnoreCase("SI") ? SI.SQUARE_METRE : CustomUnits.SQUARE_FOOT;
+
+                String wingSpanContentor = aircraftElement.getElementsByTagName("wing_span").item(0).getTextContent();
+                double wingSpanValue = Regex.getValue(wingSpanContentor);
+                Unit wingSpanUnit = Regex.getUnit(wingSpanContentor).equalsIgnoreCase("SI") ? SI.METER : NonSI.FOOT;
+
+                double dragCoeficient = Double.parseDouble(aircraftElement.getElementsByTagName("Cdrag_0").item(0).getTextContent());
+
+                double e = Double.parseDouble(aircraftElement.getElementsByTagName("e").item(0).getTextContent());
 
                 // cretes the aircraft with all the gathered information
                 this.aircraftModels.add(new AircraftModel(modelID, type,
-                        emptyWeightValue, mtowValue, mzfwValue, wingAreaValue,
-                        motorization, description, maker, maxPlayloadValue,
-                        fuelCapacityValue, vmoValue, mmoValue, wingSpanValue,
-                        dragCoeficient, e));
+                        Amount.valueOf(emptyWeightValue, emptyWeightUnit), Amount.valueOf(mtowValue, mtowUnit),
+                        Amount.valueOf(mzfwValue, mzfwUnit), Amount.valueOf(wingAreaValue, wingAreaUnit),
+                        motorization, description, maker, Amount.valueOf(maxPayloadValue, maxPayloadUnit),
+                        Amount.valueOf(fuelCapacityValue, fuelCapacityUnit), Amount.valueOf(vmoValue, NonSI.KNOT),
+                        Amount.valueOf(mmoValue, NonSI.MACH), Amount.valueOf(wingSpanValue, wingSpanUnit),
+                        Amount.valueOf(dragCoeficient, Unit.ONE), Amount.valueOf(e, Unit.ONE)));
             }
         }
 
