@@ -18,7 +18,7 @@ import java.util.Objects;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class Flight {
+public class Flight implements Comparable<Flight> {
 
     /**
      * Flight type
@@ -369,5 +369,10 @@ public class Flight {
                 + "departureDate=%s, scheduledArrival=%s,%nstops=%n%s,%nflight plan=%n",
                 flightType, designator, airline, origin, destination, aircraft, departureDate,
                 scheduledArrival, stopsString, fpString);
+    }
+
+    @Override
+    public int compareTo(Flight otherFlight) {
+        return this.designator.compareToIgnoreCase(otherFlight.designator);
     }
 }
