@@ -3,6 +3,7 @@
  */
 package lapr.project.model;
 
+import javax.measure.quantity.Angle;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Velocity;
@@ -24,6 +25,58 @@ import static org.junit.Assert.*;
  * @author Tiago Correia - 1151031
  */
 public class CalculusTest {
+
+    private static final double EPSILON = 0.1d;
+
+    /**
+     * Test 1 of getObjectSpeed method, of class Calculus.
+     */
+    @Test
+    public void testGetObjectSpeed1() {
+        System.out.println("getObjectSpeed 1");
+
+        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
+        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+
+        Amount<Velocity> expResult = Amount.valueOf(251.1, SI.METERS_PER_SECOND);
+        Amount<Velocity> result = Calculus.getObjectSpeed(altitude, machNumber);
+
+        assertEquals(expResult.doubleValue(SI.METERS_PER_SECOND), result.doubleValue(SI.METERS_PER_SECOND), EPSILON);
+    }
+
+    /**
+     * Test 1 of getPortionWindSpeed method, of class Calculus.
+     */
+    @Test
+    public void testGetPortionWindSpeed1() {
+        System.out.println("getPortionWindSpeed 1");
+
+        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+
+        Amount<Velocity> expResult = Amount.valueOf(10.65, SI.METERS_PER_SECOND);
+        Amount<Velocity> result = Calculus.getPortionWindSpeed(windSpeed, angleRelativeToY);
+
+        assertEquals(expResult.doubleValue(SI.METERS_PER_SECOND), result.doubleValue(SI.METERS_PER_SECOND), EPSILON);
+    }
+
+    /**
+     * Test 1 of getTAS method, of class Calculus.
+     */
+    @Test
+    public void testGetTAS1() {
+        System.out.println("getTAS 1");
+
+        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
+        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+
+        Amount<Velocity> expResult = Amount.valueOf(261.75, SI.METERS_PER_SECOND);
+        Amount<Velocity> result = Calculus.getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
+
+        assertEquals(expResult.doubleValue(SI.METERS_PER_SECOND), result.doubleValue(SI.METERS_PER_SECOND), EPSILON);
+    }
 
     /**
      * Test 1 of getAirDensity method, of class Calculus.

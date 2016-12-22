@@ -542,6 +542,21 @@ public class AircraftModel {
     public void setE(Amount<Dimensionless> e) {
         this.e = e;
     }
+    
+    
+    /**
+     * @return the dragCoefficient
+     */
+    public Amount<Dimensionless> getDragCoefficient() {
+        return dragCoefficient;
+    }
+
+    /**
+     * @param dragCoefficient the dragCoefficient to set
+     */
+    public void setDragCoefficient(Amount<Dimensionless> dragCoefficient) {
+        this.dragCoefficient = dragCoefficient;
+    }
 
     public Double calculateCd(Double drag, Double dynamicPressure, Double referenceArea) {
         // TODO: Implement calculateCd

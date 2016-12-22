@@ -142,7 +142,7 @@ public class Calculus {
             }
         }
 
-        return Amount.valueOf(table[index][1], SI.METERS_PER_SECOND);
+        return (Amount<Velocity>) Amount.valueOf(table[index][1], SI.METERS_PER_SECOND);
     }
 
     /**
@@ -153,8 +153,8 @@ public class Calculus {
      * @return the object speed (ground speed)
      */
     public static Amount<Velocity> getObjectSpeed(Amount<Length> altitude, Amount<Velocity> machNumber) {
-        Amount<Velocity> speedOfSound = getSpeedOfSound(altitude);
-        return (Amount<Velocity>) speedOfSound.times(machNumber);
+        double objectSpeed = getSpeedOfSound(altitude).doubleValue(SI.METERS_PER_SECOND) * machNumber.doubleValue(NonSI.MACH);
+        return Amount.valueOf(objectSpeed, SI.METERS_PER_SECOND);
     }
 
     /**
@@ -180,9 +180,9 @@ public class Calculus {
      * @return the wind speed portion (vx)
      */
     public static Amount<Velocity> getPortionWindSpeed(Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
-        Double angleRelativeToY1 = angleRelativeToY.doubleValue(NonSI.DEGREE_ANGLE);
+        Double angleRelativeToY1 = angleRelativeToY.doubleValue(SI.RADIAN);
         Double windSpeed1 = windSpeed.doubleValue(SI.METERS_PER_SECOND);
-        Double portionWindSpeed = windSpeed1 * Math.cos(90 - angleRelativeToY1);
+        Double portionWindSpeed = windSpeed1 * Math.cos((Math.PI / 2) - angleRelativeToY1);
         return Amount.valueOf(portionWindSpeed, SI.METERS_PER_SECOND);
     }
 
