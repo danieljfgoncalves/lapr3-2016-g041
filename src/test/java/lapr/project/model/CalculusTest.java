@@ -11,6 +11,7 @@ import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.quantity.Power;
 import javax.measure.quantity.Velocity;
+import javax.measure.quantity.Volume;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
@@ -274,11 +275,11 @@ public class CalculusTest {
                 Amount.valueOf(0.85, NonSI.MACH),
                 Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
                 Amount.valueOf(15, NonSI.DEGREE_ANGLE));
-        
+
         assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
     }
-    
-     /**
+
+    /**
      * Test of getMaximumRange method, of class Calculus.
      */
     @Test
@@ -303,6 +304,33 @@ public class CalculusTest {
                 altitude, machNumber, windSpeed, angleRelativeToY,
                 dragCoefficient0, wingSpan, e, referenceAircraftArea, wingsArea);
         assertEquals(expResult.doubleValue(SI.KILOMETER), result.doubleValue(SI.KILOMETER), EPSILON);
+    }
+
+    /**
+     * Test of getFuelConsumption method, of class Calculus.
+     */
+    @Test
+    public void testGetFuelConsumption() {
+        System.out.println("getFuelConsumption");
+
+        Amount<Power> tsfc = Amount.valueOf(0.057, CustomUnits.TSFC_SI);
+        Amount<Mass> initialWeight = Amount.valueOf(372800, SI.KILOGRAM);
+        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
+        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+        Amount<Dimensionless> dragCoefficient0 = Amount.valueOf(0.025, Unit.ONE);
+        Amount<Length> wingSpan = Amount.valueOf(64.8, SI.METER);
+        Amount<Dimensionless> e = Amount.valueOf(0.95, Unit.ONE);
+        Amount<Area> referenceAircraftArea = Amount.valueOf(50, SI.SQUARE_METRE);
+        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
+        Amount<Length> distance = Amount.valueOf(209226.5, SI.KILOMETER);
+
+        Amount<Volume> expResult = Amount.valueOf(100000, NonSI.LITER);
+        Amount<Volume> result = Calculus.getFuelConsumption(tsfc, initialWeight, altitude, machNumber,
+                windSpeed, angleRelativeToY, dragCoefficient0,
+                wingSpan, e, referenceAircraftArea, wingsArea, distance);
+        assertEquals(expResult.doubleValue(NonSI.LITER), result.doubleValue(NonSI.LITER), EPSILON);
     }
 
 }

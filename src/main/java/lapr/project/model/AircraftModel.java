@@ -542,17 +542,20 @@ public class AircraftModel {
     public void setE(Amount<Dimensionless> e) {
         this.e = e;
     }
-    
-    
+
     /**
-     * @return the dragCoefficient
+     * Obtains the AircraftModel's drag coefficient
+     *
+     * @return the drag coefficient
      */
     public Amount<Dimensionless> getDragCoefficient() {
         return dragCoefficient;
     }
 
     /**
-     * @param dragCoefficient the dragCoefficient to set
+     * Modifies the AircraftModel's drag coefficient
+     *
+     * @param dragCoefficient the drag coefficient to set
      */
     public void setDragCoefficient(Amount<Dimensionless> dragCoefficient) {
         this.dragCoefficient = dragCoefficient;

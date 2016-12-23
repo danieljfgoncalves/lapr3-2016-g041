@@ -246,6 +246,23 @@ public class Calculus {
                 .divide(Amount.valueOf(2, Unit.ONE));
     }
 
+    /**
+     * Obtains the maximum range.
+     *
+     * @param tsfc the thrust specific fuel consumption
+     * @param initialWeight the initial weight
+     * @param finalWeight the final weight
+     * @param altitude the altitude
+     * @param machNumber the mach number
+     * @param windSpeed the wind speed
+     * @param angleRelativeToY the angle of the wind relative to y-axis
+     * @param dragCoefficient0 the initial drag coefficient
+     * @param wingSpan the wing span
+     * @param e the efficiency factor
+     * @param referenceAircraftArea the reference aircraft area
+     * @param wingsArea the wings area
+     * @return the calculated maximum range
+     */
     public static Amount<Length> getMaximumRange(Amount<Power> tsfc, Amount<Mass> initialWeight, Amount<Mass> finalWeight,
             Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY,
             Amount<Dimensionless> dragCoefficient0, Amount<Length> wingSpan, Amount<Dimensionless> e,
@@ -257,12 +274,47 @@ public class Calculus {
                 machNumber, windSpeed, angleRelativeToY);
 
         Amount<Velocity> tas = getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
-        Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));  
-        Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI))) * (liftForce.doubleValue(SI.NEWTON) / (dragForce.doubleValue(SI.NEWTON))) * resultLN;
-  
-        return Amount.valueOf(maxRange, SI.KILOMETER);
+        Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));
+        Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI)))
+                * (liftForce.doubleValue(SI.NEWTON) / (dragForce.doubleValue(SI.NEWTON))) * resultLN;
 
+        return Amount.valueOf(maxRange, SI.KILOMETER);
     }
 
-    
+    /**
+     * Obtains the fuel consumption.
+     *
+     * @param tsfc the thrust specific fuel consumption
+     * @param initialWeight the initial weight
+     * @param altitude the altitude
+     * @param machNumber the mach number
+     * @param windSpeed the wind speed
+     * @param angleRelativeToY the angle of the wind relative to y-axis
+     * @param dragCoefficient0 the initial drag coefficient
+     * @param wingSpan the wing span
+     * @param e the efficiency factor
+     * @param referenceAircraftArea the reference area
+     * @param wingsArea the wings area
+     * @param distance the distance
+     * @return the calculated fuel consumption
+     */
+    public static Amount<Volume> getFuelConsumption(Amount<Power> tsfc, Amount<Mass> initialWeight,
+            Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY,
+            Amount<Dimensionless> dragCoefficient0, Amount<Length> wingSpan, Amount<Dimensionless> e,
+            Amount<Area> referenceAircraftArea, Amount<Area> wingsArea, Amount<Length> distance) {
+
+        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber, windSpeed, angleRelativeToY);
+        Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
+                wingSpan, wingsArea, e, referenceAircraftArea,
+                machNumber, windSpeed, angleRelativeToY);
+
+        Amount<Velocity> tas = getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
+        Double finalWeight = initialWeight.doubleValue(SI.KILOGRAM) / Math.pow(Math.E, (distance.doubleValue(SI.KILOMETER)
+                * tsfc.doubleValue(CustomUnits.TSFC_SI) / ((liftForce.doubleValue(SI.NEWTON) / dragForce.doubleValue(SI.NEWTON))
+                * tas.doubleValue(SI.METERS_PER_SECOND))));
+        Double fuelConsumption = (initialWeight.doubleValue(SI.KILOGRAM) - finalWeight);
+
+        return Amount.valueOf(fuelConsumption, NonSI.LITER);
+    }
+
 }
