@@ -9,11 +9,13 @@ import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
+import javax.measure.quantity.Power;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
+import lapr.project.utils.CustomUnits;
 import org.jscience.physics.amount.Amount;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -274,6 +276,33 @@ public class CalculusTest {
                 Amount.valueOf(15, NonSI.DEGREE_ANGLE));
         
         assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
+    }
+    
+     /**
+     * Test of getMaximumRange method, of class Calculus.
+     */
+    @Test
+    public void testGetMaximumRange() {
+        System.out.println("getMaximumRange");
+
+        Amount<Power> tsfc = Amount.valueOf(0.057, CustomUnits.TSFC_SI);
+        Amount<Mass> initialWeight = Amount.valueOf(372800, SI.KILOGRAM);
+        Amount<Mass> finalWeight = Amount.valueOf(272800, SI.KILOGRAM);
+        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
+        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+        Amount<Dimensionless> dragCoefficient0 = Amount.valueOf(0.025, Unit.ONE);
+        Amount<Length> wingSpan = Amount.valueOf(64.8, SI.METER);
+        Amount<Dimensionless> e = Amount.valueOf(0.95, Unit.ONE);
+        Amount<Area> referenceAircraftArea = Amount.valueOf(50, SI.SQUARE_METRE);
+        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
+
+        Amount<Length> expResult = Amount.valueOf(209226.5, SI.KILOMETER);
+        Amount<Length> result = Calculus.getMaximumRange(tsfc, initialWeight, finalWeight,
+                altitude, machNumber, windSpeed, angleRelativeToY,
+                dragCoefficient0, wingSpan, e, referenceAircraftArea, wingsArea);
+        assertEquals(expResult.doubleValue(SI.KILOMETER), result.doubleValue(SI.KILOMETER), EPSILON);
     }
 
 }

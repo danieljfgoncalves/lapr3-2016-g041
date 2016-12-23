@@ -9,13 +9,16 @@ import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
+import javax.measure.quantity.Power;
 import javax.measure.quantity.Velocity;
+import javax.measure.quantity.Volume;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
+import lapr.project.utils.CustomUnits;
 
 /**
  * Resposible to make calculations related to model business.
@@ -242,4 +245,24 @@ public class Calculus {
                 .times(referenceAircraftArea)
                 .divide(Amount.valueOf(2, Unit.ONE));
     }
+
+    public static Amount<Length> getMaximumRange(Amount<Power> tsfc, Amount<Mass> initialWeight, Amount<Mass> finalWeight,
+            Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY,
+            Amount<Dimensionless> dragCoefficient0, Amount<Length> wingSpan, Amount<Dimensionless> e,
+            Amount<Area> referenceAircraftArea, Amount<Area> wingsArea) {
+
+        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber, windSpeed, angleRelativeToY);
+        Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
+                wingSpan, wingsArea, e, referenceAircraftArea,
+                machNumber, windSpeed, angleRelativeToY);
+
+        Amount<Velocity> tas = getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
+        Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));  
+        Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI))) * (liftForce.doubleValue(SI.NEWTON) / (dragForce.doubleValue(SI.NEWTON))) * resultLN;
+  
+        return Amount.valueOf(maxRange, SI.KILOMETER);
+
+    }
+
+    
 }
