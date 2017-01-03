@@ -9,13 +9,16 @@ import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
+import javax.measure.quantity.Power;
 import javax.measure.quantity.Velocity;
+import javax.measure.quantity.Volume;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
+import lapr.project.utils.CustomUnits;
 
 /**
  * Resposible to make calculations related to model business.
@@ -27,6 +30,106 @@ import org.jscience.physics.amount.Constants;
  * @author Tiago Correia - 1151031
  */
 public class Calculus {
+
+    /**
+     * Eath radius in meters (Assuming that Earth is perfect sphere)
+     */
+    private static final double EARTH_RADIUS = 6371e3;
+
+    /**
+     * Compass directions.
+     */
+    public static enum DIRECTION {
+        NORTH, EAST, SOUTH, WEST
+    }
+
+    /**
+     * Converts a compass coordinate (DD MM SS) to decimal format.
+     *
+     * @param degrees degrees
+     * @param minutes minutes
+     * @param seconds seconds
+     * @param direction direction (N, E, S & W)
+     * @return coordinate in decimal format
+     */
+    public static double compassToDecimal(double degrees, double minutes, double seconds, DIRECTION direction) {
+
+        int sign = (direction == DIRECTION.NORTH || direction == DIRECTION.EAST) ? 1 : -1;
+
+        return degrees + minutes / 60 + seconds / 3600 * sign;
+    }
+
+    /**
+     * Calculate the great circle distance between two numerical coordinates
+     * (Haversine Formula).
+     *
+     * @param first first coordinate
+     * @param second second coordinate
+     * @param altitude average flight altitude
+     * @return an length amount (conversionable to m, ft, etc.)
+     */
+    public static Amount<Length> distance(Coordinate first, Coordinate second, Amount<Length> altitude) {
+
+        // Haversine:
+        // a = sin²(Δφ/2) + cos φ1 x cos φ2 x sin²(Δλ/2)
+        // c = 2 x atan2( √a, √(1−a) )
+        // d = R x c
+        // Earth radius plus airport altitude.
+        double radius = EARTH_RADIUS + altitude.doubleValue(SI.METER);
+
+        // Stores lat/lon pairs in degrees
+        Amount<Angle> lat1 = Amount.valueOf(first.getLatitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lat2 = Amount.valueOf(second.getLatitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lon1 = Amount.valueOf(first.getLongitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lon2 = Amount.valueOf(second.getLongitude(), NonSI.DEGREE_ANGLE);
+        // Variation of lat/lat & lon/lon pairs in radians
+        double deltaLat = lat2.minus(lat1).doubleValue(SI.RADIAN);
+        double deltaLon = lon2.minus(lon1).doubleValue(SI.RADIAN);
+
+        double a = (Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2))
+                + Math.cos(lat1.doubleValue(SI.RADIAN)) * Math.cos(lat2.doubleValue(SI.RADIAN))
+                * (Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return Amount.valueOf(radius * c, SI.METER);
+    }
+
+    /**
+     * Calculate the direction of a segment relative the polar axis.
+     *
+     * @param first first coordinate
+     * @param second second coordinate
+     * @return the angle amount (conversionable to degree, radian, etc.)
+     */
+    public static Amount<Angle> direction(Coordinate first, Coordinate second) {
+
+        /*
+        Δφ = ln( tan( latB / 2 + π / 4 ) / tan( latA / 2 + π / 4) ) 
+        Δlon = abs( lonA - lonB ) if Δlon > 180°  then   Δlon = Δlon (mod 180)
+        rolamento :  θ = atan2( Δlon ,  Δφ ) 
+         */
+        // Stores lat/lon pairs in degrees
+        Amount<Angle> lat1 = Amount.valueOf(first.getLatitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lat2 = Amount.valueOf(second.getLatitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lon1 = Amount.valueOf(first.getLongitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lon2 = Amount.valueOf(second.getLongitude(), NonSI.DEGREE_ANGLE);
+        // Variation of lon/lon pairs in radians
+        double deltaLat
+                = Math.log((Math.tan(lat2.doubleValue(SI.RADIAN) / 2 + Math.PI / 4)
+                        / Math.tan(lat1.doubleValue(SI.RADIAN) / 2 + Math.PI / 4))
+                );
+
+        double deltaLon = Math.abs((lon2.minus(lon1)).doubleValue(SI.RADIAN));
+        deltaLon = (deltaLon > Math.PI) ? deltaLon % Math.PI : deltaLon;
+
+        Amount<Angle> angle = Amount.valueOf(Math.atan2(deltaLon, deltaLat), SI.RADIAN);
+        angle.doubleValue(NonSI.DEGREE_ANGLE);
+
+        // Normalize angle to 0˚-360˚ (atan2 returns values in the range -pi ... +pi) 
+        // -> (θ+360) % 360
+        return Amount.valueOf(((angle.doubleValue(NonSI.DEGREE_ANGLE) + 360.0) % 360.0), NonSI.DEGREE_ANGLE);
+    }
 
     /**
      * Gets the lift force.
@@ -238,9 +341,80 @@ public class Calculus {
             Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
         return (Amount<Force>) getDragCoefficient(altitude, initialWeight, dragCoefficient0, wingSpan, wingArea, e, machNumber, windSpeed, angleRelativeToY)
                 .times(getAirDensity(altitude))
-                .times(getSpeedOfSound(altitude).pow(2))
+                .times((getTAS(altitude, machNumber, windSpeed, angleRelativeToY)).pow(2))
                 .times(referenceAircraftArea)
                 .divide(Amount.valueOf(2, Unit.ONE));
-
     }
+
+    /**
+     * Obtains the maximum range.
+     *
+     * @param tsfc the thrust specific fuel consumption
+     * @param initialWeight the initial weight
+     * @param finalWeight the final weight
+     * @param altitude the altitude
+     * @param machNumber the mach number
+     * @param windSpeed the wind speed
+     * @param angleRelativeToY the angle of the wind relative to y-axis
+     * @param dragCoefficient0 the initial drag coefficient
+     * @param wingSpan the wing span
+     * @param e the efficiency factor
+     * @param referenceAircraftArea the reference aircraft area
+     * @param wingsArea the wings area
+     * @return the calculated maximum range
+     */
+    public static Amount<Length> getMaximumRange(Amount<Power> tsfc, Amount<Mass> initialWeight, Amount<Mass> finalWeight,
+            Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY,
+            Amount<Dimensionless> dragCoefficient0, Amount<Length> wingSpan, Amount<Dimensionless> e,
+            Amount<Area> referenceAircraftArea, Amount<Area> wingsArea) {
+
+        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber, windSpeed, angleRelativeToY);
+        Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
+                wingSpan, wingsArea, e, referenceAircraftArea,
+                machNumber, windSpeed, angleRelativeToY);
+
+        Amount<Velocity> tas = getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
+        Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));
+        Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI)))
+                * (liftForce.doubleValue(SI.NEWTON) / (dragForce.doubleValue(SI.NEWTON))) * resultLN;
+
+        return Amount.valueOf(maxRange, SI.KILOMETER);
+    }
+
+    /**
+     * Obtains the fuel consumption.
+     *
+     * @param tsfc the thrust specific fuel consumption
+     * @param initialWeight the initial weight
+     * @param altitude the altitude
+     * @param machNumber the mach number
+     * @param windSpeed the wind speed
+     * @param angleRelativeToY the angle of the wind relative to y-axis
+     * @param dragCoefficient0 the initial drag coefficient
+     * @param wingSpan the wing span
+     * @param e the efficiency factor
+     * @param referenceAircraftArea the reference area
+     * @param wingsArea the wings area
+     * @param distance the distance
+     * @return the calculated fuel consumption
+     */
+    public static Amount<Volume> getFuelConsumption(Amount<Power> tsfc, Amount<Mass> initialWeight,
+            Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY,
+            Amount<Dimensionless> dragCoefficient0, Amount<Length> wingSpan, Amount<Dimensionless> e,
+            Amount<Area> referenceAircraftArea, Amount<Area> wingsArea, Amount<Length> distance) {
+
+        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber, windSpeed, angleRelativeToY);
+        Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
+                wingSpan, wingsArea, e, referenceAircraftArea,
+                machNumber, windSpeed, angleRelativeToY);
+
+        Amount<Velocity> tas = getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
+        Double finalWeight = initialWeight.doubleValue(SI.KILOGRAM) / Math.pow(Math.E, (distance.doubleValue(SI.KILOMETER)
+                * tsfc.doubleValue(CustomUnits.TSFC_SI) / ((liftForce.doubleValue(SI.NEWTON) / dragForce.doubleValue(SI.NEWTON))
+                * tas.doubleValue(SI.METERS_PER_SECOND))));
+        Double fuelConsumption = (initialWeight.doubleValue(SI.KILOGRAM) - finalWeight);
+
+        return Amount.valueOf(fuelConsumption, NonSI.LITER);
+    }
+
 }
