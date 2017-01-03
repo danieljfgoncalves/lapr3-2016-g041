@@ -543,6 +543,24 @@ public class AircraftModel {
         this.e = e;
     }
 
+    /**
+     * Obtains the AircraftModel's drag coefficient
+     *
+     * @return the drag coefficient
+     */
+    public Amount<Dimensionless> getDragCoefficient() {
+        return dragCoefficient;
+    }
+
+    /**
+     * Modifies the AircraftModel's drag coefficient
+     *
+     * @param dragCoefficient the drag coefficient to set
+     */
+    public void setDragCoefficient(Amount<Dimensionless> dragCoefficient) {
+        this.dragCoefficient = dragCoefficient;
+    }
+
     public Double calculateCd(Double drag, Double dynamicPressure, Double referenceArea) {
         // TODO: Implement calculateCd
         throw new UnsupportedOperationException("Not supported yet.");

@@ -4,23 +4,19 @@
 package lapr.project.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import lapr.project.model.Flight;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
@@ -56,27 +52,32 @@ public class MainFrame extends JFrame implements ProjectHandler {
     /**
      * Padding border.
      */
-    private final static EmptyBorder PADDING_BORDER = new EmptyBorder(50, 50, 50, 50);
+    private static final EmptyBorder PADDING_BORDER = new EmptyBorder(50, 50, 50, 50);
 
     /**
      * Page padding border.
      */
-    private final static EmptyBorder PAGE_PADDING_BORDER = new EmptyBorder(50, 50, 50, 50);
+    private static final EmptyBorder PAGE_PADDING_BORDER = new EmptyBorder(50, 50, 50, 50);
 
     /**
      * The button prefered size.
      */
-    private final static Dimension BUTTON_PREFERED_SIZE = new Dimension(150, 30);
+    private static final Dimension BUTTON_PREFERED_SIZE = new Dimension(150, 30);
 
     /**
-     * The label prefered size.
+     * The project title label.
      */
-    private final static Dimension CELL_PREFERED_SIZE = new Dimension(100, 50);
+    private JLabel projectTitleLabel;
 
     /**
-     * The label prefered size.
+     * The project description label.
      */
-    private final static Dimension TEXT_FIELD_PREFERED_SIZE = new Dimension(150, 30);
+    private JLabel projectDescriptionLabel;
+
+    /**
+     * The simulations table.
+     */
+    private JTable simulationsTable;
 
     /**
      * Creates an instance of the main frame.
@@ -95,7 +96,6 @@ public class MainFrame extends JFrame implements ProjectHandler {
         CustomMenuBar customMenuBar = new CustomMenuBar(this, simulator);
         setJMenuBar(customMenuBar);
 
-        // TODO: Implement components
         createComponents();
 
         pack();
@@ -123,14 +123,6 @@ public class MainFrame extends JFrame implements ProjectHandler {
         add(componentsPanel);
     }
 
-    @Override
-    public void activateProject(Project project) {
-        this.activeProject = project;
-        //TODO activate project
-        JOptionPane.showMessageDialog(this,
-                "The project was activated!");
-    }
-
     public Project getActiveProject() {
         return this.activeProject;
     }
@@ -143,10 +135,10 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private JPanel projectInfoPanel() {
         JPanel projectInfoPanel = new JPanel(new BorderLayout());
 
-        JLabel projectTitleLabel = new JLabel("Project Name Placeholder", SwingConstants.CENTER);
+        projectTitleLabel = new JLabel("Project Name Placeholder", SwingConstants.CENTER);
         projectTitleLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        JLabel projectDescriptionLabel = new JLabel("Project Description Placeholder", SwingConstants.CENTER);
+        projectDescriptionLabel = new JLabel("Project Description Placeholder", SwingConstants.CENTER);
         projectDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
         projectInfoPanel.add(projectTitleLabel, BorderLayout.NORTH);
@@ -171,7 +163,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         flights.add(new Flight());
         flights.add(new Flight());
 
-        JTable simulationsTable = new JTable(new TableModelFlight(flights));
+        simulationsTable = new JTable(new TableModelFlight(flights));
 
         JScrollPane scrollPane = new JScrollPane(simulationsTable);
         scrollPane.setBorder(PADDING_BORDER);
@@ -191,6 +183,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
 
         JButton openSimulationButton = new JButton("Open Simulation");
         openSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        openSimulationButton.setEnabled(false);
 
         JButton createSimulationButton = new JButton("New Simulation");
         createSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
@@ -199,5 +192,18 @@ public class MainFrame extends JFrame implements ProjectHandler {
         buttonsPanel.add(createSimulationButton);
 
         return buttonsPanel;
+    }
+
+    @Override
+    public void activateProject(Project project) {
+        this.activeProject = project;
+        refreshProject();
+    }
+
+    private void refreshProject() {
+        Collections.sort(activeProject.getSimulations().getFlights());
+        simulationsTable.setModel(new TableModelFlight(activeProject.getSimulations().getFlights()));
+        this.projectTitleLabel.setText(activeProject.getName());
+        this.projectDescriptionLabel.setText(activeProject.getDescription());
     }
 }
