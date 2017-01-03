@@ -21,7 +21,7 @@ public class EditProjectPropertiesController {
      * The project to edit it's properties
      */
     private final Project project;
-    
+
     /**
      * The simulator.
      */
@@ -33,17 +33,27 @@ public class EditProjectPropertiesController {
     }
 
     /**
-     * Changes name and description of the project selected and validate
-     * if the project does not have the same name in the flight simulator.
+     * Changes name and description of the project selected and validate if the
+     * project does not have the same name in the flight simulator.
      *
-     * @return true if the project's properties are edited successfully, false otherwise
+     * @return true if the project's properties are edited successfully, false
+     * otherwise
      */
     public boolean setProjectProperties(String name, String description) {
-        if (project.validate(name) && !flightSimulator.validateNameExists(name)) {
-            this.project.setName(name);
-            this.project.setDescription(description);
-            return true;
+        String tempName = this.project.getName();
+        if (project.validate(name)) {
+            if (tempName.equalsIgnoreCase(name) && flightSimulator.validateNameExists(name)) {
+                this.project.setName(name);
+                this.project.setDescription(description);
+                return true;
+            }
+            if (!flightSimulator.validateNameExists(name)) {
+                this.project.setName(name);
+                this.project.setDescription(description);
+                return true;
+            }
         }
         return false;
+
     }
 }
