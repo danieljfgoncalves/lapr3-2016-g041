@@ -203,8 +203,32 @@ public class Calculus {
     }
 
     /**
-     * Calculate the great circle distance between two numerical coordinates (Haversine Formula).
-     * 
+     * Compass directions.
+     */
+    public static enum DIRECTION {
+        NORTH, EAST, SOUTH, WEST
+    }
+
+    /**
+     * Converts a compass coordinate (DD MM SS) to decimal format.
+     *
+     * @param degrees degrees
+     * @param minutes minutes
+     * @param seconds seconds
+     * @param direction direction (N, E, S & W)
+     * @return coordinate in decimal format
+     */
+    public static double compassToDecimal(double degrees, double minutes, double seconds, DIRECTION direction) {
+
+        int sign = (direction == DIRECTION.NORTH || direction == DIRECTION.EAST) ? 1 : -1;
+
+        return degrees + minutes / 60 + seconds / 3600 * sign;
+    }
+
+    /**
+     * Calculate the great circle distance between two numerical coordinates
+     * (Haversine Formula).
+     *
      * @param first first coordinate
      * @param second second coordinate
      * @param altitude average flight altitude
@@ -237,4 +261,39 @@ public class Calculus {
         return Amount.valueOf(radius * c, SI.METER);
     }
 
+    /**
+     * Calculate the direction of a segment relative the polar axis.
+     *
+     * @param first first coordinate
+     * @param second second coordinate
+     * @return the angle amount (conversionable to degree, radian, etc.)
+     */
+    public static Amount<Angle> direction(Coordinate first, Coordinate second) {
+
+        /*
+        Δφ = ln( tan( latB / 2 + π / 4 ) / tan( latA / 2 + π / 4) ) 
+        Δlon = abs( lonA - lonB ) if Δlon > 180°  then   Δlon = Δlon (mod 180)
+        rolamento :  θ = atan2( Δlon ,  Δφ ) 
+         */
+        // Stores lat/lon pairs in degrees
+        Amount<Angle> lat1 = Amount.valueOf(first.getLatitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lat2 = Amount.valueOf(second.getLatitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lon1 = Amount.valueOf(first.getLongitude(), NonSI.DEGREE_ANGLE);
+        Amount<Angle> lon2 = Amount.valueOf(second.getLongitude(), NonSI.DEGREE_ANGLE);
+        // Variation of lon/lon pairs in radians
+        double deltaLat
+                = Math.log((Math.tan(lat2.doubleValue(SI.RADIAN) / 2 + Math.PI / 4)
+                        / Math.tan(lat1.doubleValue(SI.RADIAN) / 2 + Math.PI / 4))
+                );
+
+        double deltaLon = Math.abs((lon2.minus(lon1)).doubleValue(SI.RADIAN));
+        deltaLon = (deltaLon > Math.PI) ? deltaLon % Math.PI : deltaLon;
+
+        Amount<Angle> angle = Amount.valueOf(Math.atan2(deltaLon, deltaLat), SI.RADIAN);
+        angle.doubleValue(NonSI.DEGREE_ANGLE);
+
+        // Normalize angle to 0˚-360˚ (atan2 returns values in the range -pi ... +pi) 
+        // -> (θ+360) % 360
+        return Amount.valueOf(((angle.doubleValue(NonSI.DEGREE_ANGLE) + 360.0) % 360.0), NonSI.DEGREE_ANGLE);
+    }
 }
