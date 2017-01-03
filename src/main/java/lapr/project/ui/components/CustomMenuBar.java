@@ -37,8 +37,6 @@ public class CustomMenuBar extends JMenuBar {
      */
     private final FlightSimulator simulator;
 
-    private final Project activeProject;
-
     /**
      * Creates an instance of the CustomMenuBar.
      *
@@ -49,7 +47,6 @@ public class CustomMenuBar extends JMenuBar {
 
         this.mainFrame = mainFrame;
         this.simulator = simulator;
-        this.activeProject = mainFrame.getActiveProject();
 
         add(createMenuFile());
         add(createMenuSimulations());
@@ -164,8 +161,15 @@ public class CustomMenuBar extends JMenuBar {
         JMenuItem item = new JMenuItem("Copy Project", 'C');
         item.setAccelerator(KeyStroke.getKeyStroke("ctrl C"));
         item.addActionListener((ActionEvent e) -> {
-            CopyProjectDialog copyProjectDialog = new CopyProjectDialog(mainFrame, simulator, mainFrame.getActiveProject());
-            copyProjectDialog.setVisible(true);
+            if (mainFrame.getActiveProject() != null) {
+                CopyProjectDialog copyProjectDialog = new CopyProjectDialog(mainFrame, simulator, mainFrame.getActiveProject());
+                copyProjectDialog.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(mainFrame,
+                        "There is no project selected!\nPlease select a project first.",
+                        "Invalid Project",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         });
         return item;
     }

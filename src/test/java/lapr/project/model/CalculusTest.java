@@ -19,6 +19,7 @@ import javax.measure.unit.Unit;
 import lapr.project.utils.CustomUnits;
 import org.jscience.physics.amount.Amount;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -33,6 +34,87 @@ import static org.junit.Assert.*;
 public class CalculusTest {
 
     private static final double EPSILON = 0.1d;
+
+    /**
+     * Test of distance method, of class Calculus.
+     */
+    @Test
+    public void testDistance01() {
+        System.out.println("distance01");
+        Coordinate first = new Coordinate("01", 43.6426, -79.3871);
+        Coordinate second = new Coordinate("02", 38.6916, -9.2160);
+        Amount<Length> altitude = Amount.valueOf(0.0, SI.METER);
+        double expResult = 5722d; // KM
+        double result = Calculus.distance(first, second, altitude).doubleValue(SI.KILOMETER);
+        assertEquals(expResult, result, 1);
+    }
+
+    /**
+     * Test of distance method, of class Calculus.
+     */
+    @Test
+    public void testDistance02() {
+        System.out.println("distance02");
+        Coordinate first = new Coordinate("01", 43.6426, -79.3871);
+        Coordinate second = new Coordinate("02", 38.6916, -9.2160);
+        Amount<Length> altitude = Amount.valueOf(0.0, SI.METER);
+        double expResult = 3555.486d; // Mile
+        double result = Calculus.distance(first, second, altitude).doubleValue(NonSI.MILE);
+        assertEquals(expResult, result, 1);
+    }
+
+    /**
+     * Test of distance method, of class Calculus.
+     */
+    @Test
+    public void testDistance03() {
+        System.out.println("distance03");
+        Coordinate first = new Coordinate("01", 43.6426, -79.3871);
+        Coordinate second = new Coordinate("02", 38.6916, -9.2160);
+        Amount<Length> altitude = Amount.valueOf(0.0, SI.METER);
+        double expResult = 5722d; // KM
+        double result = Calculus.distance(first, second, altitude).doubleValue(NonSI.MILE); // Returns in Miles
+        assertFalse(Math.abs(expResult - result) < 1 /* Error Margin */);
+    }
+
+    /**
+     * Test of direction method, of class Calculus.
+     */
+    @Test
+    public void testDirection01() {
+        System.out.println("direction01");
+        Coordinate first = new Coordinate("01", 1.0, -79.3871);
+        Coordinate second = new Coordinate("02", 1.0, 9.2160);
+        double expResult = 90d; // º Degree
+        double result = Calculus.direction(first, second).doubleValue(NonSI.DEGREE_ANGLE); // Returns in Degrees
+        assertEquals(expResult, result, 0.1);
+    }
+
+    /**
+     * Test of direction method, of class Calculus.
+     */
+    @Test
+    public void testDirection02() {
+        System.out.println("direction02");
+        Coordinate first = new Coordinate("01", 2.0, -79.3871);
+        Coordinate second = new Coordinate("02", 1.0, 9.2160);
+        double expResult = 1.5708d; // Radians
+        double result = Calculus.direction(first, second).doubleValue(SI.RADIAN); // Returns in Radians
+        assertEquals(expResult, result, 0.1);
+    }
+
+    /**
+     * Test of direction method, of class Calculus. //
+     */
+//    @Test
+    public void testDirection03() {
+        System.out.println("direction02");
+        Coordinate first = new Coordinate("01", 43.6426, -79.3871);
+        Coordinate second = new Coordinate("02", 38.6916, -9.2160);
+        double expResult = (180 + 360) % 360; // Radians
+        double result = Calculus.direction(first, second).doubleValue(NonSI.DEGREE_ANGLE); // Returns in Degrees
+        assertFalse(Math.abs(expResult - result) < 0.1 /* Error Margin */);
+    }
 
     /**
      * Test of getLiftForce method, of class Calculus.

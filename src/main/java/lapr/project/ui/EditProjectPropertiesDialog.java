@@ -224,6 +224,8 @@ public class EditProjectPropertiesDialog<T extends Window & ProjectHandler> exte
 
                 if (parentWindow instanceof ProjectSelectionDialog) {
                     ((ProjectSelectionDialog) parentWindow).refreshProjectsList(flightSimulator.getProjects());
+                } else {
+                    parentWindow.activateProject(project);
                 }
                 dispose();
 
