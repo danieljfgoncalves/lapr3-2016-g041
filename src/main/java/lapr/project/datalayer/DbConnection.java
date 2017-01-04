@@ -31,7 +31,7 @@ public class DbConnection {
     /**
      * The database password.
      */
-    private static final String DB_PASSWORD = "qwerty";
+    private static final String DB_PASSWORD = "B1nar10";
 
     /**
      * Gets the database connection.
