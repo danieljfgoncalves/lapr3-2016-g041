@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import javax.swing.BorderFactory;
@@ -47,7 +48,12 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * The button preferred size.
      */
     private final static Dimension BUTTON_PREFERRED_SIZE = new Dimension(100, 30);
-    
+
+    /**
+     * The label preferred size.
+     */
+    private final static Dimension LABEL_PREFERRED_SIZE = new Dimension(100, 35);
+
     /**
      * The orientation panel size.
      */
@@ -57,12 +63,21 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * The main panel size.
      */
     private final static Dimension MAIN_PANEL_SIZE = new Dimension(750, 600);
-    
+
     /**
      * The buttons panel size.
      */
     private final static Dimension BUTTONS_PANEL_SIZE = new Dimension(750, 75);
+
+    /**
+     * The plain label font.
+     */
+    private final static Font PLAIN_LABEL_FONT = new Font("Helvetica", Font.PLAIN, 17);
     
+    /**
+     * The bold label font.
+     */
+    private final static Font BOLD_LABEL_FONT = new Font("Helvetica", Font.BOLD, 17);
     /**
      * Title for the frame.
      */
@@ -82,6 +97,13 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * The forms panel.
      */
     private JPanel formsPanel;
+
+    private JLabel selectAircraftLabel;
+    private JLabel classLabel;
+    private JLabel addFlightInfoLabel;
+    private JLabel nameLabel;
+    private JButton nextButton;
+    private JButton previousButton;
 
     /**
      * Creates an instance of the flight info dialog.
@@ -137,6 +159,7 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
     private Component createLabelsPanel() {
         JPanel labelsPanel = new JPanel();
         labelsPanel.setLayout(new BoxLayout(labelsPanel, BoxLayout.Y_AXIS));
+        labelsPanel.setBackground(Color.LIGHT_GRAY);
 
         labelsPanel.add(createSelectAircraftLabel());
         labelsPanel.add(createClassLabel());
@@ -152,8 +175,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @return the select aircraft label
      */
     private Component createSelectAircraftLabel() {
-        JLabel selectAircraftLabel = new JLabel("Select Aircraft");
-        selectAircraftLabel.setBackground(Color.LIGHT_GRAY);
+        selectAircraftLabel = new JLabel("Select Aircraft");
+        selectAircraftLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
+        selectAircraftLabel.setFont(BOLD_LABEL_FONT);
         return selectAircraftLabel;
     }
 
@@ -163,7 +187,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @return class label
      */
     private Component createClassLabel() {
-        JLabel classLabel = new JLabel("Set Aircraft Classes");
+        classLabel = new JLabel("Set Aircraft Classes");
+        classLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
+        classLabel.setFont(PLAIN_LABEL_FONT);
         return classLabel;
     }
 
@@ -173,8 +199,10 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @return the add flight info label
      */
     private Component createAddFlightInfoLabel() {
-        JLabel addFlightInfo = new JLabel("Add Flight Info");
-        return addFlightInfo;
+        addFlightInfoLabel = new JLabel("Add Flight Info");
+        addFlightInfoLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
+        addFlightInfoLabel.setFont(PLAIN_LABEL_FONT);
+        return addFlightInfoLabel;
     }
 
     /**
@@ -183,7 +211,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @return the name label
      */
     private Component createNameLabel() {
-        JLabel nameLabel = new JLabel("Set Name");
+        nameLabel = new JLabel("Set Name");
+        nameLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
+        nameLabel.setFont(PLAIN_LABEL_FONT);
         return nameLabel;
     }
 
@@ -260,23 +290,58 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
     }
 
     private Component createPreviousButton() {
-        JButton previousButton = new JButton("Previous");
+        previousButton = new JButton("Previous");
         previousButton.setPreferredSize(BUTTON_PREFERRED_SIZE);
 
+        if (currentForm == 1) {
+            previousButton.setEnabled(false);
+        }
         previousButton.addActionListener((ActionEvent ae) -> {
             cl.previous(formsPanel);
-            currentForm = currentForm--;
+            currentForm--;
+            switch (currentForm) {
+                case 1:
+                    previousButton.setEnabled(false);
+                    classLabel.setFont(PLAIN_LABEL_FONT);
+                    selectAircraftLabel.setFont(BOLD_LABEL_FONT);
+                    break;
+                case 2:
+                    classLabel.setFont(BOLD_LABEL_FONT);
+                    addFlightInfoLabel.setFont(PLAIN_LABEL_FONT);
+                    break;
+                case 3:
+                    nextButton.setEnabled(true);
+                    addFlightInfoLabel.setFont(BOLD_LABEL_FONT);
+                    nameLabel.setFont(PLAIN_LABEL_FONT);
+                    break;
+            }
         });
         return previousButton;
     }
 
     private Component createNextButton() {
-        JButton nextButton = new JButton("Next");
+        nextButton = new JButton("Next");
         nextButton.setPreferredSize(BUTTON_PREFERRED_SIZE);
 
         nextButton.addActionListener((ActionEvent ae) -> {
             cl.next(formsPanel);
-            currentForm = currentForm++;
+            currentForm++;
+            switch (currentForm) {
+                case 2:
+                    previousButton.setEnabled(true);
+                    selectAircraftLabel.setFont(PLAIN_LABEL_FONT);
+                    classLabel.setFont(BOLD_LABEL_FONT);
+                    break;
+                case 3:
+                    classLabel.setFont(PLAIN_LABEL_FONT);
+                    addFlightInfoLabel.setFont(BOLD_LABEL_FONT);
+                    break;
+                case 4:
+                    nextButton.setEnabled(false);
+                    addFlightInfoLabel.setFont(PLAIN_LABEL_FONT);
+                    nameLabel.setFont(BOLD_LABEL_FONT);
+                    break;
+            }
         });
         return nextButton;
     }
