@@ -11,7 +11,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import lapr.project.model.FlightSimulator;
-import lapr.project.model.Project;
 import lapr.project.ui.CopyProjectDialog;
 import lapr.project.ui.CreateProjectDialog;
 import lapr.project.ui.EditProjectPropertiesDialog;
@@ -79,6 +78,7 @@ public class CustomMenuBar extends JMenuBar {
     private JMenu createMenuSimulations() {
         JMenu menu = new JMenu("Simulations");
         menu.setMnemonic(KeyEvent.VK_S);
+        menu.add(createFlightInfoItem());
         menu.add(createSimulation1Item());
         menu.add(createSimulation2Item());
         menu.add(createSimulation3Item());
@@ -202,6 +202,16 @@ public class CustomMenuBar extends JMenuBar {
             System.exit(0);
         });
 
+        return item;
+    }
+
+    private JMenuItem createFlightInfoItem() {
+        JMenuItem item = new JMenuItem("Create Flight Info", 'I');
+        item.setAccelerator(KeyStroke.getKeyStroke("ctrl I"));
+
+        item.addActionListener((ActionEvent e) -> {
+            // TODO
+        });
         return item;
     }
 
