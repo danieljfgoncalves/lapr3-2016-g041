@@ -3,8 +3,6 @@
  */
 package lapr.project.model;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.Before;
@@ -20,20 +18,20 @@ import static org.junit.Assert.*;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class FlightTest {
+public class FlightInfoTest {
 
     /**
      * Test instance of a flight
      */
-    private Flight instance;
+    private FlightInfo instance;
 
     @Before
     public void setUp() {
-        instance = new Flight();
+        instance = new FlightInfo();
     }
 
     /**
-     * Test of getFlightType method, of class Flight.
+     * Test of getFlightType method, of class FlightInfo.
      */
     @Test
     public void testGetSetFlightType() {
@@ -45,7 +43,7 @@ public class FlightTest {
     }
 
     /**
-     * Test of getDesignator method, of class Flight.
+     * Test of getDesignator method, of class FlightInfo.
      */
     @Test
     public void testGetSetDesignator() {
@@ -57,19 +55,7 @@ public class FlightTest {
     }
 
     /**
-     * Test of getAirline method, of class Flight.
-     */
-    @Test
-    public void testGetSetAirline() {
-        System.out.println("getAirline");
-        String expResult = "TAP";
-        instance.setAirline(expResult);
-        String result = instance.getAirline();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of getAircraft method, of class Flight.
+     * Test of getAircraft method, of class FlightInfo.
      */
     @Test
     public void testGetSetAircraft() {
@@ -82,58 +68,33 @@ public class FlightTest {
     }
 
     /**
-     * Test of getOrigin method, of class Flight.
+     * Test of getOrigin method, of class FlightInfo.
      */
     @Test
     public void testGetSetOrigin() {
         System.out.println("getOrigin");
         Airport expResult = new Airport();
         expResult.setIATA("OPO"); // Change one attribute
-        instance.setOrigin(expResult);
-        Airport result = instance.getOrigin();
+        instance.setOriginAirport(expResult);
+        Airport result = instance.getOriginAirport();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of getDestination method, of class Flight.
+     * Test of getDestination method, of class FlightInfo.
      */
     @Test
     public void testGetSetDestination() {
         System.out.println("getDestination");
         Airport expResult = new Airport();
         expResult.setIATA("LIS"); // Change one attribute
-        instance.setDestination(expResult);
-        Airport result = instance.getDestination();
+        instance.setDestinationAirport(expResult);
+        Airport result = instance.getDestinationAirport();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of getDepartureDate method, of class Flight.
-     */
-    @Test
-    public void testGetSetDepartureDate() {
-        System.out.println("getDepartureDate");
-        Calendar expResult = new GregorianCalendar(2016, 12, 25);
-        instance.setDepartureDate(expResult);
-        Calendar result = instance.getDepartureDate();
-        assertEquals(expResult, result);
-
-    }
-
-    /**
-     * Test of getScheduledArrival method, of class Flight.
-     */
-    @Test
-    public void testGetSetScheduledArrival() {
-        System.out.println("getScheduledArrival");
-        Calendar expResult = new GregorianCalendar(2016, 12, 25, 15 * 60, 00);
-        instance.setScheduledArrival(expResult);
-        Calendar result = instance.getScheduledArrival();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of getStops method, of class Flight.
+     * Test of getStops method, of class FlightInfo.
      */
     @Test
     public void testGetSetStops() {
@@ -146,62 +107,62 @@ public class FlightTest {
     }
 
     /**
-     * Test of getFlightPlan method, of class Flight.
+     * Test of getWaypoints and setWaypoints methods, of class FlightInfo.
      */
     @Test
-    public void testGetSetFlightPlan() {
+    public void testGetSetWaypoints() {
         System.out.println("getFlightPlan");
-        List<Segment> expResult = new LinkedList<>();
-        expResult.add(new Segment());
-        instance.setFlightPlan(expResult);
-        List<Segment> result = instance.getFlightPlan();
+        List<Coordinate> expResult = new LinkedList<>();
+        expResult.add(new Coordinate());
+        instance.setWaypoints(expResult);
+        List<Coordinate> result = instance.getWaypoints();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of equals method, of class Flight.
+     * Test of equals method, of class FlightInfo.
      */
     @Test
     public void testEquals01() {
         System.out.println("equals");
-        // Test if object is equal to Flight
-        Object obj = new Flight();
+        // Test if object is equal to FlightInfo
+        Object obj = new FlightInfo();
         boolean result = instance.equals(obj);
         assertTrue(result);
     }
 
     /**
-     * Test of equals method, of class Flight.
+     * Test of equals method, of class FlightInfo.
      */
     @Test
     public void testEquals02() {
         System.out.println("equals");
-        // Test if object is not equal to Flight
+        // Test if object is not equal to FlightInfo
         Object obj = new Segment();
         boolean result = instance.equals(obj);
         assertFalse(result);
     }
 
     /**
-     * Test of equals method, of class Flight.
+     * Test of equals method, of class FlightInfo.
      */
     @Test
     public void testEquals03() {
         System.out.println("equals");
-        // Test if instance2 is equal to Flight
-        Flight instance2 = new Flight();
+        // Test if instance2 is equal to FlightInfo
+        FlightInfo instance2 = new FlightInfo();
         boolean result = instance.equals(instance2);
         assertTrue(result);
     }
 
     /**
-     * Test of equals method, of class Flight.
+     * Test of equals method, of class FlightInfo.
      */
     @Test
     public void testEquals04() {
         System.out.println("equals");
-        // Test if instance2 is not equal to Flight
-        Flight instance2 = new Flight();
+        // Test if instance2 is not equal to FlightInfo
+        FlightInfo instance2 = new FlightInfo();
         instance2.setDesignator("test");
         boolean result = instance.equals(instance2);
         assertFalse(result);

@@ -21,7 +21,7 @@ public class Simulation {
     /**
      * The list of flights.
      */
-    private List<Flight> flights;
+    private List<FlightInfo> flights;
 
     /**
      * Creates an instance of simulation with their default values.
@@ -35,7 +35,7 @@ public class Simulation {
      *
      * @param flights flights
      */
-    public Simulation(List<Flight> flights) {
+    public Simulation(List<FlightInfo> flights) {
         this.flights = flights;
     }
 
@@ -44,7 +44,7 @@ public class Simulation {
      *
      * @return flights
      */
-    public List<Flight> getFlights() {
+    public List<FlightInfo> getFlights() {
         return flights;
     }
 
@@ -53,7 +53,7 @@ public class Simulation {
      *
      * @param flights flights
      */
-    public void setFlights(List<Flight> flights) {
+    public void setFlights(List<FlightInfo> flights) {
         this.flights = flights;
     }
 
