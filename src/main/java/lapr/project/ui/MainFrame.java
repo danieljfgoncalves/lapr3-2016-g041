@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import lapr.project.model.Flight;
+import lapr.project.model.FlightInfo;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
 import lapr.project.ui.components.CustomMenuBar;
@@ -156,12 +156,12 @@ public class MainFrame extends JFrame implements ProjectHandler {
         JPanel tablePanel = new JPanel(new BorderLayout());
 
         // TODO remove this mock object
-        ArrayList<Flight> flights = new ArrayList<>();
-        flights.add(new Flight());
-        flights.add(new Flight());
-        flights.add(new Flight());
-        flights.add(new Flight());
-        flights.add(new Flight());
+        ArrayList<FlightInfo> flights = new ArrayList<>();
+        flights.add(new FlightInfo());
+        flights.add(new FlightInfo());
+        flights.add(new FlightInfo());
+        flights.add(new FlightInfo());
+        flights.add(new FlightInfo());
 
         simulationsTable = new JTable(new TableModelFlight(flights));
 
