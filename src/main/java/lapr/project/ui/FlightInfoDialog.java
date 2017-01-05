@@ -27,6 +27,7 @@ import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.FlightSimulator;
 import lapr.project.model.Project;
+import lapr.project.ui.components.ListCellRendererAirport;
 
 /**
  * The frame to create project.
@@ -400,11 +401,14 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
         JLabel originAirportLabel = new JLabel("Origin Airport:");
         JComboBox<Airport> originAirportComboBox = new JComboBox<>();
-        originAirportComboBox.setPreferredSize(new Dimension(150, 25));
+        originAirportComboBox.setPreferredSize(new Dimension(450, 25));
 
+        //populate origin airport combobox
         for (Airport airport : project.getAirportsRegister().getAirports()) {
             originAirportComboBox.addItem(airport);
         }
+        originAirportComboBox.setRenderer(new ListCellRendererAirport());
+
         originAirportComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -416,11 +420,14 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
         JLabel destinationAirportLabel = new JLabel("Destination Airport:");
         JComboBox<Airport> destinationAirportComboBox = new JComboBox<>();
-        destinationAirportComboBox.setPreferredSize(new Dimension(150, 25));
+        destinationAirportComboBox.setPreferredSize(new Dimension(450, 25));
 
+        //populate destination airport combobox
         for (Airport airport : project.getAirportsRegister().getAirports()) {
             destinationAirportComboBox.addItem(airport);
         }
+        destinationAirportComboBox.setRenderer(new ListCellRendererAirport());
+
         destinationAirportComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
