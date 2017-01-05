@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -27,6 +28,7 @@ import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.FlightSimulator;
 import lapr.project.model.Project;
+import lapr.project.ui.components.ListCellRendererAircraftModel;
 import lapr.project.ui.components.ListCellRendererAirport;
 
 /**
@@ -72,12 +74,12 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
     /**
      * The selectAircraft label.
      */
-    private JLabel selectAircraftLabel;
+    private JLabel aircraftInfoLabel;
 
     /**
      * The class label.
      */
-    private JLabel classLabel;
+    private JLabel aircraftConfigLabel;
 
     /**
      * The addFlightInfo label.
@@ -103,6 +105,11 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * The number of classes text field.
      */
     private JTextField txtNumClasses;
+
+    /**
+     * The company name text field.
+     */
+    private JTextField txtCompanyName;
 
     /**
      * The climb rate text field.
@@ -237,10 +244,10 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         labelsPanel.setBackground(DEFAULT_COLOR);
         labelsPanel.setBorder(PADDING_BORDER);
 
-        labelsPanel.add(createSelectAircraftLabel());
-        labelsPanel.add(createClassLabel());
+        labelsPanel.add(createAircraftInfoLabel());
+        labelsPanel.add(createAircraftConfigurationLabel());
         labelsPanel.add(createAddFlightInfoLabel());
-        labelsPanel.add(createNameLabel());
+        labelsPanel.add(createFlightNameLabel());
 
         return labelsPanel;
     }
@@ -250,12 +257,12 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      *
      * @return the select aircraft label
      */
-    private Component createSelectAircraftLabel() {
-        selectAircraftLabel = new JLabel("Select Aircraft");
-        selectAircraftLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
-        selectAircraftLabel.setFont(BOLD_LABEL_FONT);
-        selectAircraftLabel.setBorder(PADDING_BORDER);
-        return selectAircraftLabel;
+    private Component createAircraftInfoLabel() {
+        aircraftInfoLabel = new JLabel("Aircraft Information");
+        aircraftInfoLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
+        aircraftInfoLabel.setFont(BOLD_LABEL_FONT);
+        aircraftInfoLabel.setBorder(PADDING_BORDER);
+        return aircraftInfoLabel;
     }
 
     /**
@@ -263,12 +270,12 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      *
      * @return class label
      */
-    private Component createClassLabel() {
-        classLabel = new JLabel("Set Aircraft Classes");
-        classLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
-        classLabel.setFont(PLAIN_LABEL_FONT);
-        classLabel.setBorder(PADDING_BORDER);
-        return classLabel;
+    private Component createAircraftConfigurationLabel() {
+        aircraftConfigLabel = new JLabel("Set Aircraft Configuration");
+        aircraftConfigLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
+        aircraftConfigLabel.setFont(PLAIN_LABEL_FONT);
+        aircraftConfigLabel.setBorder(PADDING_BORDER);
+        return aircraftConfigLabel;
     }
 
     /**
@@ -289,8 +296,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      *
      * @return the name label
      */
-    private Component createNameLabel() {
-        nameLabel = new JLabel("Set Name");
+    private Component createFlightNameLabel() {
+        nameLabel = new JLabel("Set Flight Name");
         nameLabel.setPreferredSize(LABEL_PREFERRED_SIZE);
         nameLabel.setFont(PLAIN_LABEL_FONT);
         nameLabel.setBorder(PADDING_BORDER);
@@ -320,24 +327,22 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         formsPanel = new JPanel();
         formsPanel.setLayout(cl);
 
-        formsPanel.add(createSelectAircraftForm(), "1");
-        formsPanel.add(createClassForm(), "2");
+        formsPanel.add(createAircraftInfoForm(), "1");
+        formsPanel.add(createSetAircraftConfigurationForm(), "2");
         formsPanel.add(createAddFlightInfoForm(), "3");
         formsPanel.add(createNameForm(), "4");
 
         return formsPanel;
     }
 
-    private Component createSelectAircraftForm() {
-        JPanel selectAircraftForm = new JPanel();
-        selectAircraftForm.setLayout(new GridLayout(10, 1, 0, 0));
-        selectAircraftForm.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-        selectAircraftForm.setBackground(DEFAULT_COLOR);
+    private Component createAircraftInfoForm() {
+        JPanel aircraftInfoForm = new JPanel();
+        GroupLayout layout = new GroupLayout(aircraftInfoForm);
+        aircraftInfoForm.setLayout(layout);
+        layout.setAutoCreateContainerGaps(true);
 
-        JPanel panel1 = new JPanel(new FlowLayout());
-        JPanel panel2 = new JPanel(new FlowLayout());
-        panel1.setBackground(DEFAULT_COLOR);
-        panel2.setBackground(DEFAULT_COLOR);
+        aircraftInfoForm.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        aircraftInfoForm.setBackground(DEFAULT_COLOR);
 
         JLabel selectAircraftModelLabel = new JLabel("Select the Aircraft Model:");
         JComboBox<AircraftModel> aircraftModelComboBox = new JComboBox<>();
@@ -345,6 +350,7 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         for (AircraftModel am : project.getAircraftModelsRegister().getAircraftModels()) {
             aircraftModelComboBox.addItem(am);
         }
+        aircraftModelComboBox.setRenderer(new ListCellRendererAircraftModel());
 
         aircraftModelComboBox.addActionListener(new ActionListener() {
             @Override
@@ -357,23 +363,46 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         txtNumClasses = new JTextField();
         txtNumClasses.setPreferredSize(new Dimension(25, 25));
 
-        panel1.add(selectAircraftModelLabel);
-        panel1.add(aircraftModelComboBox);
+        JLabel companyNameLabel = new JLabel("Company Name:");
+        txtCompanyName = new JTextField();
+        txtNumClasses.setPreferredSize(new Dimension(200, 25));
 
-        panel2.add(numClassesLabel);
-        panel2.add(txtNumClasses);
+        //align horizontally
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(selectAircraftModelLabel)
+                        .addComponent(numClassesLabel)
+                        .addComponent(companyNameLabel)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(aircraftModelComboBox)
+                        .addComponent(txtNumClasses)
+                        .addComponent(txtCompanyName)
+                )
+        );
 
-        selectAircraftForm.add(panel1);
-        selectAircraftForm.add(panel2);
+        //align vertically
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(selectAircraftModelLabel)
+                        .addComponent(aircraftModelComboBox))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(numClassesLabel)
+                        .addComponent(txtNumClasses))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(companyNameLabel)
+                        .addComponent(txtCompanyName)
+                )
+        );
 
-        return selectAircraftForm;
+        return aircraftInfoForm;
     }
 
-    private Component createClassForm() {
-        JPanel classForm = new JPanel();
-        classForm.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-        classForm.setBackground(DEFAULT_COLOR);
-        return classForm;
+    private Component createSetAircraftConfigurationForm() {
+        JPanel aircraftConfigForm = new JPanel();
+        aircraftConfigForm.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        aircraftConfigForm.setBackground(DEFAULT_COLOR);
+        return aircraftConfigForm;
     }
 
     private Component createAddFlightInfoForm() {
@@ -517,11 +546,11 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
             switch (currentForm) {
                 case 1:
                     previousButton.setEnabled(false);
-                    classLabel.setFont(PLAIN_LABEL_FONT);
-                    selectAircraftLabel.setFont(BOLD_LABEL_FONT);
+                    aircraftConfigLabel.setFont(PLAIN_LABEL_FONT);
+                    aircraftInfoLabel.setFont(BOLD_LABEL_FONT);
                     break;
                 case 2:
-                    classLabel.setFont(BOLD_LABEL_FONT);
+                    aircraftConfigLabel.setFont(BOLD_LABEL_FONT);
                     addFlightInfoLabel.setFont(PLAIN_LABEL_FONT);
                     break;
                 case 3:
@@ -544,11 +573,11 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
             switch (currentForm) {
                 case 2:
                     previousButton.setEnabled(true);
-                    selectAircraftLabel.setFont(PLAIN_LABEL_FONT);
-                    classLabel.setFont(BOLD_LABEL_FONT);
+                    aircraftInfoLabel.setFont(PLAIN_LABEL_FONT);
+                    aircraftConfigLabel.setFont(BOLD_LABEL_FONT);
                     break;
                 case 3:
-                    classLabel.setFont(PLAIN_LABEL_FONT);
+                    aircraftConfigLabel.setFont(PLAIN_LABEL_FONT);
                     addFlightInfoLabel.setFont(BOLD_LABEL_FONT);
                     break;
                 case 4:
