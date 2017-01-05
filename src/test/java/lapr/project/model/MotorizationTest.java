@@ -3,10 +3,11 @@
  */
 package lapr.project.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.measure.quantity.Length;
+import javax.measure.quantity.Velocity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
 import lapr.project.utils.CustomUnits;
 import org.jscience.physics.amount.Amount;
 import org.junit.Before;
@@ -19,20 +20,25 @@ import static org.junit.Assert.*;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class MotorizationTest {
 
+    /**
+     * The instance to be tested.
+     */
     private Motorization instance;
 
     @Before
     public void setUp() {
-        ArrayList<Regime> regimes = new ArrayList<>();
-        regimes.add(new Regime("Cruise", Amount.valueOf(0.564d, CustomUnits.TSFC_US),
-                Amount.valueOf(0.85d, NonSI.MACH), Amount.valueOf(12820d, NonSI.POUND_FORCE),
-                Amount.valueOf(45e3, SI.METER)));
-        instance = new Motorization(4, "GE CF6-80C2B1F", MotorType.TURBOFAN, regimes);
+        instance = new Motorization(4, "RR Trent 970", MotorType.TURBOFAN,
+                Amount.valueOf(43E+03, NonSI.FOOT),
+                Amount.valueOf(0.85, NonSI.MACH),
+                Amount.valueOf(1.6E-4, CustomUnits.TSFC_SI),
+                Amount.valueOf(0.96, Unit.ONE),
+                new ThrustFunction(Amount.valueOf(348.31E+03, SI.NEWTON),
+                        Amount.valueOf(1.8E+05, SI.METERS_PER_SECOND),
+                        Amount.valueOf(0.9, NonSI.MACH)));
     }
 
     /**
@@ -76,17 +82,71 @@ public class MotorizationTest {
     }
 
     /**
-     * Test of setRegimes and getRegimes method, of class Motorization.
+     * Test of setCruiseAltitude and getCruiseAltitude method, of class
+     * Motorization.
      */
     @Test
-    public void testGetSetRegimes() {
-        System.out.println("get and setRegimes");
+    public void testGetSetCruiseAltitude() {
+        System.out.println("getCruiseAltitude and setCruiseAltitude");
 
-        List<Regime> regimes = new ArrayList<>();
-        regimes.add(new Regime());
-        instance.setRegimes(regimes);
+        Amount<Length> cruiseAltitude = Amount.valueOf(33e3, NonSI.FOOT);
+        instance.setCruiseAltitude(cruiseAltitude);
 
-        assertEquals(instance.getRegimes(), regimes);
+        assertEquals(instance.getCruiseAltitude(), cruiseAltitude);
+    }
+
+    /**
+     * Test of getCruiseSpeed and setCruiseSpeed method, of class Motorization.
+     */
+    @Test
+    public void testGetSetCruiseSpeed() {
+        System.out.println("getCruiseSpeed and setCruiseSpeed");
+
+        Amount<Velocity> cruiseSpeed = Amount.valueOf(0.47, NonSI.MACH);
+        instance.setCruiseSpeed(cruiseSpeed);
+
+        assertEquals(instance.getCruiseSpeed(), cruiseSpeed);
+    }
+
+    /**
+     * Test of getTsfc and setTsfc method, of class Motorization.
+     */
+    @Test
+    public void testGetSetTsfc() {
+        System.out.println("getTsfc and setTsfc");
+
+        Amount tsfc = Amount.valueOf(1.12E-31, CustomUnits.TSFC_SI);
+        instance.setTsfc(tsfc);
+
+        assertEquals(instance.getTsfc(), tsfc);
+    }
+
+    /**
+     * Test of getLapseRateFactor and setLapseRateFactor methods, of class
+     * Motorization.
+     */
+    @Test
+    public void testGetSetLapseRateFactor() {
+        System.out.println("getLapseRateFactor and setLapseRateFactor");
+
+        Amount lapseRateFactor = Amount.valueOf(0.3, Unit.ONE);
+        instance.setLapseRateFactor(lapseRateFactor);
+
+        assertEquals(instance.getLapseRateFactor(), lapseRateFactor);
+    }
+
+    /**
+     * Test of getThrustFunction and setThrustFunction methods, of class
+     * Motorization.
+     */
+    @Test
+    public void testGetSetThrustFunction() {
+        System.out.println("getThrustFunction and setThrustFunction");
+
+        ThrustFunction thrustFunction = new ThrustFunction();
+        instance.setThrustFunction(thrustFunction);
+
+        assertEquals(instance.getThrustFunction(), thrustFunction);
     }
 
     /**
@@ -99,10 +159,14 @@ public class MotorizationTest {
         Object obj = null;
         assertFalse(instance.equals(obj));
 
-        ArrayList<Regime> regimes = new ArrayList<>();
-        regimes.add(new Regime("Cruise", Amount.valueOf(0.564d, CustomUnits.TSFC_US),
-                Amount.valueOf(0.85d, NonSI.MACH), Amount.valueOf(12820d, NonSI.POUND_FORCE), Amount.valueOf(45e3, SI.METER)));
-        obj = new Motorization(4, "GE CF6-80C2B1F", MotorType.TURBOFAN, regimes);
+        obj = new Motorization(4, "RR Trent 970", MotorType.TURBOFAN,
+                Amount.valueOf(43E+03, NonSI.FOOT),
+                Amount.valueOf(0.85, NonSI.MACH),
+                Amount.valueOf(1.6E-4, CustomUnits.TSFC_SI),
+                Amount.valueOf(0.96, Unit.ONE),
+                new ThrustFunction(Amount.valueOf(348.31E+03, SI.NEWTON),
+                        Amount.valueOf(1.8E+05, SI.METERS_PER_SECOND),
+                        Amount.valueOf(0.9, NonSI.MACH)));
 
         assertTrue(instance.equals(obj));
     }

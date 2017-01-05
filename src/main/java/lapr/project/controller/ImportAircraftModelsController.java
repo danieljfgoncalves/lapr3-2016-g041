@@ -6,7 +6,6 @@ package lapr.project.controller;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
-import lapr.project.model.AircraftModelsRegister;
 import lapr.project.model.Project;
 import org.xml.sax.SAXException;
 
@@ -44,8 +43,8 @@ public class ImportAircraftModelsController {
      * @throws ParserConfigurationException configurations errors
      */
     public boolean importFile(File file) throws SAXException, IOException, ParserConfigurationException {
-        AircraftModelsRegister aircraftModelsRegister = project.getAircraftModelsRegister();
-        return aircraftModelsRegister.importXml(file);
+        // TODO reimplement with database
+        return true;
     }
 
 }

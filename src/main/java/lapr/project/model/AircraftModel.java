@@ -3,6 +3,7 @@
  */
 package lapr.project.model;
 
+import java.util.Arrays;
 import java.util.Objects;
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Dimensionless;
@@ -23,7 +24,6 @@ import org.jscience.physics.amount.Amount;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class AircraftModel {
@@ -34,9 +34,24 @@ public class AircraftModel {
     private String modelID;
 
     /**
+     * AircraftType's description.
+     */
+    private String description;
+
+    /**
+     * AircraftType's maker.
+     */
+    private String maker;
+
+    /**
      * AircraftType's type.
      */
     private AircraftType type;
+
+    /**
+     * AircraftType's motorization.
+     */
+    private Motorization motorization;
 
     /**
      * AircraftType's empty weight (EWeight) (SI: Kg).
@@ -47,31 +62,6 @@ public class AircraftModel {
      * AircraftType's Maximum take-off weight (SI: Kg).
      */
     private Amount<Mass> mtow;
-
-    /**
-     * AircraftType's Maximum Zero Fuel Weight (SI: Kg).
-     */
-    private Amount<Mass> mzfw;
-
-    /**
-     * AircraftType's wing area (SI: m2).
-     */
-    private Amount<Area> wingArea;
-
-    /**
-     * AircraftType's motorization.
-     */
-    private Motorization motorization;
-
-    /**
-     * AircraftType's description.
-     */
-    private String description;
-
-    /**
-     * AircraftType's maker.
-     */
-    private String maker;
 
     /**
      * AircraftType's maxPayload (SI: kg).
@@ -94,14 +84,19 @@ public class AircraftModel {
     private Amount<Velocity> mmo;
 
     /**
+     * AircraftType's wing area (SI: m2).
+     */
+    private Amount<Area> wingArea;
+
+    /**
      * AircraftType's wingSpan (SI: m).
      */
     private Amount<Length> wingSpan;
 
     /**
-     * The aircraft drag coefficient.
+     * The aspect ratio.
      */
-    private Amount<Dimensionless> dragCoefficient;
+    private Amount<Dimensionless> aspectRatio;
 
     /**
      * AircraftType's e (Efficiency Factor)
@@ -109,9 +104,19 @@ public class AircraftModel {
     private Amount<Dimensionless> e;
 
     /**
+     * The cdrag function.
+     */
+    private double[][] cdragFunction;
+
+    /**
      * The AircraftType's modelID by default.
      */
     private static final String MODEL_ID_BY_DEFAULT = "01Boing474";
+
+    /**
+     * The AircraftType's description by default.
+     */
+    private static final String DESCRIPTION_BY_DEFAULT = "Default description";
 
     /**
      * The AircraftType's type by default.
@@ -129,19 +134,9 @@ public class AircraftModel {
     private static final Amount<Mass> MTOW_BY_DEFAULT = Amount.valueOf(0d, SI.KILOGRAM);
 
     /**
-     * The AircraftType's mzfw by default.
-     */
-    private static final Amount<Mass> MZFW_BY_DEFAULT = Amount.valueOf(0d, SI.KILOGRAM);
-
-    /**
      * The AircraftType's wing area by default.
      */
     private static final Amount<Area> WING_AREA_BY_DEFAULT = Amount.valueOf(0d, SI.SQUARE_METRE);
-
-    /**
-     * The AircraftType's description by default.
-     */
-    private static final String DESCRIPTION_BY_DEFAULT = "DefaultDescription";
 
     /**
      * The AircraftType's maker by default.
@@ -174,9 +169,9 @@ public class AircraftModel {
     private static final Amount<Length> WING_SPAN_BY_DEFAULT = Amount.valueOf(0d, SI.METER);
 
     /**
-     * The default drag coefficient.
+     * The default aspect ratio.
      */
-    private static final Amount<Dimensionless> DEFAULT_DRAG_COEFFICIENT = Amount.valueOf(0d, Unit.ONE);
+    private static final Amount<Dimensionless> DEFAULT_ASPECT_RATIO = Amount.valueOf(7.53, Unit.ONE);
 
     /**
      * The AircraftType's e by default.
@@ -184,69 +179,74 @@ public class AircraftModel {
     private static final Amount<Dimensionless> E_BY_DEFAULT = Amount.valueOf(0d, Unit.ONE);
 
     /**
-     * Constructs an instance of AircraftModel receiving it's parameters.
-     *
-     * @param modelID the AircraftType's modelID
-     * @param type the AircraftType's type
-     * @param emptyWheight the AircraftType's empty weight
-     * @param mtow the AircraftType's maximum take off weight
-     * @param mzfw the AircraftType's maximum zero flight weight
-     * @param wingArea the AircraftType's wing area
-     * @param motorization the AircraftType's motorization
-     * @param description the AircraftType's description
-     * @param maker the AircraftType's maker
-     * @param maxPayload the AircraftType's maker
-     * @param maxFuelCapacity the AircraftType's max fuel capacity
-     * @param vmo the AircraftType's vmo (max operating system velocity)
-     * @param mmo the AircraftType's mmo (max mach operating system velocity)
-     * @param wingSpan the AircraftType's wing span
-     * @param dragCoefficient drag coefficient
-     * @param e the AircraftType's e
+     * The default cdrag function.
      */
-    public AircraftModel(String modelID, AircraftType type, Amount<Mass> emptyWheight,
-            Amount<Mass> mtow, Amount<Mass> mzfw, Amount<Area> wingArea, Motorization motorization,
-            String description, String maker, Amount<Mass> maxPayload, Amount<Volume> maxFuelCapacity,
-            Amount<Velocity> vmo, Amount<Velocity> mmo, Amount<Length> wingSpan,
-            Amount<Dimensionless> dragCoefficient, Amount<Dimensionless> e) {
-        this.modelID = modelID;
-        this.type = type;
-        this.emptyWeight = emptyWheight;
-        this.mtow = mtow;
-        this.mzfw = mzfw;
-        this.wingArea = wingArea;
-        this.motorization = motorization;
-        this.description = description;
-        this.maker = maker;
-        this.maxPayload = maxPayload;
-        this.maxFuelCapacity = maxFuelCapacity;
-        this.vmo = vmo;
-        this.mmo = mmo;
-        this.wingSpan = wingSpan;
-        this.dragCoefficient = dragCoefficient;
-        this.e = e;
-    }
+    private static final double[][] DEFAULT_CDRAG_FUNCTION = {{0, 0.020}, {0.75, 0.020}, {0.80, 0.0204}};
 
     /**
      * Constructs an instance of AircraftModel using it's parameters by default.
      */
     public AircraftModel() {
         this.modelID = MODEL_ID_BY_DEFAULT;
-        this.type = TYPE_BY_DEFAULT;
-        this.emptyWeight = EMPTY_WEIGHT_BY_DEFAULT;
-        this.mtow = MTOW_BY_DEFAULT;
-        this.mzfw = MZFW_BY_DEFAULT;
-        this.wingArea = WING_AREA_BY_DEFAULT;
-        this.description = DESCRIPTION_BY_DEFAULT;
-        this.motorization = new Motorization();
         this.description = DESCRIPTION_BY_DEFAULT;
         this.maker = MAKER_BY_DEFAULT;
+        this.type = TYPE_BY_DEFAULT;
+        this.motorization = new Motorization();
+        this.emptyWeight = EMPTY_WEIGHT_BY_DEFAULT;
+        this.mtow = MTOW_BY_DEFAULT;
         this.maxPayload = MAX_PAYLOAD_BY_DEFAULT;
         this.maxFuelCapacity = MAX_FUEL_CAPACITY_BY_DEFAULT;
         this.vmo = VMO_BY_DEFAULT;
         this.mmo = MMO_BY_DEFAULT;
+        this.wingArea = WING_AREA_BY_DEFAULT;
         this.wingSpan = WING_SPAN_BY_DEFAULT;
-        this.dragCoefficient = DEFAULT_DRAG_COEFFICIENT;
+        this.aspectRatio = DEFAULT_ASPECT_RATIO;
         this.e = E_BY_DEFAULT;
+        this.cdragFunction = DEFAULT_CDRAG_FUNCTION;
+    }
+
+    /**
+     * Constructs an aircraft model receiving their parameters.
+     *
+     * @param modelID the model ID
+     * @param description the description
+     * @param maker the maker
+     * @param type the type
+     * @param motorization the motorization
+     * @param emptyWeight the empty weight
+     * @param mtow the maximum take off weight
+     * @param maxPayload the maximum payload
+     * @param maxFuelCapacity the maximum fuel capacity
+     * @param vmo the maximum operating speed
+     * @param mmo the maximum mach operating speed
+     * @param wingArea the wing area
+     * @param wingSpan the wing span
+     * @param aspectRatio the aspect ratio
+     * @param e the e
+     * @param cdragFunction the cfrag function
+     */
+    public AircraftModel(String modelID, String description, String maker,
+            AircraftType type, Motorization motorization, Amount<Mass> emptyWeight,
+            Amount<Mass> mtow, Amount<Mass> maxPayload, Amount<Volume> maxFuelCapacity,
+            Amount<Velocity> vmo, Amount<Velocity> mmo, Amount<Area> wingArea,
+            Amount<Length> wingSpan, Amount<Dimensionless> aspectRatio,
+            Amount<Dimensionless> e, double[][] cdragFunction) {
+        this.modelID = modelID;
+        this.description = description;
+        this.maker = maker;
+        this.type = type;
+        this.motorization = motorization;
+        this.emptyWeight = emptyWeight;
+        this.mtow = mtow;
+        this.maxPayload = maxPayload;
+        this.maxFuelCapacity = maxFuelCapacity;
+        this.vmo = vmo;
+        this.mmo = mmo;
+        this.wingArea = wingArea;
+        this.wingSpan = wingSpan;
+        this.aspectRatio = aspectRatio;
+        this.e = e;
+        this.cdragFunction = cdragFunction;
     }
 
     /**
@@ -256,21 +256,25 @@ public class AircraftModel {
      */
     public AircraftModel(AircraftModel otherAircraftModel) {
         this.modelID = otherAircraftModel.modelID;
-        this.type = otherAircraftModel.type;
-        this.emptyWeight = otherAircraftModel.emptyWeight;
-        this.mtow = otherAircraftModel.mtow;
-        this.mzfw = otherAircraftModel.mzfw;
-        this.wingArea = otherAircraftModel.wingArea;
-        this.motorization = otherAircraftModel.motorization;
         this.description = otherAircraftModel.description;
         this.maker = otherAircraftModel.maker;
+        this.type = otherAircraftModel.type;
+        this.motorization = new Motorization(otherAircraftModel.motorization);
+        this.emptyWeight = otherAircraftModel.emptyWeight;
+        this.mtow = otherAircraftModel.mtow;
         this.maxPayload = otherAircraftModel.maxPayload;
         this.maxFuelCapacity = otherAircraftModel.maxFuelCapacity;
         this.vmo = otherAircraftModel.vmo;
         this.mmo = otherAircraftModel.mmo;
+        this.wingArea = otherAircraftModel.wingArea;
         this.wingSpan = otherAircraftModel.wingSpan;
-        this.dragCoefficient = otherAircraftModel.dragCoefficient;
+        this.aspectRatio = otherAircraftModel.aspectRatio;
         this.e = otherAircraftModel.e;
+
+        this.cdragFunction = new double[cdragFunction.length][cdragFunction[0].length];
+        for (int i = 0; i < otherAircraftModel.cdragFunction.length; i++) {
+            this.cdragFunction[i] = otherAircraftModel.cdragFunction[i].clone();
+        }
     }
 
     /**
@@ -343,24 +347,6 @@ public class AircraftModel {
      */
     public void setMtow(Amount<Mass> mtow) {
         this.mtow = mtow;
-    }
-
-    /**
-     * Obtains the AircraftModel's maximum zero fuel weight
-     *
-     * @return the mzfw
-     */
-    public Amount<Mass> getMzfw() {
-        return this.mzfw;
-    }
-
-    /**
-     * Modifies the AircraftModel's maximum zero fuel weight
-     *
-     * @param mzfw the mzfw to set
-     */
-    public void setMzfw(Amount<Mass> mzfw) {
-        this.mzfw = mzfw;
     }
 
     /**
@@ -526,7 +512,7 @@ public class AircraftModel {
     }
 
     /**
-     * Obtains the AircraftModel's e
+     * Obtains the AircraftModel's e.
      *
      * @return the e
      */
@@ -535,7 +521,7 @@ public class AircraftModel {
     }
 
     /**
-     * Modifies the AircraftModel's e
+     * Modifies the AircraftModel's e.
      *
      * @param e e to set
      */
@@ -544,31 +530,39 @@ public class AircraftModel {
     }
 
     /**
-     * Obtains the AircraftModel's drag coefficient
+     * Gets the aspect ratio.
      *
-     * @return the drag coefficient
+     * @return aspect ratio
      */
-    public Amount<Dimensionless> getDragCoefficient() {
-        return dragCoefficient;
+    public Amount<Dimensionless> getAspectRatio() {
+        return aspectRatio;
     }
 
     /**
-     * Modifies the AircraftModel's drag coefficient
+     * Sets the aspect ratio.
      *
-     * @param dragCoefficient the drag coefficient to set
+     * @param aspectRatio aspect ratio
      */
-    public void setDragCoefficient(Amount<Dimensionless> dragCoefficient) {
-        this.dragCoefficient = dragCoefficient;
+    public void setAspectRatio(Amount<Dimensionless> aspectRatio) {
+        this.aspectRatio = aspectRatio;
     }
 
-    public Double calculateCd(Double drag, Double dynamicPressure, Double referenceArea) {
-        // TODO: Implement calculateCd
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Gets the cdrag function.
+     *
+     * @return cdrag function
+     */
+    public double[][] getCdragFunction() {
+        return cdragFunction;
     }
 
-    public Double calculateCl(Double lift, Double dynamicPressure, Double referenceArea) {
-        // TODO: Implement calculateCl
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Sets the cdrag function.
+     *
+     * @param cdragFunction cdrag function
+     */
+    public void setCdragFunction(double[][] cdragFunction) {
+        this.cdragFunction = cdragFunction;
     }
 
     @Override
@@ -593,14 +587,13 @@ public class AircraftModel {
 
     @Override
     public String toString() {
-        return String.format("Aircraft Model{modelID=%s, type=%s, empty weight=%.2f, "
-                + "maximum take off weight=%.2f, maximum zero fuel weight=%.2f, "
-                + "wing area=%.2f, Motorization=%s, description=%s, "
-                + "maker=%s, max payload=%.2f, max fuel capacity=%.2f, max operating speed=%.2f, max mach operating speed=%.2f, "
-                + "wing span=%.2f, e=%.2f }",
-                this.modelID, this.type, this.emptyWeight, this.mtow,
-                this.mzfw, this.wingArea, this.motorization, this.description,
-                this.maker, this.maxPayload, this.maxFuelCapacity, this.vmo, this.mmo, this.wingSpan, this.e);
+        return String.format("AircraftModel{modelID=%s, description=%s, maker=%s, "
+                + "type=%s, motorization=%s, emptyWeight=%s, mtow=%s, maxPayload=%s, "
+                + "maxFuelCapacity=%s, vmo=%s, mmo=%s, wingArea=%s, wingSpan=%s, "
+                + "aspectRatio=%s, e=%s, cdragFunction=%s}",
+                modelID, description, maker, type, motorization, emptyWeight,
+                mtow, maxPayload, maxFuelCapacity, vmo, mmo, wingArea, wingSpan,
+                aspectRatio, e, Arrays.toString(cdragFunction));
     }
 
 }
