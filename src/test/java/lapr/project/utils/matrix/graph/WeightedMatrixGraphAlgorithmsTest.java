@@ -3,8 +3,8 @@
  */
 package lapr.project.utils.matrix.graph;
 
-import lapr.project.utils.matrix.graph.MatrixGraph;
-import lapr.project.utils.matrix.graph.WeightedMatrixGraphAlgorithms;
+import lapr.project.utils.graph.matrix.MatrixGraph;
+import lapr.project.utils.graph.matrix.WeightedMatrixGraphAlgorithms;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.junit.Before;

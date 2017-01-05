@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.measure.unit.NonSI;
-import lapr.project.utils.matrix.graph.MatrixGraph;
+import lapr.project.utils.graph.matrix.MatrixGraph;
 import org.jscience.physics.amount.Amount;
 import org.junit.Before;
 import org.junit.Test;

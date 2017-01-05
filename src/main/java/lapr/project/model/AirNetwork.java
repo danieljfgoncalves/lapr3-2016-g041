@@ -5,7 +5,7 @@ package lapr.project.model;
 
 import java.util.Objects;
 import lapr.project.utils.Importable;
-import lapr.project.utils.matrix.graph.MatrixGraph;
+import lapr.project.utils.graph.matrix.MatrixGraph;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
