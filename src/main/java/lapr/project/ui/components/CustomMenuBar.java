@@ -14,6 +14,7 @@ import lapr.project.model.FlightSimulator;
 import lapr.project.ui.CopyProjectDialog;
 import lapr.project.ui.CreateProjectDialog;
 import lapr.project.ui.EditProjectPropertiesDialog;
+import lapr.project.ui.FlightInfoDialog;
 import lapr.project.ui.MainFrame;
 
 /**
@@ -205,12 +206,24 @@ public class CustomMenuBar extends JMenuBar {
         return item;
     }
 
+    /**
+     * Creates the create flight info menu item.
+     * 
+     * @return create flight info menu item
+     */
     private JMenuItem createFlightInfoItem() {
         JMenuItem item = new JMenuItem("Create Flight Info", 'I');
         item.setAccelerator(KeyStroke.getKeyStroke("ctrl I"));
-
         item.addActionListener((ActionEvent e) -> {
-            // TODO
+            if (mainFrame.getActiveProject() != null) {
+                FlightInfoDialog flightInfoDialog = new FlightInfoDialog(mainFrame, simulator, mainFrame.getActiveProject());
+                flightInfoDialog.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(mainFrame,
+                        "There is no project selected!\nPlease select a project first.",
+                        "Invalid Project",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         });
         return item;
     }
