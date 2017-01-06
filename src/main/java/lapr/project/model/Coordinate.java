@@ -32,11 +32,6 @@ public class Coordinate {
     private Double longitude;
 
     /**
-     * The epsilon of the allowed error.
-     */
-    private final static Double EPSILON = 0.01d;
-
-    /**
      * The default coordinate's ID.
      */
     private final static String DEFAULT_ID = "ID00";
@@ -139,14 +134,6 @@ public class Coordinate {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.longitude);
-        hash = 37 * hash + Objects.hashCode(this.latitude);
-        return hash;
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -157,8 +144,14 @@ public class Coordinate {
 
         final Coordinate other = (Coordinate) obj;
 
-        return Math.abs(this.longitude - other.longitude) < EPSILON
-                && Math.abs(this.latitude - other.latitude) < EPSILON;
+        return id.equalsIgnoreCase(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 83 * hash + Objects.hashCode(this.id);
+        return hash;
     }
 
     @Override

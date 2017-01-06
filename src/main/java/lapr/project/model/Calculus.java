@@ -65,6 +65,19 @@ public class Calculus {
      *
      * @param first first coordinate
      * @param second second coordinate
+     * @return an length amount (conversionable to m, ft, etc.)
+     */
+    public static Amount<Length> distance(Coordinate first, Coordinate second) {
+        // return with altitude being 0.
+        return distance(first, second, Amount.valueOf(0.0, SI.METER));
+    }
+    
+    /**
+     * Calculate the great circle distance between two numerical coordinates
+     * (Haversine Formula).
+     *
+     * @param first first coordinate
+     * @param second second coordinate
      * @param altitude average flight altitude
      * @return an length amount (conversionable to m, ft, etc.)
      */

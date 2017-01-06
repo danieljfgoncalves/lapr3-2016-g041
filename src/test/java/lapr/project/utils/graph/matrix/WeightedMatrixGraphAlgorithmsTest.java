@@ -1,10 +1,10 @@
 /**
  * Package location for Pure Fabrication util classes.
  */
-package lapr.project.utils.matrix.graph;
+package lapr.project.utils.graph.matrix;
 
-import lapr.project.utils.matrix.graph.MatrixGraph;
-import lapr.project.utils.matrix.graph.WeightedMatrixGraphAlgorithms;
+import lapr.project.utils.graph.matrix.MatrixGraph;
+import lapr.project.utils.graph.matrix.WeightedMatrixGraphAlgorithms;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.junit.Before;

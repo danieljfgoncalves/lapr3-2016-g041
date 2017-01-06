@@ -5,14 +5,16 @@ package lapr.project.model;
 
 import java.util.Objects;
 import lapr.project.utils.Importable;
-import lapr.project.utils.matrix.graph.MatrixGraph;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.Iterator;
+import javax.measure.quantity.Length;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import lapr.project.utils.Regex;
+import lapr.project.utils.graph.map.MapEdge;
+import lapr.project.utils.graph.map.MapGraph;
 import org.jscience.physics.amount.Amount;
 import org.xml.sax.SAXException;
 
@@ -30,14 +32,14 @@ public class AirNetwork implements Importable {
     /**
      * Air Network
      */
-    private MatrixGraph<Coordinate, Segment> network;
+    private MapGraph<Coordinate, Segment> network;
 
     /**
      * Constructs an empty air network
      */
     public AirNetwork() {
 
-        this.network = new MatrixGraph<>(true);
+        this.network = new MapGraph<>(true);
     }
 
     /**
@@ -45,7 +47,7 @@ public class AirNetwork implements Importable {
      *
      * @param network the network to use
      */
-    public AirNetwork(MatrixGraph<Coordinate, Segment> network) {
+    public AirNetwork(MapGraph<Coordinate, Segment> network) {
 
         this.network = network;
     }
@@ -58,7 +60,7 @@ public class AirNetwork implements Importable {
      */
     public AirNetwork(AirNetwork other) throws CloneNotSupportedException {
 
-        this.network = (MatrixGraph<Coordinate, Segment>) other.network.clone();
+        this.network = (MapGraph<Coordinate, Segment>) other.network.clone();
 
     }
 
@@ -67,7 +69,7 @@ public class AirNetwork implements Importable {
      *
      * @return the network (graph)
      */
-    public MatrixGraph<Coordinate, Segment> getNetwork() {
+    public MapGraph<Coordinate, Segment> getNetwork() {
 
         return network;
     }
@@ -77,7 +79,7 @@ public class AirNetwork implements Importable {
      *
      * @param network the network to set (graph)
      */
-    public void setNetwork(MatrixGraph<Coordinate, Segment> network) {
+    public void setNetwork(MapGraph<Coordinate, Segment> network) {
 
         this.network = network;
     }
@@ -107,7 +109,7 @@ public class AirNetwork implements Importable {
      *
      * @return all segments
      */
-    public Iterable<Segment> getSegments() {
+    public Iterable<MapEdge<Coordinate, Segment>> getSegments() {
 
         return this.network.edges();
     }
@@ -132,7 +134,10 @@ public class AirNetwork implements Importable {
      */
     public boolean addSegment(Coordinate coordinateA, Coordinate coordinateB, Segment newSegment) {
 
-        return this.network.insertEdge(coordinateA, coordinateB, newSegment);
+        // Calculate distance between coordinates
+        Amount<Length> distance = Calculus.distance(coordinateA, coordinateA, newSegment.getAltitude());
+
+        return this.network.insertEdge(coordinateA, coordinateB, newSegment, distance.doubleValue(SI.METER));
     }
 
     /**
@@ -171,7 +176,10 @@ public class AirNetwork implements Importable {
             return false;
         }
 
-        return this.network.insertEdge(coordinateA, coordinateB, newSegment);
+        // Calculate distance between coordinates
+        Amount<Length> distance = Calculus.distance(coordinateA, coordinateA, newSegment.getAltitude());
+
+        return this.network.insertEdge(coordinateA, coordinateB, newSegment, distance.doubleValue(SI.METER));
     }
 
     /**
@@ -179,9 +187,9 @@ public class AirNetwork implements Importable {
      *
      * @param coordinateA starting coordinate
      * @param coordinateB ending coordinate
-     * @return the removed segment
+     * @return true if removed
      */
-    public Segment removeSegment(Coordinate coordinateA, Coordinate coordinateB) {
+    public boolean removeSegment(Coordinate coordinateA, Coordinate coordinateB) {
 
         return this.network.removeEdge(coordinateA, coordinateB);
     }
@@ -292,7 +300,7 @@ public class AirNetwork implements Importable {
 
                 Segment segment = new Segment();
                 // Set ID
-                segment.setIdentification(aElement.getAttribute("id"));
+                segment.setId(aElement.getAttribute("id"));
                 // Set wind
                 Element windElement = (Element) aElement.getElementsByTagName("wind").item(0);
                 // Set wind direction
