@@ -3,8 +3,10 @@
  */
 package lapr.project.controller;
 
-import lapr.project.model.FlightSimulator;
+import lapr.project.model.Project;
 import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests for open project controller.
@@ -17,19 +19,49 @@ import org.junit.Before;
 public class OpenProjectControllerTest {
 
     /**
-     * The instance to be tested.
+     * The instance to test.
      */
     private OpenProjectController instance;
 
-    /**
-     * The flight simulator to be used on tests.
-     */
-    private FlightSimulator flightSimulator;
-
     @Before
     public void setUp() {
-        flightSimulator = new FlightSimulator();
-        instance = new OpenProjectController(flightSimulator);
+        instance = new OpenProjectController();
+    }
+
+    /**
+     * Test 1 of validateProject method, of class OpenProjectController.
+     */
+    @Test
+    public void testValidateProject1() {
+        System.out.println("validateProject 1");
+
+        Project project = new Project(91919191, "Professional Flights", "Simulations of professional flights consuptions.");
+
+        assertTrue(instance.validateProject(project));
+    }
+
+    /**
+     * Test 2 of validateProject method, of class OpenProjectController.
+     */
+    @Test
+    public void testValidateProject2() {
+        System.out.println("validateProject 2");
+
+        Project project = new Project(91919191, "", "Simulations of professional flights consuptions.");
+
+        assertFalse(instance.validateProject(project));
+    }
+
+    /**
+     * Test 3 of validateProject method, of class OpenProjectController.
+     */
+    @Test
+    public void testValidateProject3() {
+        System.out.println("validateProject 3");
+
+        Project project = new Project(91919191, "                      ", "Simulations of professional flights consuptions.");
+
+        assertFalse(instance.validateProject(project));
     }
 
 }

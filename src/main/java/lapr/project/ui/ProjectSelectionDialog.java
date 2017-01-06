@@ -202,10 +202,18 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         openProjectButton = new JButton("Open Project");
 
         openProjectButton.addActionListener((ActionEvent ae) -> {
-            OpenProjectController openProjectController = new OpenProjectController(simulator);
-            //openProjectController.activeProjects((Project) projectsList.getSelectedValue());
-            dispose();
-            mainFrame.activateProject((Project) projectsList.getSelectedValue());
+            OpenProjectController openProjectController = new OpenProjectController();
+            Project projectToOpen = (Project) projectsList.getSelectedValue();
+            if (openProjectController.validateProject(projectToOpen)) {
+                mainFrame.activateProject(projectToOpen);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "The project to open is corrupted.",
+                        "Project Error",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         openProjectButton.setEnabled(false);

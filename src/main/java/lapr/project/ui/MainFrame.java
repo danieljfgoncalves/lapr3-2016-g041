@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -200,8 +199,8 @@ public class MainFrame extends JFrame implements ProjectHandler {
     }
 
     private void refreshProject() {
-        Collections.sort(activeProject.getSimulations().getFlights());
-        simulationsTable.setModel(new TableModelFlight(activeProject.getSimulations().getFlights()));
+        //Collections.sort(activeProject.getSimulations().getFlights());
+        //simulationsTable.setModel(new TableModelFlight(activeProject.getSimulations().getFlights()));
         this.projectTitleLabel.setText(activeProject.getName());
         this.projectDescriptionLabel.setText(activeProject.getDescription());
     }
