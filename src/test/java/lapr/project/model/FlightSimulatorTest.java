@@ -3,8 +3,6 @@
  */
 package lapr.project.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -15,7 +13,6 @@ import static org.junit.Assert.*;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class FlightSimulatorTest {
@@ -25,35 +22,6 @@ public class FlightSimulatorTest {
     @Before
     public void setUp() {
         instance = new FlightSimulator();
-    }
-
-    /**
-     * Test of setProjects and getProjects methods, of class FlightSimulator.
-     */
-    @Test
-    public void testGetSetProjects() {
-        System.out.println("get and setProjects");
-
-        List<Project> projects = new ArrayList<>();
-        projects.add(new Project());
-
-        instance.setProjects(projects);
-
-        assertEquals(instance.getProjects(), projects);
-    }
-
-    /**
-     * Test of setProjects and getProjects methods, of class FlightSimulator.
-     */
-    @Test
-    public void testGetSetActivatedProject() {
-        System.out.println("get and setActivatedProject");
-
-        Project project = new Project();
-
-        instance.setActivatedProject(project);
-
-        assertEquals(instance.getActivatedProject(), project);
     }
 
     /**
@@ -110,35 +78,5 @@ public class FlightSimulatorTest {
         String name = project.getName();
 
         assertTrue(instance.validateNameExists(name));
-    }
-
-    /**
-     * Test of validateNameExists method, of class FlightSimulator.
-     */
-    @Test
-    public void testValidateNameExists02() {
-        System.out.println("validateNameExists");
-
-        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
-        instance.addProject(project);
-        String name = "Other name";
-
-        assertFalse(instance.validateNameExists(name));
-    }
-
-    /**
-     * Test of equals method, of class FlightSimulator.
-     */
-    @Test
-    public void testEquals() {
-        System.out.println("equals");
-
-        Object obj = null;
-
-        assertFalse(instance.equals(obj));
-
-        obj = new FlightSimulator();
-
-        assertTrue(instance.equals(obj));
     }
 }

@@ -23,21 +23,17 @@ public class OpenProjectController {
     FlightSimulator simulator;
     
     /**
+     * The project to open.
+     */
+    private Project project;
+    
+    /**
      * Creates an instance of open project controller.
      * 
      * @param simulator the flight simulator
      */
     public OpenProjectController(FlightSimulator simulator){
       this.simulator = simulator;        
-    }
-    
-    /**
-     * Activates a given project.
-     * 
-     * @param project project to activate
-     */
-    public void activeProjects(Project project){
-        simulator.setActivatedProject(project); 
     }
 }
 

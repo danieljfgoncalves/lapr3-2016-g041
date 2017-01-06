@@ -3,7 +3,7 @@
  */
 package lapr.project.controller;
 
-import lapr.project.utils.DefaultInstantiator;
+import lapr.project.model.FlightSimulator;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class CreateProjectControllerTest {
@@ -26,7 +25,7 @@ public class CreateProjectControllerTest {
 
     @Before
     public void setUp() {
-        instance = new CreateProjectController(DefaultInstantiator.createSimulator());
+        instance = new CreateProjectController(new FlightSimulator());
     }
 
     /**

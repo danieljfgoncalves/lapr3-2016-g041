@@ -6,11 +6,13 @@ package lapr.project.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -28,7 +30,6 @@ import lapr.project.ui.components.ListModelProject;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
@@ -46,7 +47,7 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
     /**
      * List of the selected projects.
      */
-    private final List<Project> projects;
+    private List<Project> projects;
 
     /**
      * The selected Project.
@@ -101,8 +102,17 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         // Set Main Frame
         this.mainFrame = mainFrame;
         this.simulator = simulator;
+        this.projects = null;
 
-        this.projects = simulator.getProjects();
+        try {
+            this.projects = simulator.getProjects();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "There was an error trying to read data from database.",
+                    "Data Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }
 
         createComponents();
 
@@ -193,7 +203,7 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
 
         openProjectButton.addActionListener((ActionEvent ae) -> {
             OpenProjectController openProjectController = new OpenProjectController(simulator);
-            openProjectController.activeProjects((Project) projectsList.getSelectedValue());
+            //openProjectController.activeProjects((Project) projectsList.getSelectedValue());
             dispose();
             mainFrame.activateProject((Project) projectsList.getSelectedValue());
         });

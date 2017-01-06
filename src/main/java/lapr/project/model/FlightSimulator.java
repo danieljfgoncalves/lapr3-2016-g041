@@ -3,9 +3,13 @@
  */
 package lapr.project.model;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import lapr.project.datalayer.DbConnection;
 
 /**
  * Represents the simulator to store projects and make the simulations.
@@ -13,80 +17,37 @@ import java.util.Objects;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class FlightSimulator {
 
     /**
-     * The projects.
-     */
-    private List<Project> projects;
-
-    /**
-     * Status of the project
-     */
-    private Project activatedProject;
-
-    /**
-     * Creates an instance of simulator with its default values.
-     */
-    public FlightSimulator() {
-        this.projects = new ArrayList<>();
-    }
-
-    /**
-     * Creates an instance of Simulator receiving their projects.
-     *
-     * @param projects the projects
-     */
-    public FlightSimulator(List<Project> projects) {
-        this.projects = projects;
-    }
-
-    /**
-     * Creates an instance of simulator copying another simulator.
-     *
-     * @param otherSimulator other simulator
-     */
-    public FlightSimulator(FlightSimulator otherSimulator) {
-        this.projects = new ArrayList<>(otherSimulator.projects);
-    }
-
-    /**
      * Gets the projects.
      *
-     * @return projects
+     * @return projects available projects
+     * @throws java.sql.SQLException error on sql connection
      */
-    public List<Project> getProjects() {
+    public List<Project> getProjects() throws SQLException {
+        ArrayList<Project> projects = new ArrayList<>();
+
+        String query = "SELECT * FROM PROJECT";
+
+        // try with resorces auto-close the object
+        try (Connection connection = DbConnection.getConnection();
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                int serieNumber = resultSet.getInt("ID_PROJECT");
+                String name = resultSet.getString("NAME");
+                String description = resultSet.getString("DESCRIPTION");
+
+                projects.add(new Project(serieNumber, name, description));
+            }
+
+        }
+
         return projects;
-    }
-
-    /**
-     * Sets the projects.
-     *
-     * @param projects projects
-     */
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
-
-    /**
-     * Gets the activated project
-     *
-     * @return activated project
-     */
-    public Project getActivatedProject() {
-        return activatedProject;
-    }
-
-    /**
-     * Sets a project as activated
-     *
-     * @param activatedProject activated project
-     */
-    public void setActivatedProject(Project activatedProject) {
-        this.activatedProject = activatedProject;
     }
 
     /**
@@ -101,13 +62,14 @@ public class FlightSimulator {
     }
 
     /**
-     * Validates if a given project.
+     * Validates a given project.
      *
      * @param project project to be validated
      * @return true if it is valid, false otherwise
      */
     public boolean validateProject(Project project) {
-        return project.validate() && !this.projects.contains(project);
+        // TODO
+        return project.validate();
     }
 
     /**
@@ -118,7 +80,8 @@ public class FlightSimulator {
      * otherwise
      */
     public boolean validateNameExists(String name) {
-        return projects.stream().anyMatch((project) -> (project.getName().equalsIgnoreCase(name)));
+        // TODO
+        return true;
     }
 
     /**
@@ -128,32 +91,7 @@ public class FlightSimulator {
      * @return true if it is successfully added, false otherwise
      */
     public boolean addProject(Project project) {
-        return this.projects.add(project);
+        // TODO
+        return true;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 47 * hash + Objects.hashCode(this.projects);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final FlightSimulator other = (FlightSimulator) obj;
-        return this.projects.equals(other.projects);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Simulator{projects=%s}", this.projects);
-    }
-
 }

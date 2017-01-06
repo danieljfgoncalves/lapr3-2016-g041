@@ -5,7 +5,6 @@ package lapr.project.controller;
 
 import lapr.project.model.FlightSimulator;
 import lapr.project.model.Project;
-import lapr.project.utils.DefaultInstantiator;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -16,7 +15,6 @@ import static org.junit.Assert.*;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class CopyProjectControllerTest {
@@ -33,24 +31,9 @@ public class CopyProjectControllerTest {
 
     @Before
     public void setUp() {
-        flightSimulator = DefaultInstantiator.createSimulator();
+        flightSimulator = new FlightSimulator();
         Project projectToCopy = new Project("Simullations Europe", "Flight routes of europe.");
         instance = new CopyProjectController(flightSimulator, projectToCopy);
-    }
-
-    /**
-     * Test of setCopyProjectData method, of class CopyProjectController.
-     */
-    @Test
-    public void testSetCopyProjectData01() {
-        System.out.println("setCopyProjectData");
-
-        String name = "Test Flights";
-        String description = "Test description";
-
-        boolean expResult = true; //valid name
-        boolean result = instance.setCopyProjectData(name, description);
-        assertEquals(result, expResult);
     }
 
     /**
@@ -81,18 +64,6 @@ public class CopyProjectControllerTest {
         boolean expResult = false; //name already exists
         boolean result = instance.setCopyProjectData(name, description);
         assertEquals(result, expResult);
-    }
-
-    /**
-     * Test of addProjectCopy method, of class CopyProjectController.
-     */
-    @Test
-    public void testAddProjectCopy() {
-        System.out.println("addProjectCopy");
-
-        instance.setCopyProjectData("New copied project!asb!asb!", "Hello copied project ");
-
-        assertTrue(instance.addProjectCopy());
     }
 
 }

@@ -64,6 +64,12 @@ public class Project implements Comparable<Project> {
      * Counter to increment serie number.
      */
     private static Integer counter = 1;
+    
+    public Project(int serieNumber, String name, String description) {
+        this.serieNumber = serieNumber;
+        this.name = name;
+        this.description = description;
+    }
 
     /**
      * Creates an instance of project with its default values
