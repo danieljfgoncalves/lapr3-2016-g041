@@ -3,8 +3,6 @@
  */
 package lapr.project.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import javax.measure.quantity.Angle;
 import javax.measure.quantity.Length;
@@ -25,14 +23,14 @@ import org.jscience.physics.amount.Amount;
 public class Segment {
 
     /**
-     * The segment identification.
+     * The segment id.
      */
-    private String identification;
+    private String id;
 
     /**
      * The allowed altitude (SI: m).
      */
-    private List<Amount<Length>> allowedAltitudes;
+    private Amount<Length> altitude;
 
     /**
      * The angle of the wind direction relative to north-south line (SI: RAD).
@@ -45,9 +43,14 @@ public class Segment {
     private Amount<Velocity> windIntensity;
 
     /**
-     * The default identification.
+     * The default id.
      */
     private static final String DEFAULT_IDENTIFICATION = "XX01";
+
+    /**
+     * The default allowed altitude.
+     */
+    private final static Amount<Length> DEFAULT_ALTITUDE = Amount.valueOf(0d, SI.METER);
 
     /**
      * The default value for the angle of the wind direction relative to north.
@@ -63,8 +66,8 @@ public class Segment {
      * Creates an instance of segment with it's default values.
      */
     public Segment() {
-        this.identification = DEFAULT_IDENTIFICATION;
-        this.allowedAltitudes = new ArrayList<>();
+        this.id = DEFAULT_IDENTIFICATION;
+        this.altitude = DEFAULT_ALTITUDE;
         this.windDirection = DEFAULT_WIND_DIRECTION;
         this.windIntensity = DEFAULT_WIND_SPEED;
     }
@@ -72,15 +75,15 @@ public class Segment {
     /**
      * Creates an instance of segment receiving their attributes.
      *
-     * @param identification segment's identification
-     * @param allowedAltitudes allowed altitudes
+     * @param identification segment's id
+     * @param altitude allowed altitudes
      * @param windDirection the angle of the wind direction relative to north
      * @param windSpeed the wind speed
      */
-    public Segment(String identification, List<Amount<Length>> allowedAltitudes, Amount<Angle> windDirection,
+    public Segment(String identification, Amount<Length> altitude, Amount<Angle> windDirection,
             Amount<Velocity> windSpeed) {
-        this.identification = identification;
-        this.allowedAltitudes = allowedAltitudes;
+        this.id = identification;
+        this.altitude = altitude;
         this.windDirection = windDirection;
         this.windIntensity = windSpeed;
     }
@@ -91,46 +94,46 @@ public class Segment {
      * @param otherSegment other segment to copy
      */
     public Segment(Segment otherSegment) {
-        this.identification = otherSegment.identification;
-        this.allowedAltitudes = new ArrayList<>(otherSegment.allowedAltitudes);
+        this.id = otherSegment.id;
+        this.altitude = otherSegment.altitude;
         this.windDirection = otherSegment.windDirection;
         this.windIntensity = otherSegment.windIntensity;
     }
 
     /**
-     * Gets the segment's identification.
+     * Gets the segment's id.
      *
-     * @return segment's identification
+     * @return segment's id
      */
-    public String getIdentification() {
-        return identification;
+    public String getId() {
+        return id;
     }
 
     /**
-     * Sets the segment's identification.
+     * Sets the segment's id.
      *
-     * @param identification segment's identification
+     * @param identification segment's id
      */
-    public void setIdentification(String identification) {
-        this.identification = identification;
+    public void setId(String identification) {
+        this.id = identification;
     }
 
     /**
-     * Gets the allowed altitudes (SI: m).
+     * Gets the allowed altitude (SI: m).
      *
-     * @return allowed altitudes
+     * @return allowed altitude
      */
-    public List<Amount<Length>> getAllowedAltitudes() {
-        return allowedAltitudes;
+    public Amount<Length> getAltitude() {
+        return altitude;
     }
 
     /**
      * Sets the allowed altitudes (SI: m).
      *
-     * @param allowedAltitudes allowed altitudes
+     * @param altitude allowed altitudes
      */
-    public void setAllowedAltitudes(List<Amount<Length>> allowedAltitudes) {
-        this.allowedAltitudes = allowedAltitudes;
+    public void setAltitude(Amount<Length> altitude) {
+        this.altitude = altitude;
     }
 
     /**
@@ -170,16 +173,6 @@ public class Segment {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 17 * hash + Objects.hashCode(this.identification);
-        hash = 17 * hash + Objects.hashCode(this.allowedAltitudes);
-        hash = 17 * hash + Objects.hashCode(this.windDirection);
-        hash = 17 * hash + Objects.hashCode(this.windIntensity);
-        return hash;
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -189,16 +182,23 @@ public class Segment {
         }
 
         final Segment other = (Segment) obj;
-        return this.identification.equals(other.identification)
-                && this.allowedAltitudes.equals(other.allowedAltitudes)
+        return this.id.equals(other.id)
+                && this.altitude.approximates(other.altitude)
                 && this.windDirection.approximates(other.windDirection)
                 && this.windIntensity.approximates(other.windIntensity);
     }
 
     @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
     public String toString() {
         return String.format("Segment{identification=%s, allowedAltitudes=%s, windDirection=%s, windSpeed=%s}",
-                this.identification, this.allowedAltitudes, this.windDirection, this.windIntensity);
+                this.id, this.altitude, this.windDirection, this.windIntensity);
     }
 
 }

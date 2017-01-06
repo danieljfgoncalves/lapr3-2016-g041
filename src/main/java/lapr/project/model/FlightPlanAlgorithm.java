@@ -22,5 +22,5 @@ public interface FlightPlanAlgorithm {
      * @param flight The selected flight
      * @return a ordered list of segments (flight plan)
      */
-    LinkedList<Segment> generateFlightPlan(AirNetwork network, Flight flight);
+    LinkedList<Segment> generateFlightPlan(AirNetwork network, FlightSimulation flight);
 }

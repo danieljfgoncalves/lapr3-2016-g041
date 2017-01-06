@@ -4,11 +4,11 @@
 package lapr.project.model;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
 import lapr.project.utils.graph.map.MapEdge;
 import lapr.project.utils.graph.map.MapGraph;
 import org.jscience.physics.amount.Amount;
@@ -46,8 +46,8 @@ public class AirNetworkTest {
         testMap.insertVertex(new Coordinate("ID02", 2.0, 2.0));
         testMap.insertVertex(new Coordinate("ID03", 3.0, 3.0));
 
-        testMap.insertEdge(new Coordinate("ID01", 1.0, 1.0), new Coordinate("ID02", 2.0, 2.0), new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT)), 0);
-        testMap.insertEdge(new Coordinate("ID02", 2.0, 2.0), new Coordinate("ID03", 3.0, 3.0), new Segment("SG02", new ArrayList<>(), Amount.valueOf(2.0, NonSI.DEGREE_ANGLE), Amount.valueOf(2.0, NonSI.KNOT)), 0);
+        testMap.insertEdge(new Coordinate("ID01", 1.0, 1.0), new Coordinate("ID02", 2.0, 2.0), new Segment("SG01", Amount.valueOf(1.0, SI.METER), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT)), 0);
+        testMap.insertEdge(new Coordinate("ID02", 2.0, 2.0), new Coordinate("ID03", 3.0, 3.0), new Segment("SG02", Amount.valueOf(1.0, SI.METER), Amount.valueOf(2.0, NonSI.DEGREE_ANGLE), Amount.valueOf(2.0, NonSI.KNOT)), 0);
     }
 
     /**
@@ -97,8 +97,8 @@ public class AirNetworkTest {
         AirNetwork instance2 = new AirNetwork(testMap);
 
         List<Segment> segments = new LinkedList<>();
-        segments.add(new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT)));
-        segments.add(new Segment("SG02", new ArrayList<>(), Amount.valueOf(2.0, NonSI.DEGREE_ANGLE), Amount.valueOf(2.0, NonSI.KNOT)));
+        segments.add(new Segment("SG01", Amount.valueOf(1.0, SI.METER), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT)));
+        segments.add(new Segment("SG02", Amount.valueOf(1.0, SI.METER), Amount.valueOf(2.0, NonSI.DEGREE_ANGLE), Amount.valueOf(2.0, NonSI.KNOT)));
         Iterable<Segment> expResult = segments;
 
         Iterable<MapEdge<Coordinate, Segment>> edges = instance2.getSegments();
@@ -138,14 +138,14 @@ public class AirNetworkTest {
         AirNetwork instance2 = new AirNetwork(testMap);
         Coordinate coordinateA = new Coordinate("ID01", 1.0, 1.0);
         Coordinate coordinateB = new Coordinate("ID03", 3.0, 3.0);
-        Segment newSegment = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
+        Segment newSegment = new Segment("SG01", Amount.valueOf(1.0, SI.METER), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
         boolean result = instance2.addSegment(coordinateA, coordinateB, newSegment);
         assertTrue(result);
         // Adding the same segment should return false
         boolean result2 = instance2.addSegment(coordinateA, coordinateB, newSegment);
         assertFalse(result2);
         // Verify if network contains segment
-        Segment expResult = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
+        Segment expResult = new Segment("SG01", Amount.valueOf(1.0, SI.METER), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
         Segment result3 = instance2.getSegments().iterator().next().getElement();
         assertEquals(expResult, result3);
     }
@@ -160,14 +160,14 @@ public class AirNetworkTest {
         AirNetwork instance2 = new AirNetwork(testMap);
         String idA = "ID01";
         String idB = "ID03";
-        Segment newSegment = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
+        Segment newSegment = new Segment("SG01", Amount.valueOf(1.0, SI.METER), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
         boolean result = instance2.addSegment(idA, idB, newSegment);
         assertTrue(result);
         // Adding the same segment should return false
         boolean result2 = instance2.addSegment(idA, idB, newSegment);
         assertFalse(result2);
         // Verify if network contains segment
-        Segment expResult = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
+        Segment expResult = new Segment("SG01", Amount.valueOf(1.0, SI.METER), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
         Segment result3 = instance2.getSegments().iterator().next().getElement();
         assertEquals(expResult, result3);
     }
@@ -296,20 +296,20 @@ public class AirNetworkTest {
         expResult.addJunction(new Coordinate("ES01", 40.4936, -3.56676));
         expResult.addJunction(new Coordinate("ES02", 39.5517006, 2.7388101));
 
-        expResult.addSegment("PT01", "PT02", new Segment("PT01", new ArrayList(), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
-        expResult.addSegment("PT02", "PT01", new Segment("PT01", new ArrayList(), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
+        expResult.addSegment("PT01", "PT02", new Segment("PT01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
+        expResult.addSegment("PT02", "PT01", new Segment("PT01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
 
-        expResult.addSegment("PT02", "PT03", new Segment("PT02", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
-        expResult.addSegment("PT03", "PT02", new Segment("PT02", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
+        expResult.addSegment("PT02", "PT03", new Segment("PT02", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
+        expResult.addSegment("PT03", "PT02", new Segment("PT02", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
 
-        expResult.addSegment("PT02", "PT04", new Segment("PT03", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
-        expResult.addSegment("PT04", "PT02", new Segment("PT03", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
+        expResult.addSegment("PT02", "PT04", new Segment("PT03", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
+        expResult.addSegment("PT04", "PT02", new Segment("PT03", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
 
-        expResult.addSegment("PT04", "ES01", new Segment("PT04", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
-        expResult.addSegment("ES01", "PT04", new Segment("PT04", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
+        expResult.addSegment("PT04", "ES01", new Segment("PT04", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
+        expResult.addSegment("ES01", "PT04", new Segment("PT04", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
 
-        expResult.addSegment("ES01", "ES02", new Segment("ES01", new ArrayList(), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
-        expResult.addSegment("ES02", "ES01", new Segment("ES01", new ArrayList(), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
+        expResult.addSegment("ES01", "ES02", new Segment("ES01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
+        expResult.addSegment("ES02", "ES01", new Segment("ES01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
 
         AirNetwork result = new AirNetwork();
         result.importXml(fileToImport);

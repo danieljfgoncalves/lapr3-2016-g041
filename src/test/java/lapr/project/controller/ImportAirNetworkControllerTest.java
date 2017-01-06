@@ -4,8 +4,8 @@
 package lapr.project.controller;
 
 import java.io.File;
-import java.util.ArrayList;
 import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
 import lapr.project.model.AirNetwork;
 import lapr.project.model.Coordinate;
 import lapr.project.model.Project;
@@ -45,6 +45,7 @@ public class ImportAirNetworkControllerTest {
 
     /**
      * Test of importAirNetwork method, of class ImportAirNetworkController.
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -57,6 +58,7 @@ public class ImportAirNetworkControllerTest {
 
     /**
      * Test of importAirNetwork method, of class ImportAirNetworkController.
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -69,6 +71,7 @@ public class ImportAirNetworkControllerTest {
 
     /**
      * Test of importAirNetwork method, of class ImportAirNetworkController.
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -84,20 +87,20 @@ public class ImportAirNetworkControllerTest {
         expResult.addJunction(new Coordinate("ES01", 40.4936, -3.56676));
         expResult.addJunction(new Coordinate("ES02", 39.5517006, 2.7388101));
 
-        expResult.addSegment("PT01", "PT02", new Segment("PT01", new ArrayList(), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
-        expResult.addSegment("PT02", "PT01", new Segment("PT01", new ArrayList(), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
+        expResult.addSegment("PT01", "PT02", new Segment("PT01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
+        expResult.addSegment("PT02", "PT01", new Segment("PT01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
 
-        expResult.addSegment("PT02", "PT03", new Segment("PT02", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
-        expResult.addSegment("PT03", "PT02", new Segment("PT02", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
+        expResult.addSegment("PT02", "PT03", new Segment("PT02", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
+        expResult.addSegment("PT03", "PT02", new Segment("PT02", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
 
-        expResult.addSegment("PT02", "PT04", new Segment("PT03", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
-        expResult.addSegment("PT04", "PT02", new Segment("PT03", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
+        expResult.addSegment("PT02", "PT04", new Segment("PT03", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
+        expResult.addSegment("PT04", "PT02", new Segment("PT03", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
 
-        expResult.addSegment("PT04", "ES01", new Segment("PT04", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
-        expResult.addSegment("ES01", "PT04", new Segment("PT04", new ArrayList(), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
+        expResult.addSegment("PT04", "ES01", new Segment("PT04", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
+        expResult.addSegment("ES01", "PT04", new Segment("PT04", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
 
-        expResult.addSegment("ES01", "ES02", new Segment("ES01", new ArrayList(), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
-        expResult.addSegment("ES02", "ES01", new Segment("ES01", new ArrayList(), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
+        expResult.addSegment("ES01", "ES02", new Segment("ES01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
+        expResult.addSegment("ES02", "ES01", new Segment("ES01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
 
         File fileToImport = new File("xml_files" + File.separator + "TestSet01a_Network.xml");
         instance.importAirNetwork(fileToImport);

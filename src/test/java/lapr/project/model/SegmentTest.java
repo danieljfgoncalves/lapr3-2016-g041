@@ -3,8 +3,6 @@
  */
 package lapr.project.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.measure.quantity.Angle;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Velocity;
@@ -37,33 +35,29 @@ public class SegmentTest {
     }
 
     /**
-     * Test of getIdentification and setIdentification method, of class Segment.
+     * Test of getId and setId method, of class Segment.
      */
     @Test
     public void testGetSetIdentification() {
         System.out.println("get and setIdentification");
 
         String identification = "";
-        instance.setIdentification(identification);
+        instance.setId(identification);
 
-        assertEquals(instance.getIdentification(), identification);
+        assertEquals(instance.getId(), identification);
     }
 
     /**
-     * Test of getAllowedAltitudes method, of class Segment.
+     * Test of getAltitude method, of class Segment.
      */
     @Test
-    public void testGetSetAllowedAltitudes() {
+    public void testGetSetAltitude() {
         System.out.println("setAllowedAltitudes");
+        instance.setAltitude(Amount.valueOf(100d, SI.METER));
 
-        List<Amount<Length>> allowedAltitudes = new ArrayList<>();
-        allowedAltitudes.add(Amount.valueOf(100d, SI.METER));
-        allowedAltitudes.add(Amount.valueOf(125d, SI.METER));
-        allowedAltitudes.add(Amount.valueOf(145.55d, SI.METER));
-
-        instance.setAllowedAltitudes(allowedAltitudes);
-
-        assertEquals(instance.getAllowedAltitudes(), allowedAltitudes);
+        Amount<Length> expResult = Amount.valueOf(100d, SI.METER);
+        Amount<Length> result = instance.getAltitude();
+        assertEquals(expResult, result);
     }
 
     /**

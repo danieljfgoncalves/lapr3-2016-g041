@@ -5,8 +5,8 @@ package lapr.project.model.flightplan.algorithms;
 
 import java.util.LinkedList;
 import lapr.project.model.AirNetwork;
-import lapr.project.model.Flight;
 import lapr.project.model.FlightPlanAlgorithm;
+import lapr.project.model.FlightSimulation;
 import lapr.project.model.Segment;
 
 /**
@@ -21,7 +21,7 @@ public class ShortestFlightPlan implements FlightPlanAlgorithm {
     public static final String DESCRIPTION = "Shortest Path";
 
     @Override
-    public LinkedList<Segment> generateFlightPlan(AirNetwork network, Flight flight) {
+    public LinkedList<Segment> generateFlightPlan(AirNetwork network, FlightSimulation flight) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

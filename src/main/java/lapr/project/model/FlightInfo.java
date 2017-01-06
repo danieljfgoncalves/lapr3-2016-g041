@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a flight.
+ * Represents the flight info.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570

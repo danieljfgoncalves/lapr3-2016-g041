@@ -135,7 +135,7 @@ public class AirNetwork implements Importable {
     public boolean addSegment(Coordinate coordinateA, Coordinate coordinateB, Segment newSegment) {
 
         // Calculate distance between coordinates
-        Amount<Length> distance = Calculus.distance(coordinateA, coordinateA);
+        Amount<Length> distance = Calculus.distance(coordinateA, coordinateA, newSegment.getAltitude());
 
         return this.network.insertEdge(coordinateA, coordinateB, newSegment, distance.doubleValue(SI.METER));
     }
@@ -177,7 +177,7 @@ public class AirNetwork implements Importable {
         }
 
         // Calculate distance between coordinates
-        Amount<Length> distance = Calculus.distance(coordinateA, coordinateA);
+        Amount<Length> distance = Calculus.distance(coordinateA, coordinateA, newSegment.getAltitude());
 
         return this.network.insertEdge(coordinateA, coordinateB, newSegment, distance.doubleValue(SI.METER));
     }
@@ -300,7 +300,7 @@ public class AirNetwork implements Importable {
 
                 Segment segment = new Segment();
                 // Set ID
-                segment.setIdentification(aElement.getAttribute("id"));
+                segment.setId(aElement.getAttribute("id"));
                 // Set wind
                 Element windElement = (Element) aElement.getElementsByTagName("wind").item(0);
                 // Set wind direction
