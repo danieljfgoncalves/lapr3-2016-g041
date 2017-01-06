@@ -13,6 +13,7 @@ import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -144,6 +145,40 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
     private JTextField txtMaxCargo;
 
     /**
+     * The class 1 text field.
+     */
+    private JTextField txtClass1;
+
+    /**
+     * The class 2 text field.
+     */
+    private JTextField txtClass2;
+    /**
+     * The class 3 text field.
+     */
+    private JTextField txtClass3;
+
+    /**
+     * The class 4 text field.
+     */
+    private JTextField txtClass4;
+
+    /**
+     * The class 5 text field.
+     */
+    private JTextField txtClass5;
+    
+    /**
+     * The list with aircraft classes.
+     */
+    private ArrayList<JTextField> listClasses;
+
+    /**
+     * Selected number of classes in the aircraft.
+     */
+    private int numClasses = 1;
+
+    /**
      * The selected origin airport.
      */
     private Airport originAirport;
@@ -231,6 +266,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         this.parentWindow = parentWindow;
         this.project = project;
         this.setResizable(false);
+
+        listClasses = new ArrayList();
 
         createComponents();
 
@@ -405,6 +442,7 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         numClassesLabel.setFont(FORM_LABEL_FONT);
 
         txtNumClasses = new JTextField();
+        txtNumClasses.setText("1");
         txtNumClasses.setPreferredSize(new Dimension(30, 25));
 
         JLabel companyNameLabel = new JLabel("Company Name:");
@@ -464,13 +502,55 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         aircraftConfigForm.setBackground(DEFAULT_COLOR);
         aircraftConfigForm.setBorder(DEFAULT_GREY_LINE_BORDER);
 
-        JLabel maxCrewLabel = new JLabel("Maximum Crew Elements:");
+        JLabel class1Label = new JLabel("Max number of passengers in class 1:");
+        class1Label.setFont(FORM_LABEL_FONT);
+
+        JLabel class2Label = new JLabel("Max number of passengers in class 2:");
+        class2Label.setFont(FORM_LABEL_FONT);
+
+        JLabel class3Label = new JLabel("Max number of passengers in class 3:");
+        class3Label.setFont(FORM_LABEL_FONT);
+
+        JLabel class4Label = new JLabel("Max number of passengers in class 4:");
+        class4Label.setFont(FORM_LABEL_FONT);
+
+        JLabel class5Label = new JLabel("Max number of passengers in class 5:");
+        class5Label.setFont(FORM_LABEL_FONT);
+
+        txtClass1 = new JTextField();
+        txtClass1.setPreferredSize(new Dimension(60, 25));
+        txtClass1.setEditable(false);
+
+        txtClass2 = new JTextField();
+        txtClass2.setPreferredSize(new Dimension(60, 25));
+        txtClass2.setEditable(false);
+
+        txtClass3 = new JTextField();
+        txtClass3.setPreferredSize(new Dimension(60, 25));
+        txtClass3.setEditable(false);
+
+        txtClass4 = new JTextField();
+        txtClass4.setPreferredSize(new Dimension(60, 25));
+        txtClass4.setEditable(false);
+
+        txtClass5 = new JTextField();
+        txtClass5.setPreferredSize(new Dimension(60, 25));
+        txtClass5.setEditable(false);
+
+        //used to set the boxes enabled or disabled
+        listClasses.add(txtClass1);
+        listClasses.add(txtClass2);
+        listClasses.add(txtClass3);
+        listClasses.add(txtClass4);
+        listClasses.add(txtClass5);
+
+        JLabel maxCrewLabel = new JLabel("Max Crew Elements:");
         maxCrewLabel.setFont(FORM_LABEL_FONT);
 
         txtMaxCrew = new JTextField();
         txtMaxCrew.setPreferredSize(new Dimension(30, 25));
 
-        JLabel maxCargoLabel = new JLabel("Maximum Cargo Weight (Kg):");
+        JLabel maxCargoLabel = new JLabel("Max Cargo Weight (Kg):");
         maxCargoLabel.setFont(FORM_LABEL_FONT);
 
         txtMaxCargo = new JTextField();
@@ -479,10 +559,25 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         //align horizontally
         layout.setHorizontalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(class1Label)
+                        .addComponent(class2Label)
+                        .addComponent(class3Label)
+                        .addComponent(class4Label)
+                        .addComponent(class5Label)
                         .addComponent(maxCrewLabel)
                         .addComponent(maxCargoLabel)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(txtClass1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtClass2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtClass3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtClass4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtClass5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtMaxCrew, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
                                 GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtMaxCargo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
@@ -492,6 +587,26 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
         //align vertically
         layout.setVerticalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class1Label)
+                        .addComponent(txtClass1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class2Label)
+                        .addComponent(txtClass2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class3Label)
+                        .addComponent(txtClass3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class4Label)
+                        .addComponent(txtClass4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class5Label)
+                        .addComponent(txtClass5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(maxCrewLabel)
                         .addComponent(txtMaxCrew, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
@@ -731,6 +846,11 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
                     previousButton.setEnabled(false);
                     aircraftConfigLabel.setFont(PLAIN_LABEL_FONT);
                     aircraftInfoLabel.setFont(BOLD_LABEL_FONT);
+                    int i;
+                    numClasses = Integer.parseInt(txtNumClasses.getText());
+                    for (i = 0; i < numClasses; i++) {
+                        listClasses.get(i).setEditable(false);
+                    }
                     break;
                 case 2:
                     aircraftConfigLabel.setFont(BOLD_LABEL_FONT);
@@ -763,6 +883,22 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
                     previousButton.setEnabled(true);
                     aircraftInfoLabel.setFont(PLAIN_LABEL_FONT);
                     aircraftConfigLabel.setFont(BOLD_LABEL_FONT);
+                    numClasses = Integer.parseInt(txtNumClasses.getText());
+                    try {
+                        if (numClasses < 1 || numClasses > 5) {
+                            throw new IllegalArgumentException("Number of classes must be between 1 and 5!");
+                        }
+                        int i;
+                        for (i = 0; i < numClasses; i++) {
+                            listClasses.get(i).setEditable(true);
+                        }
+                    } catch (IllegalArgumentException ex) {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                ex.getMessage(),
+                                "Error",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
                     break;
                 case 3:
                     aircraftConfigLabel.setFont(PLAIN_LABEL_FONT);
@@ -774,7 +910,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
                     nameLabel.setFont(BOLD_LABEL_FONT);
                     break;
             }
-        });
+        }
+        );
         return nextButton;
     }
 
@@ -804,7 +941,7 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
         cancelButton.addActionListener((ActionEvent ae) -> {
             int selectedOption = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel the operation?", "Flight Info", JOptionPane.YES_NO_OPTION);
-            if(selectedOption == JOptionPane.YES_OPTION){
+            if (selectedOption == JOptionPane.YES_OPTION) {
                 dispose();
             }
         });
