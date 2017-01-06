@@ -205,7 +205,7 @@ public class Aircraft {
 
     @Override
     public String toString() {
-        return String.format("Aircraft{id=\"%d\", aircraftModel=\"%s\", company=\"%s\", maxPassengerPerClass=\"%d\", maxCrew=\"%d\"}",
+        return String.format("Aircraft{id=\"%d\", aircraftModel=\"%s\", company=\"%s\", maxPassengerPerClass=\"%s\", maxCrew=\"%d\"}",
                 this.id, this.aircraftModel, this.company, this.maxPassengerPerClass, this.maxCrew);
     }
 }
