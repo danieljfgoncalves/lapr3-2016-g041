@@ -75,18 +75,6 @@ public class AircraftModelTest {
     }
 
     /**
-     * Test of getMzfw and setMzfw methods, of class AircraftModel.
-     */
-    @Test
-    public void testGetSetMzfw() {
-        System.out.println("getMzfw and setMzfw");
-        Amount<Mass> expResult = Amount.valueOf(200000d, SI.KILOGRAM);
-        instance.setMzfw(expResult);
-        Amount<Mass> result = instance.getMzfw();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of getWingArea and setWingArea methods, of class AircraftModel.
      */
     @Test
@@ -228,14 +216,8 @@ public class AircraftModelTest {
     public void testEquals01() {
         System.out.println("equals");
 
-        AircraftModel obj = new AircraftModel("30BOING474", AircraftType.MIXED, 
-                Amount.valueOf(10d, SI.KILOGRAM), Amount.valueOf(10d, SI.KILOGRAM), 
-                Amount.valueOf(10d, SI.KILOGRAM), Amount.valueOf(10d, SI.SQUARE_METRE), 
-                new Motorization(), "motor1",
-                "Boeing Vertol Company (United States)", 
-                Amount.valueOf(10d, SI.KILOGRAM), Amount.valueOf(10d, SI.CUBIC_METRE), 
-                Amount.valueOf(10d, NonSI.KNOT), Amount.valueOf(10d, NonSI.MACH), Amount.valueOf(10d, SI.METER), 
-                Amount.valueOf(10d, Unit.ONE), Amount.valueOf(10d, Unit.ONE));
+        Object obj = new AircraftModel();
+        ((AircraftModel)obj).setModelID("12abc67");
 
         assertFalse(instance.equals(obj));
     }
@@ -247,7 +229,7 @@ public class AircraftModelTest {
     @Test
     public void testEquals02() {
         System.out.println("equals");
-        AircraftModel obj = new AircraftModel();
+        Object obj = new AircraftModel();
         boolean expResult = true;
         boolean result = instance.equals(obj);
         assertEquals(expResult, result);

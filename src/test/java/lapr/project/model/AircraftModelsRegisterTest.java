@@ -3,7 +3,6 @@
  */
 package lapr.project.model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -61,22 +60,6 @@ public class AircraftModelsRegisterTest {
         Object obj = new AircraftModelsRegister(aircraftModels);
 
         assertTrue(instance.equals(obj));
-    }
-
-    /**
-     * Test of importXml method, of class AircraftModelsRegister.
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testImportXml() throws Exception {
-        System.out.println("importXml");
-
-        File fileToImport = new File("xml_files" + File.separator + "TestSet01_Aircraft.xml");
-        fileToImport.getAbsolutePath();
-        instance = new AircraftModelsRegister();
-
-        assertTrue(instance.importXml(fileToImport));
     }
 
 }

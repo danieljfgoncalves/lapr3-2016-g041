@@ -5,7 +5,7 @@ package lapr.project.ui.components;
 
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import lapr.project.model.Flight;
+import lapr.project.model.FlightInfo;
 
 /**
  * Table model for flights.
@@ -27,14 +27,14 @@ public class TableModelFlight extends AbstractTableModel {
     /**
      * The list of flights.
      */
-    private final List<Flight> flights;
+    private final List<FlightInfo> flights;
 
     /**
      * Constructs an instance of table model flight.
      *
      * @param flights the list of flights
      */
-    public TableModelFlight(List<Flight> flights) {
+    public TableModelFlight(List<FlightInfo> flights) {
         this.flights = flights;
     }
 
@@ -63,11 +63,9 @@ public class TableModelFlight extends AbstractTableModel {
             case 2:
                 return flights.get(rowIndex).getAircraft();
             case 3:
-                return flights.get(rowIndex).getOrigin();
+                return flights.get(rowIndex).getOriginAirport();
             case 4:
-                return flights.get(rowIndex).getDestination();
-            case 5:
-                return flights.get(rowIndex).getScheduledArrival();
+                return flights.get(rowIndex).getDestinationAirport();
             default:
                 return null;
         }

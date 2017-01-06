@@ -37,8 +37,8 @@ public class SimulationTest {
     public void testGetSetFlights() {
         System.out.println("getFlights and setFlights");
 
-        List<Flight> flights = new ArrayList<>();
-        flights.add(new Flight());
+        List<FlightInfo> flights = new ArrayList<>();
+        flights.add(new FlightInfo());
 
         instance.setFlights(flights);
 
