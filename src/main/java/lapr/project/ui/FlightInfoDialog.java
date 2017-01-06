@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -628,7 +629,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
     private JButton createAddTechStopButton() {
         JButton addTechStopButton = new JButton("Add Technical Stop");
         addTechStopButton.addActionListener((ActionEvent ae) -> {
-            //TODO
+            SelectTechStopsDialog techStopDialog = new SelectTechStopsDialog(this, project);
+            techStopDialog.setVisible(true);
         });
         return addTechStopButton;
     }
@@ -774,10 +776,10 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         });
         return nextButton;
     }
-    
+
     /**
      * Creates the finish button.
-     * 
+     *
      * @return the finish button
      */
     private Component createFinishButton() {
@@ -792,7 +794,7 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
     /**
      * Creates the cancel button.
-     * 
+     *
      * @return the cancel button
      */
     private Component createCancelButton() {
@@ -800,7 +802,10 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         cancelButton.setPreferredSize(BUTTON_PREFERRED_SIZE);
 
         cancelButton.addActionListener((ActionEvent ae) -> {
-            //TODO
+            int selectedOption = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel the operation?", "Flight Info", JOptionPane.YES_NO_OPTION);
+            if(selectedOption == JOptionPane.YES_OPTION){
+                dispose();
+            }
         });
         return cancelButton;
     }
