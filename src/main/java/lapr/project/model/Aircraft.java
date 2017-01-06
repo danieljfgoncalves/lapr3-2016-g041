@@ -3,6 +3,9 @@
  */
 package lapr.project.model;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,30 +14,34 @@ import java.util.Objects;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class Aircraft {
 
     /**
-     * The aircraft registration code.
+     * The aircraft id code.
      */
-    private Integer registration;
+    private Integer id;
 
+    /**
+     * The aircraft model.
+     */
+    private AircraftModel aircraftModel;
+    
     /**
      * The company name.
      */
     private String company;
 
     /**
-     * The number of seats in each class.
-     */
-    private Integer cabinConfiguration;
-
-    /**
      * The number of elements in the flight crew.
      */
-    private Integer numberFlightCrew;
+    private Integer maxCrew;
+    
+    /**
+     * The number of seats in each class.
+     */
+    private List<Integer> maxPassengerPerClass;
 
     /**
      * Default value for company name.
@@ -42,39 +49,37 @@ public class Aircraft {
     private static final String DEFAULT_COMPANY = "unknown company";
 
     /**
-     * Default value for the number of seats in each class.
-     */
-    private static final Integer DEFAULT_CABIN_CONFIGURATION = 60;
-
-    /**
      * Default value for the number of elements in the flight crew.
      */
-    private static final Integer DEFAULT_NUMBER_FLIGHT_CREW = 120;
+    private static final Integer DEFAULT_NUMBER_FLIGHT_MAX_CREW = 120;
 
     /**
      * Creates an empty instance of aircraft.
      */
     public Aircraft() {
         int lower = 1, upper = 1000;
-        this.registration = (int) (Math.random() * (upper - lower)) + lower;
+        this.id = (int) (Math.random() * (upper - lower)) + lower;
         this.company = DEFAULT_COMPANY;
-        this.cabinConfiguration = DEFAULT_CABIN_CONFIGURATION;
-        this.numberFlightCrew = DEFAULT_NUMBER_FLIGHT_CREW;
+        this.aircraftModel = new AircraftModel();
+        this.maxPassengerPerClass = new ArrayList<>();
+        this.maxCrew = DEFAULT_NUMBER_FLIGHT_MAX_CREW;
     }
 
     /**
      * Creates an aircraft receiving their attributes.
      *
      * @param registration
+     * @param aircraftModel
      * @param company
-     * @param cabinConfiguration
-     * @param numberFlightCrew
+     * @param maxPassengerPerClass
+     * @param maxCrew
      */
-    public Aircraft(Integer registration, String company, Integer cabinConfiguration, Integer numberFlightCrew) {
-        this.registration = registration;
+    public Aircraft(Integer registration, AircraftModel aircraftModel, String company, List maxPassengerPerClass, Integer maxCrew) {
+        this.id = registration;
+        this.aircraftModel = aircraftModel;
         this.company = company;
-        this.cabinConfiguration = cabinConfiguration;
-        this.numberFlightCrew = numberFlightCrew;
+        this.maxPassengerPerClass = new ArrayList<>(maxPassengerPerClass);
+        this.maxCrew = maxCrew;
     }
 
     /**
@@ -83,28 +88,45 @@ public class Aircraft {
      * @param otherAircraft aircraft to be copied.
      */
     public Aircraft(Aircraft otherAircraft) {
-        this.registration = otherAircraft.registration;
+        this.id = otherAircraft.id;
+        this.aircraftModel = otherAircraft.aircraftModel;
         this.company = otherAircraft.company;
-        this.cabinConfiguration = otherAircraft.cabinConfiguration;
-        this.numberFlightCrew = otherAircraft.numberFlightCrew;
+        this.maxPassengerPerClass = new ArrayList<>(otherAircraft.getMaxPassengerPerClass());
+        this.maxCrew = otherAircraft.maxCrew;
     }
 
     /**
-     * Gets the registration.
+     * Gets the id.
      *
-     * @return registration
+     * @return id
      */
-    public Integer getRegistration() {
-        return registration;
+    public Integer getId() {
+        return id;
     }
 
     /**
-     * Sets the registration.
+     * Sets the id.
      *
-     * @param registration registration
+     * @param id id
      */
-    public void setRegistration(Integer registration) {
-        this.registration = registration;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    /**
+     * Obtains the aircraft model.
+     * @return aircraft model
+     */
+    public AircraftModel getAircraftModel(){
+        return this.aircraftModel;
+    }
+    
+    /**
+     * Modifies the aircraft model.
+     * @param aircraftModel the new aircraft model
+     */
+    public void setAircraftModel(AircraftModel aircraftModel){
+        this.aircraftModel = aircraftModel;
     }
 
     /**
@@ -130,17 +152,17 @@ public class Aircraft {
      *
      * @return cabin configuration
      */
-    public Integer getCabinConfiguration() {
-        return cabinConfiguration;
+    public List<Integer> getMaxPassengerPerClass() {
+        return this.maxPassengerPerClass;
     }
 
     /**
      * Sets the cabin configuration.
      *
-     * @param cabinConfiguration cabin configuration
+     * @param maxPassengerPerClass cabin configuration
      */
-    public void setCabinConfiguration(Integer cabinConfiguration) {
-        this.cabinConfiguration = cabinConfiguration;
+    public void setMaxPassengerPerClass(List<Integer> maxPassengerPerClass) {
+        this.maxPassengerPerClass = maxPassengerPerClass;
     }
 
     /**
@@ -148,23 +170,23 @@ public class Aircraft {
      *
      * @return number of flight crew
      */
-    public Integer getNumberFlightCrew() {
-        return numberFlightCrew;
+    public Integer getMaxCrew() {
+        return maxCrew;
     }
 
     /**
      * Sets the number of flight crew.
      *
-     * @param numberFlightCrew number of flight crew
+     * @param maxCrew number of flight crew
      */
-    public void setNumberFlightCrew(Integer numberFlightCrew) {
-        this.numberFlightCrew = numberFlightCrew;
+    public void setMaxCrew(Integer maxCrew) {
+        this.maxCrew = maxCrew;
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 59 * hash + Objects.hashCode(this.registration);
+        hash = 59 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -178,12 +200,12 @@ public class Aircraft {
         }
 
         final Aircraft other = (Aircraft) obj;
-        return this.registration.equals(other.registration);
+        return this.id.equals(other.id);
     }
 
     @Override
     public String toString() {
-        return String.format("Aircraft{registration=\"%d\", company=\"%s\", cabinConfiguration=\"%d\", numberFlightCrew=\"%d\"}",
-                this.registration, this.company, this.cabinConfiguration, this.numberFlightCrew);
+        return String.format("Aircraft{id=\"%d\", aircraftModel=\"%s\", company=\"%s\", maxPassengerPerClass=\"%d\", maxCrew=\"%d\"}",
+                this.id, this.aircraftModel, this.company, this.maxPassengerPerClass, this.maxCrew);
     }
 }
