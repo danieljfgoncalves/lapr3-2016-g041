@@ -254,7 +254,7 @@ public class MapGraph<V, E> implements MapGraphInterface<V, E> {
         this.vertices.remove(vert);
         this.numVert--;
 
-        return false;
+        return true;
     }
 
     @Override

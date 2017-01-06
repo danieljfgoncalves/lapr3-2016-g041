@@ -7,8 +7,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.measure.unit.NonSI;
-import lapr.project.utils.graph.matrix.MatrixGraph;
+import lapr.project.utils.graph.map.MapEdge;
+import lapr.project.utils.graph.map.MapGraph;
 import org.jscience.physics.amount.Amount;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,19 +35,19 @@ public class AirNetworkTest {
     /**
      * Test adjancency matrix
      */
-    private MatrixGraph<Coordinate, Segment> testMatrix;
+    private MapGraph<Coordinate, Segment> testMap;
 
     @Before
     public void setUp() {
         instance = new AirNetwork();
 
-        testMatrix = new MatrixGraph(true);
-        testMatrix.insertVertex(new Coordinate("ID01", 1.0, 1.0));
-        testMatrix.insertVertex(new Coordinate("ID02", 2.0, 2.0));
-        testMatrix.insertVertex(new Coordinate("ID03", 3.0, 3.0));
+        testMap = new MapGraph(true);
+        testMap.insertVertex(new Coordinate("ID01", 1.0, 1.0));
+        testMap.insertVertex(new Coordinate("ID02", 2.0, 2.0));
+        testMap.insertVertex(new Coordinate("ID03", 3.0, 3.0));
 
-        testMatrix.insertEdge(new Coordinate("ID01", 1.0, 1.0), new Coordinate("ID02", 2.0, 2.0), new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT)));
-        testMatrix.insertEdge(new Coordinate("ID02", 2.0, 2.0), new Coordinate("ID03", 3.0, 3.0), new Segment("SG02", new ArrayList<>(), Amount.valueOf(2.0, NonSI.DEGREE_ANGLE), Amount.valueOf(2.0, NonSI.KNOT)));
+        testMap.insertEdge(new Coordinate("ID01", 1.0, 1.0), new Coordinate("ID02", 2.0, 2.0), new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT)), 0);
+        testMap.insertEdge(new Coordinate("ID02", 2.0, 2.0), new Coordinate("ID03", 3.0, 3.0), new Segment("SG02", new ArrayList<>(), Amount.valueOf(2.0, NonSI.DEGREE_ANGLE), Amount.valueOf(2.0, NonSI.KNOT)), 0);
     }
 
     /**
@@ -56,9 +58,9 @@ public class AirNetworkTest {
         System.out.println("getSetNetwork");
 
         // Test get/set pair
-        MatrixGraph<Coordinate, Segment> expResult = testMatrix;
-        instance.setNetwork(testMatrix);
-        MatrixGraph<Coordinate, Segment> result = instance.getNetwork();
+        MapGraph<Coordinate, Segment> expResult = testMap;
+        instance.setNetwork(testMap);
+        MapGraph<Coordinate, Segment> result = instance.getNetwork();
         assertEquals(expResult, result);
     }
 
@@ -69,7 +71,7 @@ public class AirNetworkTest {
     public void testGetNumSegments() {
         System.out.println("getNumSegments");
         int expResult = 2;
-        AirNetwork instance2 = new AirNetwork(testMatrix);
+        AirNetwork instance2 = new AirNetwork(testMap);
         int result = instance2.getNumSegments();
         assertEquals(expResult, result);
     }
@@ -81,7 +83,7 @@ public class AirNetworkTest {
     public void testGetNumJunctions() {
         System.out.println("getNumJunctions");
         int expResult = 3;
-        AirNetwork instance2 = new AirNetwork(testMatrix);
+        AirNetwork instance2 = new AirNetwork(testMap);
         int result = instance2.getNumJunctions();
         assertEquals(expResult, result);
     }
@@ -92,14 +94,18 @@ public class AirNetworkTest {
     @Test
     public void testGetSegments() {
         System.out.println("getSegments");
-        AirNetwork instance2 = new AirNetwork(testMatrix);
+        AirNetwork instance2 = new AirNetwork(testMap);
 
         List<Segment> segments = new LinkedList<>();
         segments.add(new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT)));
         segments.add(new Segment("SG02", new ArrayList<>(), Amount.valueOf(2.0, NonSI.DEGREE_ANGLE), Amount.valueOf(2.0, NonSI.KNOT)));
         Iterable<Segment> expResult = segments;
 
-        Iterable<Segment> result = instance2.getSegments();
+        Iterable<MapEdge<Coordinate, Segment>> edges = instance2.getSegments();
+        List<Segment> result = new LinkedList<>();
+        for (MapEdge<Coordinate, Segment> edge : edges) {
+            result.add(edge.getElement());
+        }
         assertEquals(expResult, result);
     }
 
@@ -109,15 +115,17 @@ public class AirNetworkTest {
     @Test
     public void testGetJunctions() {
         System.out.println("getJunctions");
-        AirNetwork instance2 = new AirNetwork(testMatrix);
+        AirNetwork instance2 = new AirNetwork(testMap);
 
         List<Coordinate> coordinates = new LinkedList<>();
         coordinates.add(new Coordinate("ID01", 1.0, 1.0));
         coordinates.add(new Coordinate("ID02", 2.0, 2.0));
         coordinates.add(new Coordinate("ID03", 3.0, 3.0));
-        Iterable<Coordinate> expResult = coordinates;
-        Iterable<Coordinate> result = instance2.getJunctions();
-        assertEquals(expResult, result);
+        Object[] expResult = coordinates.toArray();
+        List junctions = new LinkedList((Set) instance2.getJunctions());
+        Object[] result = junctions.toArray();
+
+        assertArrayEquals(expResult, result);
     }
 
     /**
@@ -127,28 +135,7 @@ public class AirNetworkTest {
     public void testAddSegment() {
         System.out.println("addSegment");
 
-        AirNetwork instance2 = new AirNetwork(testMatrix);
-        String idA = "ID01";
-        String idB = "ID03";
-        Segment newSegment = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
-        boolean result = instance2.addSegment(idA, idB, newSegment);
-        assertTrue(result);
-        // Adding the same segment should return false
-        boolean result2 = instance2.addSegment(idA, idB, newSegment);
-        assertFalse(result2);
-        // Verify if network contains segment
-        Segment resultSegment = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
-        assertEquals(resultSegment, instance2.getSegments().iterator().next());
-    }
-
-    /**
-     * Test of addSegment method, of class AirNetwork.
-     */
-    @Test
-    public void testAddSegment_CoordinateIDs() {
-        System.out.println("addSegment_with_coordinateIDs");
-
-        AirNetwork instance2 = new AirNetwork(testMatrix);
+        AirNetwork instance2 = new AirNetwork(testMap);
         Coordinate coordinateA = new Coordinate("ID01", 1.0, 1.0);
         Coordinate coordinateB = new Coordinate("ID03", 3.0, 3.0);
         Segment newSegment = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
@@ -158,8 +145,31 @@ public class AirNetworkTest {
         boolean result2 = instance2.addSegment(coordinateA, coordinateB, newSegment);
         assertFalse(result2);
         // Verify if network contains segment
-        Segment resultSegment = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
-        assertEquals(resultSegment, instance2.getSegments().iterator().next());
+        Segment expResult = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
+        Segment result3 = instance2.getSegments().iterator().next().getElement();
+        assertEquals(expResult, result3);
+    }
+
+    /**
+     * Test of addSegment method, of class AirNetwork.
+     */
+    @Test
+    public void testAddSegment_CoordinateIDs() {
+        System.out.println("addSegment_with_coordinateIDs");
+
+        AirNetwork instance2 = new AirNetwork(testMap);
+        String idA = "ID01";
+        String idB = "ID03";
+        Segment newSegment = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
+        boolean result = instance2.addSegment(idA, idB, newSegment);
+        assertTrue(result);
+        // Adding the same segment should return false
+        boolean result2 = instance2.addSegment(idA, idB, newSegment);
+        assertFalse(result2);
+        // Verify if network contains segment
+        Segment expResult = new Segment("SG01", new ArrayList<>(), Amount.valueOf(1.0, NonSI.DEGREE_ANGLE), Amount.valueOf(1.0, NonSI.KNOT));
+        Segment result3 = instance2.getSegments().iterator().next().getElement();
+        assertEquals(expResult, result3);
     }
 
     /**
@@ -169,12 +179,11 @@ public class AirNetworkTest {
     public void testRemoveSegment() {
         System.out.println("removeSegment");
 
-        AirNetwork instance2 = new AirNetwork(testMatrix);
+        AirNetwork instance2 = new AirNetwork(testMap);
         Coordinate coordinateA = new Coordinate("ID02", 2.0, 2.0);
         Coordinate coordinateB = new Coordinate("ID03", 3.0, 3.0);
-        Segment expResult = new Segment("SG02", new ArrayList<>(), Amount.valueOf(2.0, NonSI.DEGREE_ANGLE), Amount.valueOf(2.0, NonSI.KNOT));
-        Segment result = instance2.removeSegment(coordinateA, coordinateB);
-        assertEquals(expResult, result);
+        boolean result = instance2.removeSegment(coordinateA, coordinateB);
+        assertTrue(result);
 
         // See if number of edges is right
         assertTrue(instance2.getNumSegments() == 1);
@@ -204,8 +213,8 @@ public class AirNetworkTest {
     public void testRemoveJunction01() {
         System.out.println("removeJunction");
         // Test if method returns true when a valid junction is removed
-        Coordinate junction = new Coordinate("ID01", 1.0, 1.0);
-        AirNetwork instance1 = new AirNetwork(testMatrix);
+        Coordinate junction = new Coordinate("ID02", 2.0, 2.0);
+        AirNetwork instance1 = new AirNetwork(testMap);
         boolean result = instance1.removeJunction(junction);
         assertTrue(result);
     }
@@ -218,7 +227,7 @@ public class AirNetworkTest {
         System.out.println("removeJunction");
         // Test if method returns false when junction is invalid
         Coordinate junction = new Coordinate("ID04", 4.0, 4.0);
-        AirNetwork instance1 = new AirNetwork(testMatrix);
+        AirNetwork instance1 = new AirNetwork(testMap);
         boolean result = instance1.removeJunction(junction);
         assertFalse(result);
     }
@@ -231,7 +240,7 @@ public class AirNetworkTest {
         System.out.println("removeJunction");
         // Test if method returns false when junction is invalid
         Coordinate junction = new Coordinate("ID03", 3.0, 3.0);
-        AirNetwork instance1 = new AirNetwork(testMatrix);
+        AirNetwork instance1 = new AirNetwork(testMap);
         instance1.removeJunction(junction);
         int expResult = 2;
         int result = instance1.getNumJunctions();
@@ -351,7 +360,7 @@ public class AirNetworkTest {
     public void testEquals04() {
         System.out.println("equals");
         // Test if Airnetwork is equal to AirNetwork
-        AirNetwork instance2 = new AirNetwork(testMatrix);
+        AirNetwork instance2 = new AirNetwork(testMap);
         boolean result = instance.equals(instance2);
         assertFalse(result);
     }

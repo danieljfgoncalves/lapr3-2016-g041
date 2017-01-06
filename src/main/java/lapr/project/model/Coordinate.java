@@ -157,8 +157,7 @@ public class Coordinate {
 
         final Coordinate other = (Coordinate) obj;
 
-        return Math.abs(this.longitude - other.longitude) < EPSILON
-                && Math.abs(this.latitude - other.latitude) < EPSILON;
+        return id.equalsIgnoreCase(other.id);
     }
 
     @Override
