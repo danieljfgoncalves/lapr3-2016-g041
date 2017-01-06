@@ -4,6 +4,7 @@
 package lapr.project.model;
 
 import java.util.LinkedList;
+import org.jscience.physics.amount.Amount;
 
 /**
  * Interface to represent a Path Algorithm.
@@ -20,7 +21,8 @@ public interface FlightPlanAlgorithm {
      *
      * @param network The air network
      * @param flight The selected flight
-     * @return a ordered list of segments (flight plan)
+     * @param flightplan the flight plan to insert
+     * @return the criteria total amount (distance, consumption, etc.)
      */
-    LinkedList<Segment> generateFlightPlan(AirNetwork network, FlightSimulation flight);
+    Amount<?> generateFlightPlan(AirNetwork network, FlightSimulation flight, LinkedList<Segment> flightplan);
 }
