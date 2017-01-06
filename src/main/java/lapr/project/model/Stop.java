@@ -17,7 +17,6 @@ import org.jscience.physics.amount.Amount;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class Stop {
@@ -30,7 +29,7 @@ public class Stop {
     /**
      * Stop's minimum stop (SI: s)
      */
-    private Amount<Duration> minimumStop;
+    private Amount<Duration> minimumStopMinutes;
 
     /**
      * Stop's schedule arrival
@@ -51,13 +50,13 @@ public class Stop {
      * Constructs an instance of Stop
      *
      * @param airport the stop's airport
-     * @param minimumStop the stop's minimum stop minutes
+     * @param minimumStopMinutes the stop's minimum stop minutes
      * @param scheduleArrival the stop's schedule arrival
      * @param departureTime the stop's departure time
      */
-    public Stop(Airport airport, Amount<Duration> minimumStop, Calendar scheduleArrival, Calendar departureTime) {
+    public Stop(Airport airport, Amount<Duration> minimumStopMinutes, Calendar scheduleArrival, Calendar departureTime) {
         this.airport = airport;
-        this.minimumStop = minimumStop;
+        this.minimumStopMinutes = minimumStopMinutes;
         this.scheduleArrival = scheduleArrival;
         this.departureTime = departureTime;
     }
@@ -67,7 +66,7 @@ public class Stop {
      */
     public Stop() {
         this.airport = new Airport();
-        this.minimumStop = DEFAULT_MINIMUM_STOP;
+        this.minimumStopMinutes = DEFAULT_MINIMUM_STOP;
         this.scheduleArrival = new GregorianCalendar();
         this.departureTime = new GregorianCalendar();
     }
@@ -79,7 +78,7 @@ public class Stop {
      */
     public Stop(Stop otherStop) {
         this.airport = otherStop.airport;
-        this.minimumStop = otherStop.minimumStop;
+        this.minimumStopMinutes = otherStop.minimumStopMinutes;
         this.scheduleArrival = otherStop.scheduleArrival;
         this.departureTime = otherStop.departureTime;
     }
@@ -107,17 +106,17 @@ public class Stop {
      *
      * @return the minimum stop minutes
      */
-    public Amount<Duration> getMinimumStop() {
-        return minimumStop;
+    public Amount<Duration> getMinimumStopMinutes() {
+        return minimumStopMinutes;
     }
 
     /**
      * Modifies the Stop's minimum stop minutes
      *
-     * @param minimumStop the Stop's minimum stop minutes to set
+     * @param minimumStopMinutes the Stop's minimum stop minutes to set
      */
-    public void setMinimumStop(Amount<Duration> minimumStop) {
-        this.minimumStop = minimumStop;
+    public void setMinimumStopMinutes(Amount<Duration> minimumStopMinutes) {
+        this.minimumStopMinutes = minimumStopMinutes;
     }
 
     /**
@@ -160,7 +159,7 @@ public class Stop {
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.airport);
-        hash = 97 * hash + Objects.hashCode(this.minimumStop);
+        hash = 97 * hash + Objects.hashCode(this.minimumStopMinutes);
         hash = 97 * hash + Objects.hashCode(this.scheduleArrival);
         hash = 97 * hash + Objects.hashCode(this.departureTime);
         return hash;
@@ -179,13 +178,13 @@ public class Stop {
 
         return this.airport.equals(other.airport)
                 && this.departureTime.equals(other.departureTime)
-                && this.minimumStop.equals(other.minimumStop)
+                && this.minimumStopMinutes.equals(other.minimumStopMinutes)
                 && this.scheduleArrival.equals(other.scheduleArrival);
     }
 
     @Override
     public String toString() {
         return String.format("Stop{airport=%s, minumum stop minutes=%d, schedule arrival=%s, departure time=%s",
-                this.airport, this.minimumStop.longValue(NonSI.MINUTE), this.scheduleArrival, this.departureTime);
+                this.airport, this.minimumStopMinutes.longValue(NonSI.MINUTE), this.scheduleArrival, this.departureTime);
     }
 }

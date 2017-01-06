@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class StopTest {
@@ -40,7 +39,7 @@ public class StopTest {
     @Test
     public void testGetSetAirport() {
         System.out.println("getSetAirport");
-        Airport expResult = new Airport("Sá carneiro", "Porto", "Portugal", "OPO", 1.0d, -1.0d, Amount.valueOf(10d, SI.METER));
+        Airport expResult = new Airport("Sá carneiro", "Porto", "Portugal", "OPO", new Coordinate("id01", 1.0d, -1.0d), Amount.valueOf(10d, SI.METER));
         instance.setAirport(expResult);
         Airport result = instance.getAirport();
         assertEquals(expResult, result);
@@ -53,8 +52,8 @@ public class StopTest {
     public void testGetSetMinimumStop() {
         System.out.println("getSetMinimumStopMinutes");
         Amount<Duration> expResult = Amount.valueOf(10d, NonSI.MINUTE);
-        instance.setMinimumStop(expResult);
-        Amount<Duration> result = instance.getMinimumStop();
+        instance.setMinimumStopMinutes(expResult);
+        Amount<Duration> result = instance.getMinimumStopMinutes();
         assertEquals(expResult, result);
     }
 

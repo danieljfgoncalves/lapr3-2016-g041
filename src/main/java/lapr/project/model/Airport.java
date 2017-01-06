@@ -14,7 +14,6 @@ import org.jscience.physics.amount.Amount;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class Airport {
@@ -40,14 +39,9 @@ public class Airport {
     private String IATA;
 
     /**
-     * The latitude of the airport.
+     * The coordinates of the Airport.
      */
-    private Double latitude;
-
-    /**
-     * The longitude of the airport.
-     */
-    private Double longitude;
+    private Coordinate coordinates;
 
     /**
      * The altitude of the airport.
@@ -75,16 +69,6 @@ public class Airport {
     private final static String DEFAULT_IATA = "Default IATA";
 
     /**
-     * The default latitude of the airport.
-     */
-    private final static Double DEFAULT_LATITUDE = 0.0d;
-
-    /**
-     * The defaults longitude of the airport.
-     */
-    private final static Double DEFAULT_LONGITUDE = 0.0d;
-
-    /**
      * The default altitude of the airport (SI: m).
      */
     private final static Amount<Length> DEFAULT_ALTITUDE = Amount.valueOf(0d, SI.METER);
@@ -95,18 +79,16 @@ public class Airport {
      * @param name the airport's name
      * @param town the airport's town
      * @param country the airport's country
-     * @param IATA the aiports IATA code
-     * @param latitude the airport's latitude
-     * @param longitude the airport's longitude
+     * @param IATA the airports IATA code
+     * @param coordinates the airport's coordinates
      * @param altitude the airport's altitude
      */
-    public Airport(String name, String town, String country, String IATA, Double latitude, Double longitude, Amount<Length> altitude) {
+    public Airport(String name, String town, String country, String IATA, Coordinate coordinates, Amount<Length> altitude) {
         this.name = name;
         this.town = town;
         this.country = country;
         this.IATA = IATA;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.coordinates = coordinates;
         this.altitude = altitude;
     }
 
@@ -118,8 +100,7 @@ public class Airport {
         this.town = DEFAULT_TOWN;
         this.country = DEFAULT_COUNTRY;
         this.IATA = DEFAULT_IATA;
-        this.latitude = DEFAULT_LATITUDE;
-        this.longitude = DEFAULT_LONGITUDE;
+        this.coordinates = new Coordinate();
         this.altitude = DEFAULT_ALTITUDE;
     }
 
@@ -133,8 +114,7 @@ public class Airport {
         this.town = other.town;
         this.country = other.country;
         this.IATA = other.IATA;
-        this.latitude = other.latitude;
-        this.longitude = other.longitude;
+        this.coordinates = other.coordinates;
         this.altitude = other.altitude;
     }
 
@@ -211,39 +191,21 @@ public class Airport {
     }
 
     /**
-     * Gets the latitude of the airport.
+     * Gets the coordinates of the airport.
      *
-     * @return the latitude
+     * @return the coordinates
      */
-    public Double getLatitude() {
-        return latitude;
+    public Coordinate getCoordinates() {
+        return this.coordinates;
     }
 
     /**
-     * Modifies the latitude of the airport.
+     * Modifies the coordinates of the airport.
      *
-     * @param latitude the latitude code to set
+     * @param coordinates the coordinates to set
      */
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    /**
-     * Gets the longitude of the airport.
-     *
-     * @return the longitude
-     */
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    /**
-     * Modifies the longitude of the airport.
-     *
-     * @param longitude the longitude code to set
-     */
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void setCoordinates(Coordinate coordinates) {
+        this.coordinates = coordinates;
     }
 
     /**
@@ -292,9 +254,8 @@ public class Airport {
                 + "Town: %s\n"
                 + "Country: %s\n"
                 + "IATA code: %s\n"
-                + "Latitude: %.6f\n"
-                + "Longitude: %.6f\n"
-                + "Altitude: %s\n", name, town, country, IATA, latitude, longitude, altitude);
+                + "Coordinates: %s\n"
+                + "Altitude: %s\n", name, town, country, IATA, coordinates, altitude);
     }
 
 }

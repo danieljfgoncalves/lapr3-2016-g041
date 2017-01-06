@@ -17,7 +17,6 @@ import static org.junit.Assert.*;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class AirportTest {
@@ -88,27 +87,16 @@ public class AirportTest {
     }
 
     /**
-     * Test of getLatitude and setLatitude methods, of class Airport.
+     * Test of getCoordinates and setCoordinates methods, of class Airport.
      */
     @Test
-    public void testGetSetLatitude() {
-        System.out.println("getLatitude and setLatitude");
+    public void testGetSetCoordinates() {
+        System.out.println("getSetCoordinates");
 
-        Double latitude = 41.248100d;
-        instance.setLatitude(latitude);
-        assertEquals(latitude, instance.getLatitude());
-    }
+        Coordinate coordinates = new Coordinate("id01", 41.248100d, -8.681389d);
 
-    /**
-     * Test of getLongitude and setLongitude methods, of class Airport.
-     */
-    @Test
-    public void testGetSetLongitude() {
-        System.out.println("getLongitude and setLongitude");
-
-        Double longitude = -8.681389d;
-        instance.setLongitude(longitude);
-        assertEquals(longitude, instance.getLongitude());
+        instance.setCoordinates(coordinates);
+        assertEquals(coordinates, instance.getCoordinates());
     }
 
     /**
