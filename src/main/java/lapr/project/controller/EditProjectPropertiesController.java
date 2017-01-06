@@ -3,6 +3,7 @@
  */
 package lapr.project.controller;
 
+import java.sql.SQLException;
 import lapr.project.model.FlightSimulator;
 import lapr.project.model.Project;
 
@@ -32,27 +33,28 @@ public class EditProjectPropertiesController {
     }
 
     /**
-     * Changes name and description of the project selected and validate if the
-     * project does not have the same name in the flight simulator.
+     * Sets the project properties.
      *
-     * @return true if the project's properties are edited successfully, false
-     * otherwise
+     * @param name project's name
+     * @param description project's description
+     * @return true if the project is successfully updated, false otherwise
+     * @throws SQLException error in database
      */
-    public boolean setProjectProperties(String name, String description) {
+    public boolean setProjectProperties(String name, String description) throws SQLException {
         String tempName = this.project.getName();
-        if (project.validate(name)) {
-            if (tempName.equalsIgnoreCase(name) && flightSimulator.validateNameExists(name)) {
+        if (project.validateName()) {
+            if ((tempName.equalsIgnoreCase(name) && !flightSimulator.validateProjectName(name))
+                    || flightSimulator.validateProjectName(name)) {
+
                 this.project.setName(name);
                 this.project.setDescription(description);
-                return true;
-            }
-            if (!flightSimulator.validateNameExists(name)) {
-                this.project.setName(name);
-                this.project.setDescription(description);
+
+                // updates the project on database
+                flightSimulator.updateProjectNameAndDescription(project);
+                
                 return true;
             }
         }
         return false;
-
     }
 }

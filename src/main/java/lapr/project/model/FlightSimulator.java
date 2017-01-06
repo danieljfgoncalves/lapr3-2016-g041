@@ -69,18 +69,25 @@ public class FlightSimulator {
      */
     public boolean validateProject(Project project) {
         // TODO
-        return project.validate();
+        return project.validateName();
     }
 
     /**
-     * Checks if a project with a specific name already exists.
+     * Checks if the projects exists.
      *
-     * @param name the name to verify
-     * @return true if a project with the given name already exists and false
-     * otherwise
+     * @param name project's name to validate
+     * @return true if the name is valid, false otherwise
+     * @throws SQLException error in database
      */
-    public boolean validateNameExists(String name) {
-        // TODO
+    public boolean validateProjectName(String name) throws SQLException {
+        List<Project> projects = getProjects();
+
+        for (Project project : projects) {
+            if (project.getName().equalsIgnoreCase(name)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -93,5 +100,15 @@ public class FlightSimulator {
     public boolean addProject(Project project) {
         // TODO
         return true;
+    }
+
+    public void updateProjectNameAndDescription(Project project) throws SQLException {
+        String query = String.format("UPDATE PROJECT SET NAME = '%s', DESCRIPTION = '%s' WHERE ID_PROJECT = %d",
+                project.getName(), project.getDescription(), project.getSerieNumber());
+
+        try (Connection connection = DbConnection.getConnection();
+                Statement statement = connection.createStatement();) {
+            statement.executeUpdate(query);
+        }
     }
 }

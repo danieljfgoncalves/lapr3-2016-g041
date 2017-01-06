@@ -243,6 +243,12 @@ public class EditProjectPropertiesDialog<T extends Window & ProjectHandler> exte
                         ex.getMessage(),
                         "Error",
                         JOptionPane.WARNING_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "There was an error trying to read data from database.",
+                        "Data Error",
+                        JOptionPane.WARNING_MESSAGE);
             }
         });
 

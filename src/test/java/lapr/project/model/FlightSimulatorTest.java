@@ -65,18 +65,4 @@ public class FlightSimulatorTest {
 
         assertTrue(instance.addProject(project));
     }
-
-    /**
-     * Test of validateNameExists method, of class FlightSimulator.
-     */
-    @Test
-    public void testValidateNameExists01() {
-        System.out.println("validateNameExists");
-
-        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
-        instance.addProject(project);
-        String name = project.getName();
-
-        assertTrue(instance.validateNameExists(name));
-    }
 }

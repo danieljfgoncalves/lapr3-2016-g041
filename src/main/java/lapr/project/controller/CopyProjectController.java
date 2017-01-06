@@ -1,8 +1,9 @@
 /**
- * Package location for Coontroller concepts.
+ * Package location for controller concepts.
  */
 package lapr.project.controller;
 
+import java.sql.SQLException;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
 
@@ -12,7 +13,6 @@ import lapr.project.model.FlightSimulator;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class CopyProjectController {
@@ -46,8 +46,8 @@ public class CopyProjectController {
      * @return true if the name is not empty and if a project with the same name
      * does not exist, false otherwise
      */
-    public boolean setCopyProjectData(String name, String description) {
-        if (projectCopy.validate(name) && !flightSimulator.validateNameExists(name)) {
+    public boolean setCopyProjectData(String name, String description) throws SQLException {
+        if (projectCopy.validateName() && !flightSimulator.validateProjectName(name)) {
             projectCopy.setName(name);
             projectCopy.setDescription(description);
             return true;

@@ -15,7 +15,6 @@ import static org.junit.Assert.*;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class ProjectTest {
@@ -117,7 +116,7 @@ public class ProjectTest {
     }
 
     /**
-     * Test 1 of validate method, of class Project.
+     * Test 1 of validateName method, of class Project.
      */
     @Test
     public void testValidateNoParamter1() {
@@ -125,11 +124,11 @@ public class ProjectTest {
 
         instance.setName("Europe Flights");
 
-        assertTrue(instance.validate());
+        assertTrue(instance.validateName());
     }
 
     /**
-     * Test 2 of validate method, of class Project.
+     * Test 2 of validateName method, of class Project.
      */
     @Test
     public void testValidateNoParamter2() {
@@ -137,31 +136,7 @@ public class ProjectTest {
 
         instance.setName("   ");
 
-        assertFalse(instance.validate());
-    }
-
-    /**
-     * Test of validate method, of class Project.
-     */
-    @Test
-    public void testValidate01() {
-        System.out.println("validate");
-        String name = "";
-        boolean expResult = false;
-        boolean result = instance.validate(name);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of validate method, of class Project.
-     */
-    @Test
-    public void testValidate02() {
-        System.out.println("validate");
-        String name = "a";
-        boolean expResult = true;
-        boolean result = instance.validate(name);
-        assertEquals(expResult, result);
+        assertFalse(instance.validateName());
     }
 
     /**

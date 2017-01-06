@@ -11,7 +11,6 @@ import java.util.Objects;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class Project implements Comparable<Project> {
@@ -64,7 +63,7 @@ public class Project implements Comparable<Project> {
      * Counter to increment serie number.
      */
     private static Integer counter = 1;
-    
+
     public Project(int serieNumber, String name, String description) {
         this.serieNumber = serieNumber;
         this.name = name;
@@ -286,19 +285,8 @@ public class Project implements Comparable<Project> {
      *
      * @return true if it is valid, false otherwise
      */
-    public boolean validate() {
+    public boolean validateName() {
         return !this.name.trim().isEmpty();
-    }
-
-    /**
-     * Obtains the validation of name (true if name is not empty), false
-     * otherwise
-     *
-     * @param name
-     * @return true if validated, false otherwise
-     */
-    public boolean validate(String name) {
-        return !name.equals("");
     }
 
     @Override
