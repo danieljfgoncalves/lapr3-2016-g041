@@ -20,12 +20,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import lapr.project.model.Airport;
+import lapr.project.model.Coordinate;
 import lapr.project.model.Project;
-import lapr.project.ui.components.ListCellRendererAirport;
 
 /**
- * The frame to create select technical stop dialog.
+ * The frame to create select waypoit dialog.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
@@ -33,7 +32,7 @@ import lapr.project.ui.components.ListCellRendererAirport;
  * @author Tiago Correia - 1151031
  *
  */
-public class SelectTechStopsDialog extends JDialog {
+public class SelectWaypointDialog extends JDialog {
 
     /**
      * The parent frame.
@@ -41,9 +40,9 @@ public class SelectTechStopsDialog extends JDialog {
     private final JDialog parentFrame;
 
     /**
-     * The combo box with the airports for technical stops.
+     * The combo box with the coordinates for mandatory waypoints.
      */
-    private JComboBox<Airport> airportComboBox;
+    private JComboBox<Coordinate> waypointsComboBox;
 
     /**
      * The open project.
@@ -51,9 +50,9 @@ public class SelectTechStopsDialog extends JDialog {
     private final Project project;
 
     /**
-     * the selected technical stop airport.
+     * the selected waypoint.
      */
-    private Airport techStop;
+    private Coordinate waypoint;
 
     /**
      * Padding border.
@@ -76,12 +75,12 @@ public class SelectTechStopsDialog extends JDialog {
     private static final String WINDOW_TITLE = "Add Technical Stop";
 
     /**
-     * Creates an instance of select technical stop dialog.
+     * Creates an instance of select mandatory waypoint dialog.
      *
      * @param parentFrame the parent frame
      * @param project the open project
      */
-    public SelectTechStopsDialog(JDialog parentFrame, Project project) {
+    public SelectWaypointDialog(JDialog parentFrame, Project project) {
         super(parentFrame, WINDOW_TITLE);
         setModal(true);
         this.parentFrame = parentFrame;
@@ -121,29 +120,29 @@ public class SelectTechStopsDialog extends JDialog {
         panel.setBackground(DEFAULT_COLOR);
         panel.setBorder(DEFAULT_GREY_LINE_BORDER);
 
-        JLabel selectTechStopLabel = new JLabel("Select Airport for technical stop:");
+        JLabel selectWaypointLabel = new JLabel("Select the desired mandatory waypoint:");
 
-        JComboBox<Airport> techStopComboBox = new JComboBox<>();
-        techStopComboBox.setPreferredSize(new Dimension(420, 25));
+        JComboBox<Coordinate> waypointsComboBox = new JComboBox<>();
+        waypointsComboBox.setPreferredSize(new Dimension(350, 25));
         //populate origin airport combobox
-        for (Airport airport : project.getAirportsRegister().getAirports()) {
-            techStopComboBox.addItem(airport);
+        for (Coordinate coordinate : project.getAirNetwork().getNetwork().vertices()) {
+            waypointsComboBox.addItem(coordinate);
         }
-        techStopComboBox.setRenderer(new ListCellRendererAirport());
-        techStopComboBox.addActionListener(new ActionListener() {
+//        waypointsComboBox.setRenderer(//TODO);
+        waypointsComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                techStop = (Airport) techStopComboBox.getSelectedItem();
+                waypoint = (Coordinate) waypointsComboBox.getSelectedItem();
             }
         });
 
         //align horizontally
         layout.setHorizontalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                        .addComponent(selectTechStopLabel)
+                        .addComponent(selectWaypointLabel)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(techStopComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        .addComponent(waypointsComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
                                 GroupLayout.PREFERRED_SIZE)
                 )
         );
@@ -151,8 +150,8 @@ public class SelectTechStopsDialog extends JDialog {
         //align vertically
         layout.setVerticalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(selectTechStopLabel)
-                        .addComponent(techStopComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        .addComponent(selectWaypointLabel)
+                        .addComponent(waypointsComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
                                 GroupLayout.PREFERRED_SIZE))
         );
 
@@ -198,7 +197,7 @@ public class SelectTechStopsDialog extends JDialog {
         JButton button = new JButton("Cancel");
         button.addActionListener((ActionEvent ae) -> {
             int selectedOption = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel the operation? "
-                    + "No technical stop will be added!", "Technical Stop", JOptionPane.YES_NO_OPTION);
+                    + "No mandatory waypoint will be added!", "Mandatory Waypoint", JOptionPane.YES_NO_OPTION);
             if (selectedOption == JOptionPane.YES_OPTION) {
                 dispose();
             }

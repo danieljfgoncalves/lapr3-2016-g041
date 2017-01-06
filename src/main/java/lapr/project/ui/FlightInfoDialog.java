@@ -643,7 +643,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
     private JButton createAddWaypointButton() {
         JButton addWaypointButton = new JButton("Add Waypoint");
         addWaypointButton.addActionListener((ActionEvent ae) -> {
-            //TODO
+            SelectWaypointDialog waypointDialog = new SelectWaypointDialog(this, project);
+            waypointDialog.setVisible(true);
         });
         return addWaypointButton;
     }
