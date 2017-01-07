@@ -10,6 +10,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -27,7 +28,6 @@ import lapr.project.model.FlightSimulator;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  *
  * @param <T> window that extend ProjectHandler
@@ -233,14 +233,22 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
         createProjectButton.setPreferredSize(BUTTON_PREFERED_SIZE);
 
         createProjectButton.addActionListener((ActionEvent ae) -> {
-            if (controller.newProject(nameTextField.getText(), descriptionTextField.getText())) {
-                dispose();
-                parentWindow.activateProject(controller.getCreatedProject());
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "The data is invalid.\nPlease review the data!",
-                        "Invalid data",
-                        JOptionPane.ERROR_MESSAGE);
+            try {
+                if (controller.newProject(nameTextField.getText(), descriptionTextField.getText())) {
+                    dispose();
+                    parentWindow.activateProject(controller.getCreatedProject());
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "The data is invalid.\nPlease review the data!",
+                            "Invalid data",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "There was an error trying to read data from database.",
+                        "Data Error",
+                        JOptionPane.WARNING_MESSAGE);
             }
         });
 

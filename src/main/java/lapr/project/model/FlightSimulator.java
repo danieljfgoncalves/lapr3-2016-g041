@@ -62,17 +62,6 @@ public class FlightSimulator {
     }
 
     /**
-     * Validates a given project.
-     *
-     * @param project project to be validated
-     * @return true if it is valid, false otherwise
-     */
-    public boolean validateProject(Project project) {
-        // TODO
-        return project.validateName();
-    }
-
-    /**
      * Checks if the projects exists.
      *
      * @param name project's name to validate
@@ -96,9 +85,17 @@ public class FlightSimulator {
      *
      * @param project project to add
      * @return true if it is successfully added, false otherwise
+     * @throws java.sql.SQLException database error
      */
-    public boolean addProject(Project project) {
-        // TODO
+    public boolean addProject(Project project) throws SQLException {
+        String query = String.format("INSERT INTO PROJECT VALUES (%d, '%s', '%s')",
+                project.getSerieNumber(), project.getName(), project.getDescription());
+
+        try (Connection connection = DbConnection.getConnection();
+                Statement statement = connection.createStatement();) {
+            statement.executeUpdate(query);
+        }
+
         return true;
     }
 

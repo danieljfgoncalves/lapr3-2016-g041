@@ -3,6 +3,7 @@
  */
 package lapr.project.controller;
 
+import java.sql.SQLException;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
 
@@ -42,13 +43,14 @@ public class CreateProjectController {
      * @param name project's name
      * @param description project's description
      * @return true if the project is successfully added, false otherwise
+     * @throws java.sql.SQLException database error
      */
-    public boolean newProject(String name, String description) {
+    public boolean newProject(String name, String description) throws SQLException {
 
         createdProject.setName(name);
         createdProject.setDescription(description);
 
-        return simulator.validateProject(createdProject) ? simulator.addProject(createdProject) : false;
+        return createdProject.validateName() && simulator.validateProjectName(name) ? simulator.addProject(createdProject) : false;
     }
 
     /**

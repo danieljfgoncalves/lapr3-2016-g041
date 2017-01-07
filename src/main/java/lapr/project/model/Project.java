@@ -68,6 +68,7 @@ public class Project implements Comparable<Project> {
         this.serieNumber = serieNumber;
         this.name = name;
         this.description = description;
+        counter++;
     }
 
     /**

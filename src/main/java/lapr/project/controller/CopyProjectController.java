@@ -45,6 +45,7 @@ public class CopyProjectController {
      * @param description the description of the project copy
      * @return true if the name is not empty and if a project with the same name
      * does not exist, false otherwise
+     * @throws java.sql.SQLException
      */
     public boolean setCopyProjectData(String name, String description) throws SQLException {
         if (projectCopy.validateName() && !flightSimulator.validateProjectName(name)) {
@@ -60,9 +61,10 @@ public class CopyProjectController {
      *
      * @return true if the project does not exist and is added to the project
      * list, false otherwise
+     * @throws java.sql.SQLException
      */
-    public boolean addProjectCopy() {
-        return flightSimulator.validateProject(projectCopy) ? flightSimulator.addProject(projectCopy) : false;
+    public boolean addProjectCopy() throws SQLException {
+        return flightSimulator.validateProjectName(projectCopy.getName()) ? flightSimulator.addProject(projectCopy) : false;
     }
 
     /**
