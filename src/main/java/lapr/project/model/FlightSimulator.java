@@ -88,7 +88,7 @@ public class FlightSimulator {
      * @throws java.sql.SQLException database error
      */
     public boolean addProject(Project project) throws SQLException {
-        String query = String.format("INSERT INTO PROJECT VALUES (%d, '%s', '%s')",
+        String query = String.format("INSERT INTO PROJECT (ID_PROJECT, NAME, DESCRIPTION) VALUES (%d, '%s', '%s');",
                 project.getSerieNumber(), project.getName(), project.getDescription());
 
         try (Connection connection = DbConnection.getConnection();
