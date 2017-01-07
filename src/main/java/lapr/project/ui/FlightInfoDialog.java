@@ -167,11 +167,18 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * The class 5 text field.
      */
     private JTextField txtClass5;
-    
+
+    private JLabel class1Label;
+    private JLabel class2Label;
+    private JLabel class3Label;
+    private JLabel class4Label;
+    private JLabel class5Label;
+
     /**
      * The list with aircraft classes.
      */
-    private ArrayList<JTextField> listClasses;
+    private ArrayList<JTextField> listClassTxt;
+    private ArrayList<JLabel> listClassLabels;
 
     /**
      * Selected number of classes in the aircraft.
@@ -267,7 +274,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         this.project = project;
         this.setResizable(false);
 
-        listClasses = new ArrayList();
+        listClassTxt = new ArrayList();
+        listClassLabels = new ArrayList();
 
         createComponents();
 
@@ -426,9 +434,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
         JComboBox<AircraftModel> aircraftModelComboBox = new JComboBox<>();
         aircraftModelComboBox.setPreferredSize(new Dimension(300, 25));
-        for (AircraftModel aircraftModel : project.getAircraftModelsRegister().getAircraftModels()) {
-            aircraftModelComboBox.addItem(aircraftModel);
-        }
+//        for (AircraftModel aircraftModel : project.getAircraftModelsRegister().getAircraftModels()) {
+//            aircraftModelComboBox.addItem(aircraftModel);
+//        }
         aircraftModelComboBox.setRenderer(new ListCellRendererAircraftModel());
 
         aircraftModelComboBox.addActionListener(new ActionListener() {
@@ -502,47 +510,59 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         aircraftConfigForm.setBackground(DEFAULT_COLOR);
         aircraftConfigForm.setBorder(DEFAULT_GREY_LINE_BORDER);
 
-        JLabel class1Label = new JLabel("Max number of passengers in class 1:");
+        class1Label = new JLabel("Max number of passengers in class 1:");
         class1Label.setFont(FORM_LABEL_FONT);
+        class1Label.setVisible(false);
 
-        JLabel class2Label = new JLabel("Max number of passengers in class 2:");
+        class2Label = new JLabel("Max number of passengers in class 2:");
         class2Label.setFont(FORM_LABEL_FONT);
+        class2Label.setVisible(false);
 
-        JLabel class3Label = new JLabel("Max number of passengers in class 3:");
+        class3Label = new JLabel("Max number of passengers in class 3:");
         class3Label.setFont(FORM_LABEL_FONT);
+        class3Label.setVisible(false);
 
-        JLabel class4Label = new JLabel("Max number of passengers in class 4:");
+        class4Label = new JLabel("Max number of passengers in class 4:");
         class4Label.setFont(FORM_LABEL_FONT);
+        class4Label.setVisible(false);
 
-        JLabel class5Label = new JLabel("Max number of passengers in class 5:");
+        class5Label = new JLabel("Max number of passengers in class 5:");
         class5Label.setFont(FORM_LABEL_FONT);
+        class5Label.setVisible(false);
 
         txtClass1 = new JTextField();
         txtClass1.setPreferredSize(new Dimension(60, 25));
-        txtClass1.setEditable(false);
+        txtClass1.setVisible(false);
 
         txtClass2 = new JTextField();
         txtClass2.setPreferredSize(new Dimension(60, 25));
-        txtClass2.setEditable(false);
+        txtClass2.setVisible(false);
 
         txtClass3 = new JTextField();
         txtClass3.setPreferredSize(new Dimension(60, 25));
-        txtClass3.setEditable(false);
+        txtClass3.setVisible(false);
 
         txtClass4 = new JTextField();
         txtClass4.setPreferredSize(new Dimension(60, 25));
-        txtClass4.setEditable(false);
+        txtClass4.setVisible(false);
 
         txtClass5 = new JTextField();
         txtClass5.setPreferredSize(new Dimension(60, 25));
-        txtClass5.setEditable(false);
+        txtClass5.setVisible(false);
 
-        //used to set the boxes enabled or disabled
-        listClasses.add(txtClass1);
-        listClasses.add(txtClass2);
-        listClasses.add(txtClass3);
-        listClasses.add(txtClass4);
-        listClasses.add(txtClass5);
+        //used to set the boxes visible or not
+        listClassTxt.add(txtClass1);
+        listClassTxt.add(txtClass2);
+        listClassTxt.add(txtClass3);
+        listClassTxt.add(txtClass4);
+        listClassTxt.add(txtClass5);
+
+        //used to set the labels visible or not
+        listClassLabels.add(class1Label);
+        listClassLabels.add(class2Label);
+        listClassLabels.add(class3Label);
+        listClassLabels.add(class4Label);
+        listClassLabels.add(class5Label);
 
         JLabel maxCrewLabel = new JLabel("Max Crew Elements:");
         maxCrewLabel.setFont(FORM_LABEL_FONT);
@@ -644,9 +664,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         JComboBox<Airport> originAirportComboBox = new JComboBox<>();
         originAirportComboBox.setPreferredSize(new Dimension(420, 25));
         //populate origin airport combobox
-        for (Airport airport : project.getAirportsRegister().getAirports()) {
-            originAirportComboBox.addItem(airport);
-        }
+//        for (Airport airport : project.getAirportsRegister().getAirports()) {
+//            originAirportComboBox.addItem(airport);
+//        }
         originAirportComboBox.setRenderer(new ListCellRendererAirport());
         originAirportComboBox.addActionListener(new ActionListener() {
             @Override
@@ -661,9 +681,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         JComboBox<Airport> destinationAirportComboBox = new JComboBox<>();
         destinationAirportComboBox.setPreferredSize(new Dimension(420, 25));
         //populate destination airport combobox
-        for (Airport airport : project.getAirportsRegister().getAirports()) {
-            destinationAirportComboBox.addItem(airport);
-        }
+//        for (Airport airport : project.getAirportsRegister().getAirports()) {
+//            destinationAirportComboBox.addItem(airport);
+//        }
         destinationAirportComboBox.setRenderer(new ListCellRendererAirport());
         destinationAirportComboBox.addActionListener(new ActionListener() {
             @Override
@@ -849,7 +869,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
                     int i;
                     numClasses = Integer.parseInt(txtNumClasses.getText());
                     for (i = 0; i < numClasses; i++) {
-                        listClasses.get(i).setEditable(false);
+                        listClassLabels.get(i).setVisible(false);
+                        listClassTxt.get(i).setVisible(false);
                     }
                     break;
                 case 2:
@@ -890,7 +911,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
                         }
                         int i;
                         for (i = 0; i < numClasses; i++) {
-                            listClasses.get(i).setEditable(true);
+                            listClassLabels.get(i).setVisible(true);
+                            listClassTxt.get(i).setVisible(true);
                         }
                     } catch (IllegalArgumentException ex) {
                         JOptionPane.showMessageDialog(

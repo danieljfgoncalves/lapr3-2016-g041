@@ -126,9 +126,9 @@ public class SelectTechStopsDialog extends JDialog {
         JComboBox<Airport> techStopComboBox = new JComboBox<>();
         techStopComboBox.setPreferredSize(new Dimension(420, 25));
         //populate origin airport combobox
-        for (Airport airport : project.getAirportsRegister().getAirports()) {
-            techStopComboBox.addItem(airport);
-        }
+//        for (Airport airport : project.getAirportsRegister().getAirports()) {
+//            techStopComboBox.addItem(airport);
+//        }
         techStopComboBox.setRenderer(new ListCellRendererAirport());
         techStopComboBox.addActionListener(new ActionListener() {
             @Override
