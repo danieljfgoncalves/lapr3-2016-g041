@@ -64,13 +64,6 @@ public class Project implements Comparable<Project> {
      */
     private static Integer counter = 1;
 
-    public Project(int serieNumber, String name, String description) {
-        this.serieNumber = serieNumber;
-        this.name = name;
-        this.description = description;
-        counter++;
-    }
-
     /**
      * Creates an instance of project with its default values
      */
@@ -82,26 +75,6 @@ public class Project implements Comparable<Project> {
         this.airportsRegister = new AirportsRegister();
         this.aircraftModelsRegister = new AircraftModelsRegister();
         this.simulations = new Simulation();
-    }
-
-    /**
-     * Creates a project receiving its name and description.
-     *
-     * @param name project the given project's name
-     * @param description the given project's description
-     * @param airNetwork the given air network
-     * @param airports the given airport list
-     * @param aircraftModelsRegister the given aircraft models register
-     * @param simulations the given simulations
-     */
-    public Project(String name, String description, AirNetwork airNetwork, AirportsRegister airports, AircraftModelsRegister aircraftModelsRegister, Simulation simulations) {
-        this.serieNumber = counter++;
-        this.name = name;
-        this.description = description;
-        this.airNetwork = airNetwork;
-        this.airportsRegister = airports;
-        this.aircraftModelsRegister = aircraftModelsRegister;
-        this.simulations = simulations;
     }
 
     /**
@@ -122,24 +95,17 @@ public class Project implements Comparable<Project> {
     }
 
     /**
-     * Creates an instance of project receiving it's attributes
+     * Creates a project receiving their attributes.
      *
-     * @param name the name of the project
-     * @param description the description of the project
-     * @param serieNumber the serie number of the project
-     * @param airNetwork the air network of the project
-     * @param airports the airports of the project
-     * @param aircraftModelsRegister the aircraft models register of the project
-     * @param simulations the simulations of the project
+     * @param serieNumber serie number
+     * @param name name
+     * @param description descriptions
      */
-    public Project(String name, String description, int serieNumber, AirNetwork airNetwork, AirportsRegister airports, AircraftModelsRegister aircraftModelsRegister, Simulation simulations) {
+    public Project(int serieNumber, String name, String description) {
         this.serieNumber = serieNumber;
         this.name = name;
         this.description = description;
-        this.airNetwork = airNetwork;
-        this.airportsRegister = airports;
-        this.aircraftModelsRegister = aircraftModelsRegister;
-        this.simulations = simulations;
+        counter++;
     }
 
     /**
