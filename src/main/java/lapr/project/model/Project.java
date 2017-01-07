@@ -1,5 +1,5 @@
-/*
- * Package location for Project concept
+/**
+ * Package location for Model concepts.
  */
 package lapr.project.model;
 
