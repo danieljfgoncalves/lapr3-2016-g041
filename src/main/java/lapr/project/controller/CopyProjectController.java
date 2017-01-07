@@ -35,7 +35,7 @@ public class CopyProjectController {
      */
     public CopyProjectController(FlightSimulator flightSimulator, Project project) {
         this.flightSimulator = flightSimulator;
-        projectCopy = new Project(project);
+        projectCopy = new Project();
     }
 
     /**
@@ -48,7 +48,7 @@ public class CopyProjectController {
      * @throws java.sql.SQLException
      */
     public boolean setCopyProjectData(String name, String description) throws SQLException {
-        if (projectCopy.validateName() && !flightSimulator.validateProjectName(name)) {
+        if (projectCopy.validateName() && flightSimulator.validateProjectName(name)) {
             projectCopy.setName(name);
             projectCopy.setDescription(description);
             return true;
