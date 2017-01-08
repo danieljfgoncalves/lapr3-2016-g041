@@ -3,6 +3,7 @@
  */
 package lapr.project.model;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import lapr.project.datalayer.DbConnection;
+import oracle.jdbc.OracleTypes;
 
 /**
  * Represents the simulator to store projects and make the simulations.
@@ -114,6 +116,51 @@ public class FlightSimulator {
         try (Connection connection = DbConnection.getConnection();
                 Statement statement = connection.createStatement();) {
             statement.executeUpdate(query);
+        }
+    }
+
+    /**
+     * Creates an empty project, returning the project.
+     *
+     * @return created project
+     * @throws java.sql.SQLException
+     */
+    public Project createEmptyProject() throws SQLException {
+        String query = "{call PC_CREATE_EMPTY_PROJECT (?, ?, ?)}";
+
+        try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.registerOutParameter(1, OracleTypes.INTEGER);
+            callableStatement.registerOutParameter(2, OracleTypes.VARCHAR);
+            callableStatement.registerOutParameter(3, OracleTypes.VARCHAR);
+
+            callableStatement.executeUpdate();
+
+            int serieNumber = callableStatement.getInt(1);
+            String name = callableStatement.getString(2);
+            String description = callableStatement.getString(3);
+
+            return new Project(serieNumber, name, description);
+        }
+    }
+    
+    /**
+     * Deletes a given project.
+     * 
+     * @param serieNumber serie number of the project to delete
+     * @throws java.sql.SQLException
+     */
+    public void deleteProject(int serieNumber) throws SQLException {
+        String query = "{call PC_DELETE_PROJECT (?)}";
+
+        try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.registerOutParameter(1, OracleTypes.INTEGER);
+            callableStatement.registerOutParameter(2, OracleTypes.VARCHAR);
+            callableStatement.registerOutParameter(3, OracleTypes.VARCHAR);
+
+            callableStatement.setDouble(1, serieNumber);
+            callableStatement.executeUpdate();
         }
     }
 }
