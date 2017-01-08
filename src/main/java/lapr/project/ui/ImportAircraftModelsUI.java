@@ -4,6 +4,7 @@
 package lapr.project.ui;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.controller.ImportAircraftModelsController;
@@ -59,6 +60,12 @@ public class ImportAircraftModelsUI extends ImportFileChooser {
                     String.format("Invalid File!%nPlease select a different file.%n(Error:%s)", ex.getMessage()),
                     "Invalid file",
                     JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "There was an error trying to read data from database.",
+                    "Data Error",
+                    JOptionPane.WARNING_MESSAGE);
         }
     }
 
