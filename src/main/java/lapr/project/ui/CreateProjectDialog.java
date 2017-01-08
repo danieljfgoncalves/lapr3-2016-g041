@@ -40,9 +40,14 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
     private final T parentWindow;
 
     /**
+     * The flight simulator.
+     */
+    private final FlightSimulator flightSimulator;
+
+    /**
      * The controller to create project.
      */
-    private final CreateProjectController controller;
+    private CreateProjectController controller;
 
     /**
      * The name text field;
@@ -87,17 +92,27 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
      */
     public CreateProjectDialog(T parentWindow, FlightSimulator simulator) {
         super(parentWindow, WINDOW_TITLE);
-        setModal(true);
-
         this.parentWindow = parentWindow;
-        this.controller = new CreateProjectController(simulator);
+        this.flightSimulator = simulator;
 
-        createComponents();
-        createWindowClosingListener();
+        try {
+            setModal(true);
 
-        pack();
-        setMinimumSize(new Dimension(getWidth(), getHeight()));
-        setLocationRelativeTo(parentWindow);
+            this.controller = new CreateProjectController(simulator);
+
+            createComponents();
+            createWindowClosingListener();
+
+            pack();
+            setMinimumSize(new Dimension(getWidth(), getHeight()));
+            setLocationRelativeTo(parentWindow);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "There was an error on database.",
+                    "Data Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     /**
@@ -264,8 +279,17 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
-                dispose();
-                parentWindow.setVisible(true);
+                try {
+                    flightSimulator.deleteProject(controller.getCreatedProject().getSerieNumber());
+                    dispose();
+                    parentWindow.setVisible(true);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "There was an error trying to read data from database.",
+                            "Data Error",
+                            JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
     }

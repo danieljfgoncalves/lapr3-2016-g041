@@ -167,15 +167,15 @@ public class Import {
                 double e = Double.parseDouble(aircraftElement.getElementsByTagName("e").item(0).getTextContent());
 
                 // TODO test this
-                addAircraftModelToDatabase(projectSerieNumber, modelID, description, 
-                        maker, type, motor, numberOfMotors, motorType, 
-                        Amount.valueOf(cruiseAltitudeValue, cruiseAltitudeUnit).doubleValue(SI.METER), 
-                        Amount.valueOf(cruiseSpeedValue, cruiseSpeedUnit).doubleValue(SI.METERS_PER_SECOND), 
+                addAircraftModelToDatabase(projectSerieNumber, modelID, description,
+                        maker, type, motor, numberOfMotors, motorType,
+                        Amount.valueOf(cruiseAltitudeValue, cruiseAltitudeUnit).doubleValue(SI.METER),
+                        Amount.valueOf(cruiseSpeedValue, cruiseSpeedUnit).doubleValue(SI.METERS_PER_SECOND),
                         Amount.valueOf(tsfcValue, tsfcUnit).doubleValue(CustomUnits.TSFC_SI),
                         lapseRateFactor,
-                        Amount.valueOf(thrust0Value, thrust0Unit).doubleValue(SI.NEWTON), 
+                        Amount.valueOf(thrust0Value, thrust0Unit).doubleValue(SI.NEWTON),
                         Amount.valueOf(thrustMaxSpeedValue, thrustMaxSpeedUnit).doubleValue(SI.NEWTON),
-                        Amount.valueOf(maxSpeedValue, maxSpeedUnit).doubleValue(SI.METERS_PER_SECOND), 
+                        Amount.valueOf(maxSpeedValue, maxSpeedUnit).doubleValue(SI.METERS_PER_SECOND),
                         Amount.valueOf(emptyWeightValue, emptyWeightUnit).doubleValue(SI.KILOGRAM),
                         Amount.valueOf(mtowValue, mtowUnit).doubleValue(SI.KILOGRAM),
                         Amount.valueOf(maxPayloadValue, maxPayloadUnit).doubleValue(SI.KILOGRAM),
@@ -202,7 +202,9 @@ public class Import {
                         cdragFunction[j][1] = Double.parseDouble(cdragFunctionElement.getElementsByTagName("Cdrag_0").item(0).getTextContent());
 
                         // TODO test this
-                        addCdragFunctionToDatabase(cdragFunction[j][0], cdragFunction[j][1], modelID);
+                        addCdragFunctionToDatabase(
+                                Amount.valueOf(cdragFunction[j][0], NonSI.MACH).doubleValue(SI.METERS_PER_SECOND),
+                                cdragFunction[j][1], modelID);
                     }
                 }
             }

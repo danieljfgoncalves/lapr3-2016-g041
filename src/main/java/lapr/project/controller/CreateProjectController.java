@@ -20,7 +20,7 @@ public class CreateProjectController {
     /**
      * The simulator.
      */
-    private final FlightSimulator simulator;
+    private final FlightSimulator flightSimulator;
 
     /**
      * The created project.
@@ -30,11 +30,12 @@ public class CreateProjectController {
     /**
      * Creates an instance of the controller.
      *
-     * @param simulator the simulator
+     * @param flightSimulator the simulator
+     * @throws java.sql.SQLException
      */
-    public CreateProjectController(FlightSimulator simulator) {
-        this.simulator = simulator;
-        this.createdProject = new Project();
+    public CreateProjectController(FlightSimulator flightSimulator) throws SQLException {
+        this.flightSimulator = flightSimulator;
+        this.createdProject = flightSimulator.createEmptyProject();
     }
 
     /**
@@ -50,7 +51,7 @@ public class CreateProjectController {
         createdProject.setName(name);
         createdProject.setDescription(description);
 
-        return createdProject.validateName() && simulator.validateProjectName(name) ? simulator.addProject(createdProject) : false;
+        return createdProject.validateName() && flightSimulator.validateProjectName(name) ? flightSimulator.addProject(createdProject) : false;
     }
 
     /**
