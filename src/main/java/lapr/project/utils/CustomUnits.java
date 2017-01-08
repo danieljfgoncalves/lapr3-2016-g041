@@ -4,8 +4,6 @@
 package lapr.project.utils;
 
 import javax.measure.quantity.Area;
-import javax.measure.quantity.Power;
-import javax.measure.quantity.Quantity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
@@ -16,7 +14,6 @@ import javax.measure.unit.Unit;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class CustomUnits {
@@ -35,5 +32,20 @@ public class CustomUnits {
      * Square Foot unit (ft2)
      */
     public static final Unit<Area> SQUARE_FOOT = NonSI.FOOT.pow(2).asType(Area.class);
+    
+    /**
+     * Temperature lapse rate unit (K/m) 
+     */
+    public static final Unit TEMP_GRADIENT_SI = SI.KELVIN.divide(SI.METER);
+    
+    /**
+     * Volumetric density (Kg/m3)
+     */
+    public static final Unit VOLUMETRIC_DENSITY_SI = SI.KILOGRAM.divide(SI.METER.pow(3));
+    
+    /**
+     * Pressure (N/m2)
+     */
+    public static final Unit PRESSURE_SI = SI.NEWTON.divide(SI.SQUARE_METRE);
 
 }
