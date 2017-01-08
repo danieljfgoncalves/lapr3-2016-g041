@@ -33,21 +33,23 @@ public class FlightSimulator {
     public List<Project> getProjects() throws SQLException {
         ArrayList<Project> projects = new ArrayList<>();
 
-        String query = "SELECT * FROM PROJECT";
+        String query = "{?= call FC_GET_PROJECTS}";
 
-        // try with resorces auto-close the object
         try (Connection connection = DbConnection.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(query)) {
+                CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            while (resultSet.next()) {
-                int serieNumber = resultSet.getInt("ID_PROJECT");
-                String name = resultSet.getString("NAME");
-                String description = resultSet.getString("DESCRIPTION");
+            callableStatement.registerOutParameter(1, OracleTypes.CURSOR);
+            callableStatement.executeUpdate();
 
-                projects.add(new Project(serieNumber, name, description));
+            try (ResultSet resultSet = (ResultSet) callableStatement.getObject(1)) {
+                while (resultSet.next()) {
+                    int serieNumber = resultSet.getInt(1);
+                    String name = resultSet.getString(2);
+                    String description = resultSet.getString(3);
+
+                    projects.add(new Project(serieNumber, name, description));
+                }
             }
-
         }
 
         return projects;
@@ -143,10 +145,10 @@ public class FlightSimulator {
             return new Project(serieNumber, name, description);
         }
     }
-    
+
     /**
      * Deletes a given project.
-     * 
+     *
      * @param serieNumber serie number of the project to delete
      * @throws java.sql.SQLException
      */
@@ -154,10 +156,6 @@ public class FlightSimulator {
         String query = "{call PC_DELETE_PROJECT (?)}";
 
         try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
-
-            callableStatement.registerOutParameter(1, OracleTypes.INTEGER);
-            callableStatement.registerOutParameter(2, OracleTypes.VARCHAR);
-            callableStatement.registerOutParameter(3, OracleTypes.VARCHAR);
 
             callableStatement.setDouble(1, serieNumber);
             callableStatement.executeUpdate();
