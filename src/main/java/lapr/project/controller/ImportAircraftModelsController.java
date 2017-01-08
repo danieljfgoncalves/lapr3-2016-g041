@@ -44,7 +44,7 @@ public class ImportAircraftModelsController {
      * @throws ParserConfigurationException configurations errors
      */
     public boolean importFile(File file) throws SAXException, IOException, ParserConfigurationException {
-        return Import.importAircraftModelsFromXml(file);
+        return Import.importAircraftModelsFromXml(file, project.getSerieNumber());
     }
 
 }

@@ -5,12 +5,16 @@ package lapr.project.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import lapr.project.datalayer.DbConnection;
 import lapr.project.model.AircraftType;
 import lapr.project.model.MotorType;
 import org.w3c.dom.Document;
@@ -33,12 +37,14 @@ public class Import {
      * Imports the aircraft models from xml, saving them on database.
      *
      * @param xmlFile XML file with the aircraft models
+     * @param projectSerieNumber the project serie number (id_project)
      * @return true if it is successfully imported, false otherwise
      * @throws org.xml.sax.SAXException
      * @throws java.io.IOException
      * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws java.sql.SQLException
      */
-    public static boolean importAircraftModelsFromXml(File xmlFile) throws SAXException, IOException, ParserConfigurationException {
+    public static boolean importAircraftModelsFromXml(File xmlFile, int projectSerieNumber) throws SAXException, IOException, ParserConfigurationException, SQLException {
 
         // set up dom
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -159,6 +165,8 @@ public class Import {
 
                 double e = Double.parseDouble(aircraftElement.getElementsByTagName("e").item(0).getTextContent());
 
+                // TODO addAircraftModelToDatabase(parameters);
+
                 // set up cdrag function
                 double[][] cdragFunction; //first column is speed in mack, second column is cdrag0
                 NodeList cdragFunctionNodeList = aircraftElement.getElementsByTagName("iten");
@@ -173,10 +181,11 @@ public class Import {
                         String speedContentor = cdragFunctionElement.getElementsByTagName("speed").item(0).getTextContent();
                         cdragFunction[j][0] = Regex.getValue(speedContentor);
                         cdragFunction[j][1] = Double.parseDouble(cdragFunctionElement.getElementsByTagName("Cdrag_0").item(0).getTextContent());
+
+                        // TODO test this
+                        addCdragFunctionToDatabase(cdragFunction[j][0], cdragFunction[j][1], modelID);
                     }
                 }
-
-                // TODO add to database
             }
         }
 
@@ -203,5 +212,74 @@ public class Import {
     public static boolean importAirNetworkFromXml(File xmlFile) {
         // TODO implement this
         return true;
+    }
+
+    /**
+     * Adds the aircraft model to database.
+     */
+    private static void addAircraftModelToDatabase(
+            int idProject, String idAircraftModel, String description,
+            String maker, AircraftType aircraftType, String motor,
+            int numberMotors, MotorType motorType, double cruiseAltitude,
+            double cruiseSpeed, double tsfc, double lapseRateFactor,
+            double thrust0, double thrustMaxSped, double maxSpeed,
+            double emptyWeight, double mtow, double maxPayLoad,
+            double fuelCapacity, double vmo, double mmo,
+            double wingArea, double wingSpan, double aspectRatio,
+            double e
+    ) throws SQLException {
+        String query = "{call PC_CREATE_AIRCRAFT_MODEL "
+                + "(?, ?, ?, ?, ?,"
+                + " ?, ?, ?, ?, ?,"
+                + " ?, ?, ?, ?, ?,"
+                + " ?, ?, ?, ?, ?,"
+                + " ?, ?, ?, ?, ?)}";
+
+        try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.setDouble(1, idProject);
+            callableStatement.setString(2, idAircraftModel);
+            callableStatement.setString(3, description);
+            callableStatement.setString(4, maker);
+            callableStatement.setString(5, aircraftType.equals(AircraftType.PASSENGER)
+                    ? "Passenger" : aircraftType.equals(AircraftType.CARGO) ? "Cargo" : "Mixed");
+            callableStatement.setString(6, motor);
+            callableStatement.setDouble(7, numberMotors);
+            callableStatement.setString(8, motorType.equals(MotorType.TURBOFAN)
+                    ? "Turbofan" : motorType.equals(MotorType.TURBOJET) ? "Turbojet" : "Turboprop");
+            callableStatement.setDouble(9, cruiseAltitude);
+            callableStatement.setDouble(10, cruiseSpeed);
+            callableStatement.setDouble(11, tsfc);
+            callableStatement.setDouble(12, lapseRateFactor);
+            callableStatement.setDouble(13, thrust0);
+            callableStatement.setDouble(14, thrustMaxSped);
+            callableStatement.setDouble(15, maxSpeed);
+            callableStatement.setDouble(16, emptyWeight);
+            callableStatement.setDouble(17, mtow);
+            callableStatement.setDouble(18, maxPayLoad);
+            callableStatement.setDouble(19, fuelCapacity);
+            callableStatement.setDouble(20, vmo);
+            callableStatement.setDouble(21, mmo);
+            callableStatement.setDouble(22, wingArea);
+            callableStatement.setDouble(23, wingSpan);
+            callableStatement.setDouble(24, aspectRatio);
+            callableStatement.setDouble(25, e);
+            callableStatement.executeUpdate();
+        }
+    }
+
+    /**
+     * Adds a cdrag function to database.
+     */
+    private static void addCdragFunctionToDatabase(double cdrag0, double speed, String idAircraftModel) throws SQLException {
+        String query = "{call PC_CREATE_CDRAG_FUNCTION (?, ?, ?)}";
+
+        try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.setDouble(1, cdrag0);
+            callableStatement.setDouble(2, speed);
+            callableStatement.setString(3, idAircraftModel);
+            callableStatement.executeUpdate();
+        }
     }
 }
