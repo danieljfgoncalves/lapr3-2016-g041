@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import lapr.project.datalayer.DbConnection;
@@ -112,12 +111,15 @@ public class FlightSimulator {
      * @throws SQLException database error
      */
     public void updateProjectNameAndDescription(Project project) throws SQLException {
-        String query = String.format("UPDATE PROJECT SET NAME = '%s', DESCRIPTION = '%s' WHERE ID_PROJECT = %d",
-                project.getName(), project.getDescription(), project.getSerieNumber());
+        String query = "{call PC_EDIT_PROJECT_N_D (?, ?, ?)}";
 
-        try (Connection connection = DbConnection.getConnection();
-                Statement statement = connection.createStatement();) {
-            statement.executeUpdate(query);
+        try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.setDouble(1, project.getSerieNumber());
+            callableStatement.setString(2, project.getName());
+            callableStatement.setString(3, project.getDescription());
+
+            callableStatement.executeUpdate();
         }
     }
 
