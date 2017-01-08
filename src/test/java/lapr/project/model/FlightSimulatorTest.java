@@ -41,28 +41,4 @@ public class FlightSimulatorTest {
 
         assertEquals(expResult, result);
     }
-
-    /**
-     * Test of validateProject method, of class FlightSimulator.
-     */
-    @Test
-    public void testValidateProject() {
-        System.out.println("validateProject");
-
-        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
-
-        assertTrue(instance.validateProject(project));
-    }
-
-    /**
-     * Test of addProject method, of class FlightSimulator.
-     */
-    @Test
-    public void testAddProject() {
-        System.out.println("addProject");
-
-        Project project = new Project("Fly Safe", "The safest routes in a nutshell");
-
-        assertTrue(instance.addProject(project));
-    }
 }

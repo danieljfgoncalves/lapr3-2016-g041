@@ -4,7 +4,6 @@
 package lapr.project.controller;
 
 import lapr.project.model.Project;
-import lapr.project.model.FlightSimulator;
 
 /**
  * Controller responsible for opening projects
@@ -12,28 +11,17 @@ import lapr.project.model.FlightSimulator;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class OpenProjectController {
-    
+
     /**
-     * The flight simulator.
+     * Validates if the project to open is valid.
+     *
+     * @param project project to open and validate
+     * @return true if the project is valid, false otherwise
      */
-    FlightSimulator simulator;
-    
-    /**
-     * The project to open.
-     */
-    private Project project;
-    
-    /**
-     * Creates an instance of open project controller.
-     * 
-     * @param simulator the flight simulator
-     */
-    public OpenProjectController(FlightSimulator simulator){
-      this.simulator = simulator;        
+    public boolean validateProject(Project project) {
+        return project.validateName();
     }
 }
-

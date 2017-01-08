@@ -4,6 +4,7 @@
 package lapr.project.model;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,17 +63,6 @@ public class FlightSimulator {
     }
 
     /**
-     * Validates a given project.
-     *
-     * @param project project to be validated
-     * @return true if it is valid, false otherwise
-     */
-    public boolean validateProject(Project project) {
-        // TODO
-        return project.validateName();
-    }
-
-    /**
      * Checks if the projects exists.
      *
      * @param name project's name to validate
@@ -96,12 +86,27 @@ public class FlightSimulator {
      *
      * @param project project to add
      * @return true if it is successfully added, false otherwise
+     * @throws java.sql.SQLException database error
      */
-    public boolean addProject(Project project) {
-        // TODO
+    public boolean addProject(Project project) throws SQLException {
+        String query = "INSERT INTO PROJECT (NAME, DESCRIPTION) VALUES (?, ?)";
+
+        try (Connection connection = DbConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, project.getName());
+            preparedStatement.setString(2, project.getDescription());
+            preparedStatement.executeUpdate();
+
+        }
+
         return true;
     }
 
+    /**
+     * Updates a given project.
+     *
+     * @param project project to update
+     * @throws SQLException database error
+     */
     public void updateProjectNameAndDescription(Project project) throws SQLException {
         String query = String.format("UPDATE PROJECT SET NAME = '%s', DESCRIPTION = '%s' WHERE ID_PROJECT = %d",
                 project.getName(), project.getDescription(), project.getSerieNumber());

@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -79,6 +78,16 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private JTable simulationsTable;
 
     /**
+     * Create flight info button.
+     */
+    private JButton createFlightInfoButton;
+
+    /**
+     * Create Simulation button.
+     */
+    private JButton createSimulationButton;
+
+    /**
      * Creates an instance of the main frame.
      *
      * @param simulator the simulator
@@ -134,10 +143,10 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private JPanel projectInfoPanel() {
         JPanel projectInfoPanel = new JPanel(new BorderLayout());
 
-        projectTitleLabel = new JLabel("Project Name Placeholder", SwingConstants.CENTER);
+        projectTitleLabel = new JLabel("", SwingConstants.CENTER);
         projectTitleLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        projectDescriptionLabel = new JLabel("Project Description Placeholder", SwingConstants.CENTER);
+        projectDescriptionLabel = new JLabel("", SwingConstants.CENTER);
         projectDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
         projectInfoPanel.add(projectTitleLabel, BorderLayout.NORTH);
@@ -168,6 +177,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         scrollPane.setBorder(PADDING_BORDER);
 
         tablePanel.add(scrollPane);
+        simulationsTable.setVisible(false);
 
         return tablePanel;
     }
@@ -184,25 +194,42 @@ public class MainFrame extends JFrame implements ProjectHandler {
         openSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         openSimulationButton.setEnabled(false);
 
-        JButton createSimulationButton = new JButton("New Simulation");
+        createFlightInfoButton = new JButton("New Flight Info");
+        createFlightInfoButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        createFlightInfoButton.setEnabled(false);
+
+        createSimulationButton = new JButton("New Simulation");
         createSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        createSimulationButton.setEnabled(false);
 
         buttonsPanel.add(openSimulationButton);
+        buttonsPanel.add(createFlightInfoButton);
         buttonsPanel.add(createSimulationButton);
 
         return buttonsPanel;
     }
 
+    /**
+     * Activate a given project.
+     *
+     * @param project project to activate
+     */
     @Override
     public void activateProject(Project project) {
         this.activeProject = project;
         refreshProject();
     }
 
+    /**
+     * Refresh the main frame fields.
+     */
     private void refreshProject() {
-        Collections.sort(activeProject.getSimulations().getFlights());
-        simulationsTable.setModel(new TableModelFlight(activeProject.getSimulations().getFlights()));
+        //Collections.sort(activeProject.getSimulations().getFlights());
+        //simulationsTable.setModel(new TableModelFlight(activeProject.getSimulations().getFlights()));
         this.projectTitleLabel.setText(activeProject.getName());
         this.projectDescriptionLabel.setText(activeProject.getDescription());
+        this.simulationsTable.setVisible(true);
+        createFlightInfoButton.setEnabled(true);
+        createSimulationButton.setEnabled(true);
     }
 }

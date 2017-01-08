@@ -125,9 +125,9 @@ public class SelectWaypointDialog extends JDialog {
         JComboBox<Coordinate> waypointsComboBox = new JComboBox<>();
         waypointsComboBox.setPreferredSize(new Dimension(350, 25));
         //populate origin airport combobox
-        for (Coordinate coordinate : project.getAirNetwork().getNetwork().vertices()) {
-            waypointsComboBox.addItem(coordinate);
-        }
+//        for (Coordinate coordinate : project.getAirNetwork().getNetwork().vertices()) {
+//            waypointsComboBox.addItem(coordinate);
+//        }
 //        waypointsComboBox.setRenderer(//TODO);
         waypointsComboBox.addActionListener(new ActionListener() {
             @Override
