@@ -43,7 +43,6 @@ public class CreateProjectController {
      *
      * @param name project's name
      * @param description project's description
-     * @return true if the project is successfully added, false otherwise
      * @throws java.sql.SQLException database error
      */
     public boolean newProject(String name, String description) throws SQLException {
@@ -51,7 +50,11 @@ public class CreateProjectController {
         createdProject.setName(name);
         createdProject.setDescription(description);
 
-        return createdProject.validateName() && flightSimulator.validateProjectName(name) ? flightSimulator.addProject(createdProject) : false;
+        if (createdProject.validateName() && flightSimulator.validateProjectName(name)) {
+            flightSimulator.updateProjectNameAndDescription(createdProject);
+            return true;
+        }
+        return false;
     }
 
     /**
