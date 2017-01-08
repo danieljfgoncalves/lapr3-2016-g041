@@ -5,6 +5,7 @@ package lapr.project.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.model.Project;
 import lapr.project.utils.Import;
@@ -42,8 +43,9 @@ public class ImportAircraftModelsController {
      * @throws SAXException parser error
      * @throws IOException invalid file or path
      * @throws ParserConfigurationException configurations errors
+     * @throws java.sql.SQLException
      */
-    public boolean importFile(File file) throws SAXException, IOException, ParserConfigurationException {
+    public boolean importFile(File file) throws SAXException, IOException, ParserConfigurationException, SQLException {
         return Import.importAircraftModelsFromXml(file, project.getSerieNumber());
     }
 

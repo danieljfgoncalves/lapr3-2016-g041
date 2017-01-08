@@ -17,6 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.datalayer.DbConnection;
 import lapr.project.model.AircraftType;
 import lapr.project.model.MotorType;
+import org.jscience.physics.amount.Amount;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -165,7 +166,25 @@ public class Import {
 
                 double e = Double.parseDouble(aircraftElement.getElementsByTagName("e").item(0).getTextContent());
 
-                // TODO addAircraftModelToDatabase(parameters);
+                // TODO test this
+                addAircraftModelToDatabase(projectSerieNumber, modelID, description, 
+                        maker, type, motor, numberOfMotors, motorType, 
+                        Amount.valueOf(cruiseAltitudeValue, cruiseAltitudeUnit).doubleValue(SI.METER), 
+                        Amount.valueOf(cruiseSpeedValue, cruiseSpeedUnit).doubleValue(SI.METERS_PER_SECOND), 
+                        Amount.valueOf(tsfcValue, tsfcUnit).doubleValue(CustomUnits.TSFC_SI),
+                        lapseRateFactor,
+                        Amount.valueOf(thrust0Value, thrust0Unit).doubleValue(SI.NEWTON), 
+                        Amount.valueOf(thrustMaxSpeedValue, thrustMaxSpeedUnit).doubleValue(SI.NEWTON),
+                        Amount.valueOf(maxSpeedValue, maxSpeedUnit).doubleValue(SI.METERS_PER_SECOND), 
+                        Amount.valueOf(emptyWeightValue, emptyWeightUnit).doubleValue(SI.KILOGRAM),
+                        Amount.valueOf(mtowValue, mtowUnit).doubleValue(SI.KILOGRAM),
+                        Amount.valueOf(maxPayloadValue, maxPayloadUnit).doubleValue(SI.KILOGRAM),
+                        Amount.valueOf(fuelCapacityValue, fuelCapacityUnit).doubleValue(SI.CUBIC_METRE),
+                        Amount.valueOf(vmoValue, vmoUnit).doubleValue(SI.METERS_PER_SECOND),
+                        Amount.valueOf(mmoValue, mmoUnit).doubleValue(SI.METERS_PER_SECOND),
+                        Amount.valueOf(wingAreaValue, wingAreaUnit).doubleValue(SI.SQUARE_METRE),
+                        Amount.valueOf(wingSpanValue, wingSpanUnit).doubleValue(SI.METER),
+                        aspectRatio, e);
 
                 // set up cdrag function
                 double[][] cdragFunction; //first column is speed in mack, second column is cdrag0
