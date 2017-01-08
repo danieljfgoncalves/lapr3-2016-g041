@@ -116,48 +116,48 @@ public class CalculusTest {
         assertFalse(Math.abs(expResult - result) < 0.1 /* Error Margin */);
     }
 
+//    /**
+//     * Test of getLiftForce method, of class Calculus.
+//     */
+//    @Test
+//    public void testGetLiftForce() {
+//        System.out.println("getLiftForce");
+//
+//        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
+//        Amount<Mass> mass = Amount.valueOf(372800, SI.KILOGRAM);
+//        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
+//        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+//        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+//        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+//
+//        Amount<Force> expResult = Amount.valueOf(3655919.12, SI.NEWTON);
+//        Amount<Force> result = Calculus.getLiftForce(altitude, mass, wingsArea, machNumber, windSpeed, angleRelativeToY);
+//
+//        assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
+//    }
+
+//    /**
+//     * Test of getLiftCoefficient method, of class Calculus.
+//     */
+//    @Test
+//    public void testGetLiftCoefficient() {
+//        System.out.println("getLiftCoefficient");
+//
+//        Amount<Length> altitude = Amount.valueOf(35000, NonSI.FOOT);
+//        Amount<Mass> mass = Amount.valueOf(372800, SI.KILOGRAM);
+//        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
+//        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+//        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+//        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+//
+//        Amount<Dimensionless> expResult = Amount.valueOf(0.5, Unit.ONE);
+//        Amount<Dimensionless> result = Calculus.getLiftCoefficient(altitude, mass, wingsArea, machNumber, windSpeed, angleRelativeToY);
+//
+//        assertEquals(expResult.doubleValue(Unit.ONE), result.doubleValue(Unit.ONE), EPSILON);
+//    }
+
     /**
-     * Test of getLiftForce method, of class Calculus.
-     */
-    @Test
-    public void testGetLiftForce() {
-        System.out.println("getLiftForce");
-
-        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
-        Amount<Mass> mass = Amount.valueOf(372800, SI.KILOGRAM);
-        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
-        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
-        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
-        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
-
-        Amount<Force> expResult = Amount.valueOf(3655919.12, SI.NEWTON);
-        Amount<Force> result = Calculus.getLiftForce(altitude, mass, wingsArea, machNumber, windSpeed, angleRelativeToY);
-
-        assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
-    }
-
-    /**
-     * Test of getLiftCoefficient method, of class Calculus.
-     */
-    @Test
-    public void testGetLiftCoefficient() {
-        System.out.println("getLiftCoefficient");
-
-        Amount<Length> altitude = Amount.valueOf(35000, NonSI.FOOT);
-        Amount<Mass> mass = Amount.valueOf(372800, SI.KILOGRAM);
-        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
-        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
-        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
-        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
-
-        Amount<Dimensionless> expResult = Amount.valueOf(0.5, Unit.ONE);
-        Amount<Dimensionless> result = Calculus.getLiftCoefficient(altitude, mass, wingsArea, machNumber, windSpeed, angleRelativeToY);
-
-        assertEquals(expResult.doubleValue(Unit.ONE), result.doubleValue(Unit.ONE), EPSILON);
-    }
-
-    /**
-     * Test 1 of getObjectSpeed method, of class Calculus.
+     * Test 1 of getTAS method, of class Calculus.
      */
     @Test
     public void testGetObjectSpeed1() {
@@ -167,7 +167,7 @@ public class CalculusTest {
         Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
 
         Amount<Velocity> expResult = Amount.valueOf(251.1, SI.METERS_PER_SECOND);
-        Amount<Velocity> result = Calculus.getObjectSpeed(altitude, machNumber);
+        Amount<Velocity> result = Calculus.getTAS(altitude, machNumber);
 
         assertEquals(expResult.doubleValue(SI.METERS_PER_SECOND), result.doubleValue(SI.METERS_PER_SECOND), EPSILON);
     }
@@ -189,7 +189,7 @@ public class CalculusTest {
     }
 
     /**
-     * Test 1 of getTAS method, of class Calculus.
+     * Test 1 of getGS method, of class Calculus.
      */
     @Test
     public void testGetTAS1() {
@@ -201,7 +201,7 @@ public class CalculusTest {
         Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
 
         Amount<Velocity> expResult = Amount.valueOf(261.75, SI.METERS_PER_SECOND);
-        Amount<Velocity> result = Calculus.getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
+        Amount<Velocity> result = Calculus.getGS(altitude, machNumber, windSpeed, angleRelativeToY);
 
         assertEquals(expResult.doubleValue(SI.METERS_PER_SECOND), result.doubleValue(SI.METERS_PER_SECOND), EPSILON);
     }
@@ -318,101 +318,101 @@ public class CalculusTest {
         assertTrue(expResult.approximates(result));
     }
 
-    /**
-     * Test of getDragCoefficient method, of class Calculus.
-     */
-    @Test
-    public void testGetDragCoefficient() {
-        System.out.println("getDragCoefficient");
+//    /**
+//     * Test of getDragCoefficient method, of class Calculus.
+//     */
+//    @Test
+//    public void testGetDragCoefficient() {
+//        System.out.println("getDragCoefficient");
+//
+//        Amount<Dimensionless> expResult = Amount.valueOf((0.035), Unit.ONE);
+//        Amount<Dimensionless> result = Calculus.getDragCoefficient(Amount.valueOf(10668.0, SI.METER),
+//                Amount.valueOf(372800, SI.KILOGRAM),
+//                Amount.valueOf(0.025, Unit.ONE),
+//                Amount.valueOf(64.8, SI.METER),
+//                Amount.valueOf(512, SI.SQUARE_METRE),
+//                Amount.valueOf(0.95, Unit.ONE),
+//                Amount.valueOf(0.85, NonSI.MACH),
+//                Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
+//                Amount.valueOf(15, NonSI.DEGREE_ANGLE));
+//
+//        assertEquals(expResult.doubleValue(Unit.ONE), result.doubleValue(Unit.ONE), 0.001d);
+//    }
 
-        Amount<Dimensionless> expResult = Amount.valueOf((0.035), Unit.ONE);
-        Amount<Dimensionless> result = Calculus.getDragCoefficient(Amount.valueOf(10668.0, SI.METER),
-                Amount.valueOf(372800, SI.KILOGRAM),
-                Amount.valueOf(0.025, Unit.ONE),
-                Amount.valueOf(64.8, SI.METER),
-                Amount.valueOf(512, SI.SQUARE_METRE),
-                Amount.valueOf(0.95, Unit.ONE),
-                Amount.valueOf(0.85, NonSI.MACH),
-                Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
-                Amount.valueOf(15, NonSI.DEGREE_ANGLE));
+//    /**
+//     * Test of getDragCoefficient method, of class Calculus.
+//     */
+//    @Test
+//    public void testGetDragForce() {
+//        System.out.println("testGetDragForce");
+//
+//        Amount<Force> expResult = Amount.valueOf((25058.4), SI.NEWTON);
+//        Amount<Force> result = Calculus.getDragForce(Amount.valueOf(10668.0, SI.METER),
+//                Amount.valueOf(372800, SI.KILOGRAM),
+//                Amount.valueOf(0.025, Unit.ONE),
+//                Amount.valueOf(64.8, SI.METER),
+//                Amount.valueOf(512, SI.SQUARE_METRE),
+//                Amount.valueOf(0.95, Unit.ONE),
+//                Amount.valueOf(50, SI.SQUARE_METRE),
+//                Amount.valueOf(0.85, NonSI.MACH),
+//                Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
+//                Amount.valueOf(15, NonSI.DEGREE_ANGLE));
+//
+//        assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
+//    }
 
-        assertEquals(expResult.doubleValue(Unit.ONE), result.doubleValue(Unit.ONE), 0.001d);
-    }
+//    /**
+//     * Test of getMaximumRange method, of class Calculus.
+//     */
+//    @Test
+//    public void testGetMaximumRange() {
+//        System.out.println("getMaximumRange");
+//
+//        Amount<Power> tsfc = Amount.valueOf(0.057, CustomUnits.TSFC_SI);
+//        Amount<Mass> initialWeight = Amount.valueOf(372800, SI.KILOGRAM);
+//        Amount<Mass> finalWeight = Amount.valueOf(272800, SI.KILOGRAM);
+//        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
+//        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+//        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+//        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+//        Amount<Dimensionless> dragCoefficient0 = Amount.valueOf(0.025, Unit.ONE);
+//        Amount<Length> wingSpan = Amount.valueOf(64.8, SI.METER);
+//        Amount<Dimensionless> e = Amount.valueOf(0.95, Unit.ONE);
+//        Amount<Area> referenceAircraftArea = Amount.valueOf(50, SI.SQUARE_METRE);
+//        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
+//
+//        Amount<Length> expResult = Amount.valueOf(209226.5, SI.KILOMETER);
+//        Amount<Length> result = Calculus.getMaximumRange(tsfc, initialWeight, finalWeight,
+//                altitude, machNumber, windSpeed, angleRelativeToY,
+//                dragCoefficient0, wingSpan, e, referenceAircraftArea, wingsArea);
+//        assertEquals(expResult.doubleValue(SI.KILOMETER), result.doubleValue(SI.KILOMETER), EPSILON);
+//    }
 
-    /**
-     * Test of getDragCoefficient method, of class Calculus.
-     */
-    @Test
-    public void testGetDragForce() {
-        System.out.println("testGetDragForce");
-
-        Amount<Force> expResult = Amount.valueOf((25058.4), SI.NEWTON);
-        Amount<Force> result = Calculus.getDragForce(Amount.valueOf(10668.0, SI.METER),
-                Amount.valueOf(372800, SI.KILOGRAM),
-                Amount.valueOf(0.025, Unit.ONE),
-                Amount.valueOf(64.8, SI.METER),
-                Amount.valueOf(512, SI.SQUARE_METRE),
-                Amount.valueOf(0.95, Unit.ONE),
-                Amount.valueOf(50, SI.SQUARE_METRE),
-                Amount.valueOf(0.85, NonSI.MACH),
-                Amount.valueOf(41.1556, SI.METERS_PER_SECOND),
-                Amount.valueOf(15, NonSI.DEGREE_ANGLE));
-
-        assertEquals(expResult.doubleValue(SI.NEWTON), result.doubleValue(SI.NEWTON), EPSILON);
-    }
-
-    /**
-     * Test of getMaximumRange method, of class Calculus.
-     */
-    @Test
-    public void testGetMaximumRange() {
-        System.out.println("getMaximumRange");
-
-        Amount<Power> tsfc = Amount.valueOf(0.057, CustomUnits.TSFC_SI);
-        Amount<Mass> initialWeight = Amount.valueOf(372800, SI.KILOGRAM);
-        Amount<Mass> finalWeight = Amount.valueOf(272800, SI.KILOGRAM);
-        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
-        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
-        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
-        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
-        Amount<Dimensionless> dragCoefficient0 = Amount.valueOf(0.025, Unit.ONE);
-        Amount<Length> wingSpan = Amount.valueOf(64.8, SI.METER);
-        Amount<Dimensionless> e = Amount.valueOf(0.95, Unit.ONE);
-        Amount<Area> referenceAircraftArea = Amount.valueOf(50, SI.SQUARE_METRE);
-        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
-
-        Amount<Length> expResult = Amount.valueOf(209226.5, SI.KILOMETER);
-        Amount<Length> result = Calculus.getMaximumRange(tsfc, initialWeight, finalWeight,
-                altitude, machNumber, windSpeed, angleRelativeToY,
-                dragCoefficient0, wingSpan, e, referenceAircraftArea, wingsArea);
-        assertEquals(expResult.doubleValue(SI.KILOMETER), result.doubleValue(SI.KILOMETER), EPSILON);
-    }
-
-    /**
-     * Test of getFuelConsumption method, of class Calculus.
-     */
-    @Test
-    public void testGetFuelConsumption() {
-        System.out.println("getFuelConsumption");
-
-        Amount<Power> tsfc = Amount.valueOf(0.057, CustomUnits.TSFC_SI);
-        Amount<Mass> initialWeight = Amount.valueOf(372800, SI.KILOGRAM);
-        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
-        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
-        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
-        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
-        Amount<Dimensionless> dragCoefficient0 = Amount.valueOf(0.025, Unit.ONE);
-        Amount<Length> wingSpan = Amount.valueOf(64.8, SI.METER);
-        Amount<Dimensionless> e = Amount.valueOf(0.95, Unit.ONE);
-        Amount<Area> referenceAircraftArea = Amount.valueOf(50, SI.SQUARE_METRE);
-        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
-        Amount<Length> distance = Amount.valueOf(209226.5, SI.KILOMETER);
-
-        Amount<Volume> expResult = Amount.valueOf(100000, NonSI.LITER);
-        Amount<Volume> result = Calculus.getFuelConsumption(tsfc, initialWeight, altitude, machNumber,
-                windSpeed, angleRelativeToY, dragCoefficient0,
-                wingSpan, e, referenceAircraftArea, wingsArea, distance);
-        assertEquals(expResult.doubleValue(NonSI.LITER), result.doubleValue(NonSI.LITER), EPSILON);
-    }
+//    /**
+//     * Test of getFuelConsumption method, of class Calculus.
+//     */
+//    @Test
+//    public void testGetFuelConsumption() {
+//        System.out.println("getFuelConsumption");
+//
+//        Amount<Power> tsfc = Amount.valueOf(0.057, CustomUnits.TSFC_SI);
+//        Amount<Mass> initialWeight = Amount.valueOf(372800, SI.KILOGRAM);
+//        Amount<Length> altitude = Amount.valueOf(10668, SI.METER);
+//        Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
+//        Amount<Velocity> windSpeed = Amount.valueOf(41.1556, SI.METERS_PER_SECOND);
+//        Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
+//        Amount<Dimensionless> dragCoefficient0 = Amount.valueOf(0.025, Unit.ONE);
+//        Amount<Length> wingSpan = Amount.valueOf(64.8, SI.METER);
+//        Amount<Dimensionless> e = Amount.valueOf(0.95, Unit.ONE);
+//        Amount<Area> referenceAircraftArea = Amount.valueOf(50, SI.SQUARE_METRE);
+//        Amount<Area> wingsArea = Amount.valueOf(512, SI.SQUARE_METRE);
+//        Amount<Length> distance = Amount.valueOf(209226.5, SI.KILOMETER);
+//
+//        Amount<Volume> expResult = Amount.valueOf(100000, NonSI.LITER);
+//        Amount<Volume> result = Calculus.getFuelConsumption(tsfc, initialWeight, altitude, machNumber,
+//                windSpeed, angleRelativeToY, dragCoefficient0,
+//                wingSpan, e, referenceAircraftArea, wingsArea, distance);
+//        assertEquals(expResult.doubleValue(NonSI.LITER), result.doubleValue(NonSI.LITER), EPSILON);
+//    }
 
 }

@@ -13,26 +13,27 @@ import javax.measure.quantity.Power;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.Volume;
 import javax.measure.quantity.VolumetricDensity;
+import javax.measure.quantity.Pressure;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
 import lapr.project.utils.CustomUnits;
+import lapr.project.utils.Consts;
 
 /**
- * Resposible to make calculations related to model business.
+ * Responsible to make calculations related to model business.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class Calculus {
 
     /**
-     * Eath radius in meters (Assuming that Earth is perfect sphere)
+     * Earth radius in meters (Assuming that Earth is perfect sphere)
      */
     private static final double EARTH_RADIUS = 6371e3;
 
@@ -71,7 +72,7 @@ public class Calculus {
         // return with altitude being 0.
         return distance(first, second, Amount.valueOf(0.0, SI.METER));
     }
-    
+
     /**
      * Calculate the great circle distance between two numerical coordinates
      * (Haversine Formula).
@@ -148,17 +149,15 @@ public class Calculus {
      * Gets the lift force.
      *
      * @param altitude the altitude
-     * @param initialWeight the initial weight
+     * @param weight the initial weight
      * @param wingsArea the wings area
      * @return lift force the lift force
-     * @param machNumber mach number
-     * @param windSpeed wind speed
-     * @param angleRelativeToY angle relative to y
+     * @param machNumber Mach number
      */
-    public static Amount<Force> getLiftForce(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Area> wingsArea, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
-        return (Amount<Force>) getLiftCoefficient(altitude, initialWeight, wingsArea, machNumber, windSpeed, angleRelativeToY)
+    public static Amount<Force> getLiftForce(Amount<Length> altitude, Amount<Mass> weight, Amount<Area> wingsArea, Amount<Velocity> machNumber) {
+        return (Amount<Force>) getLiftCoefficient(altitude, weight, wingsArea, machNumber)
                 .times(getAirDensity(altitude))
-                .times(getTAS(altitude, machNumber, windSpeed, angleRelativeToY).pow(2))
+                .times(getTAS(altitude, machNumber).pow(2))
                 .times(wingsArea)
                 .divide(Amount.valueOf(2, Unit.ONE));
     }
@@ -167,20 +166,18 @@ public class Calculus {
      * Gets the liftCoefficient.
      *
      * @param altitude the altitude
-     * @param initialWeight the initial weight
+     * @param weight the initial weight
      * @param wingsArea the wings area
      * @param machNumber mach number
-     * @param windSpeed wind speed
-     * @param angleRelativeToY angle relative to y
      * @return lift coefficient the lift coefficient
      */
-    public static Amount<Dimensionless> getLiftCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Area> wingsArea, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
+    public static Amount<Dimensionless> getLiftCoefficient(Amount<Length> altitude, Amount<Mass> weight, Amount<Area> wingsArea, Amount<Velocity> machNumber) {
         return (Amount<Dimensionless>) Amount.valueOf(2, Unit.ONE)
-                .times(initialWeight)
+                .times(weight)
                 .times(Constants.g)
                 .divide(getAirDensity(altitude)
                         .times(wingsArea)
-                        .times(getTAS(altitude, machNumber, windSpeed, angleRelativeToY).pow(2)));
+                        .times(getTAS(altitude, machNumber).pow(2)));
     }
 
     /**
@@ -268,32 +265,32 @@ public class Calculus {
     }
 
     /**
-     * Obtains object speed (ground speed)
-     *
-     * @param altitude altitute of aircraft in cruise travel above sea level
-     * @param machNumber mach number
-     * @return the object speed (ground speed)
-     */
-    public static Amount<Velocity> getObjectSpeed(Amount<Length> altitude, Amount<Velocity> machNumber) {
-        double objectSpeed = getSpeedOfSound(altitude).doubleValue(SI.METERS_PER_SECOND) * machNumber.doubleValue(NonSI.MACH);
-        return Amount.valueOf(objectSpeed, SI.METERS_PER_SECOND);
-    }
-
-    /**
      * Obtains True Air Speed (TAS)(velocity of aircraft relative to the
      * air(m/s)
      *
-     * @param altitude altitute of aircraft in cruise travel above sea level
-     * @param machNumber mach number
-     * @param windSpeed wind speed
-     * @param angleRelativeToY angle relative to y
+     * @param altitude altitude of aircraft relative to sea level in meters (m)
+     * @param machNumber mach number (Mach)
      * @return the True Air Speed (TAS) (velocity of aircraft relative to the
-     * air)
+     * air) (m/s)
      */
-    public static Amount<Velocity> getTAS(Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
-        Amount<Velocity> objectSpeed = getObjectSpeed(altitude, machNumber);
+    public static Amount<Velocity> getTAS(Amount<Length> altitude, Amount<Velocity> machNumber) {
+        double tas = getSpeedOfSound(altitude).doubleValue(SI.METERS_PER_SECOND) * machNumber.doubleValue(NonSI.MACH);
+        return Amount.valueOf(tas, SI.METERS_PER_SECOND);
+    }
+
+    /**
+     * Obtains ground speed (GS)
+     *
+     * @param altitude altitude of aircraft relative to sea level (m)
+     * @param machNumber mach number (Mach)
+     * @param windSpeed wind speed (m/s)
+     * @param angleRelativeToY angle relative to y
+     * @return the ground speed (GS) (m/s)
+     */
+    public static Amount<Velocity> getGS(Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
+        Amount<Velocity> tas = getTAS(altitude, machNumber);
         Amount<Velocity> portionWindSpeed = getPortionWindSpeed(windSpeed, angleRelativeToY);
-        return objectSpeed.plus(portionWindSpeed);
+        return tas.plus(portionWindSpeed);
     }
 
     /**
@@ -313,21 +310,19 @@ public class Calculus {
     /**
      * Gets the drag coefficient.
      *
-     * @param altitude in meters
-     * @param initialWeight of the aircraft in kg
-     * @param dragCoefficient0
-     * @param wingSpan in meters
-     * @param wingArea in square meters
-     * @param machNumber mach number
-     * @param windSpeed wind speed
-     * @param angleRelativeToY angle relative to y
-     * @param e e
+     * @param altitude altitude in meters
+     * @param weight weight of the aircraft in Kg
+     * @param dragCoefficient0 coefficient drag zero
+     * @param wingSpan wing span in meters
+     * @param wingArea wings area in square meters
+     * @param machNumber Mach number
+     * @param e efficiency factor
      * @return the calculated drag coefficient
      */
-    public static Amount<Dimensionless> getDragCoefficient(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Dimensionless> dragCoefficient0,
-            Amount<Length> wingSpan, Amount<Area> wingArea, Amount<Dimensionless> e, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
+    public static Amount<Dimensionless> getDragCoefficient(Amount<Length> altitude, Amount<Mass> weight, Amount<Dimensionless> dragCoefficient0,
+            Amount<Length> wingSpan, Amount<Area> wingArea, Amount<Dimensionless> e, Amount<Velocity> machNumber) {
 
-        Amount<Dimensionless> cl = getLiftCoefficient(altitude, initialWeight, wingArea, machNumber, windSpeed, angleRelativeToY);
+        Amount<Dimensionless> cl = getLiftCoefficient(altitude, weight, wingArea, machNumber);
         Amount<Dimensionless> cl2 = (Amount<Dimensionless>) cl.pow(2);
         Amount<Dimensionless> aspectRatio = (Amount<Dimensionless>) (wingSpan.times(wingSpan)).divide(wingArea);
         return (Amount<Dimensionless>) (cl2.divide(aspectRatio.times(Constants.π).times(e))).plus(dragCoefficient0);
@@ -345,16 +340,14 @@ public class Calculus {
      * @param e e
      * @param referenceAircraftArea reference aircraft area in square meters
      * @param machNumber mach number
-     * @param windSpeed wind speed
-     * @param angleRelativeToY angle relative to y
      * @return the calculated drag force
      */
     public static Amount<Force> getDragForce(Amount<Length> altitude, Amount<Mass> initialWeight, Amount<Dimensionless> dragCoefficient0,
             Amount<Length> wingSpan, Amount<Area> wingArea, Amount<Dimensionless> e, Amount<Area> referenceAircraftArea,
-            Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
-        return (Amount<Force>) getDragCoefficient(altitude, initialWeight, dragCoefficient0, wingSpan, wingArea, e, machNumber, windSpeed, angleRelativeToY)
+            Amount<Velocity> machNumber) {
+        return (Amount<Force>) getDragCoefficient(altitude, initialWeight, dragCoefficient0, wingSpan, wingArea, e, machNumber)
                 .times(getAirDensity(altitude))
-                .times((getTAS(altitude, machNumber, windSpeed, angleRelativeToY)).pow(2))
+                .times((getTAS(altitude, machNumber)).pow(2))
                 .times(referenceAircraftArea)
                 .divide(Amount.valueOf(2, Unit.ONE));
     }
@@ -367,8 +360,6 @@ public class Calculus {
      * @param finalWeight the final weight
      * @param altitude the altitude
      * @param machNumber the mach number
-     * @param windSpeed the wind speed
-     * @param angleRelativeToY the angle of the wind relative to y-axis
      * @param dragCoefficient0 the initial drag coefficient
      * @param wingSpan the wing span
      * @param e the efficiency factor
@@ -377,16 +368,16 @@ public class Calculus {
      * @return the calculated maximum range
      */
     public static Amount<Length> getMaximumRange(Amount<Power> tsfc, Amount<Mass> initialWeight, Amount<Mass> finalWeight,
-            Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY,
+            Amount<Length> altitude, Amount<Velocity> machNumber,
             Amount<Dimensionless> dragCoefficient0, Amount<Length> wingSpan, Amount<Dimensionless> e,
             Amount<Area> referenceAircraftArea, Amount<Area> wingsArea) {
 
-        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber, windSpeed, angleRelativeToY);
+        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
         Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
                 wingSpan, wingsArea, e, referenceAircraftArea,
-                machNumber, windSpeed, angleRelativeToY);
+                machNumber);
 
-        Amount<Velocity> tas = getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
+        Amount<Velocity> tas = getTAS(altitude, machNumber);
         Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));
         Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI)))
                 * (liftForce.doubleValue(SI.NEWTON) / (dragForce.doubleValue(SI.NEWTON))) * resultLN;
@@ -401,8 +392,6 @@ public class Calculus {
      * @param initialWeight the initial weight
      * @param altitude the altitude
      * @param machNumber the mach number
-     * @param windSpeed the wind speed
-     * @param angleRelativeToY the angle of the wind relative to y-axis
      * @param dragCoefficient0 the initial drag coefficient
      * @param wingSpan the wing span
      * @param e the efficiency factor
@@ -412,22 +401,49 @@ public class Calculus {
      * @return the calculated fuel consumption
      */
     public static Amount<Volume> getFuelConsumption(Amount<Power> tsfc, Amount<Mass> initialWeight,
-            Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY,
+            Amount<Length> altitude, Amount<Velocity> machNumber,
             Amount<Dimensionless> dragCoefficient0, Amount<Length> wingSpan, Amount<Dimensionless> e,
             Amount<Area> referenceAircraftArea, Amount<Area> wingsArea, Amount<Length> distance) {
 
-        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber, windSpeed, angleRelativeToY);
+        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
         Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
                 wingSpan, wingsArea, e, referenceAircraftArea,
-                machNumber, windSpeed, angleRelativeToY);
+                machNumber);
 
-        Amount<Velocity> tas = getTAS(altitude, machNumber, windSpeed, angleRelativeToY);
+        Amount<Velocity> tas = getTAS(altitude, machNumber);
         Double finalWeight = initialWeight.doubleValue(SI.KILOGRAM) / Math.pow(Math.E, (distance.doubleValue(SI.KILOMETER)
                 * tsfc.doubleValue(CustomUnits.TSFC_SI) / ((liftForce.doubleValue(SI.NEWTON) / dragForce.doubleValue(SI.NEWTON))
                 * tas.doubleValue(SI.METERS_PER_SECOND))));
         Double fuelConsumption = (initialWeight.doubleValue(SI.KILOGRAM) - finalWeight);
 
         return Amount.valueOf(fuelConsumption, NonSI.LITER);
+    }
+
+    /**
+     * Obtains the pressure in a given altitude.
+     *
+     * @param altitude the given altitude (m)
+     * @return the pressure (N/m2)
+     */
+    public static Amount<Pressure> getPressure(Amount<Length> altitude) {
+        Double result = Consts.AIR_PRESSURE_SEA_LEVEL.doubleValue(CustomUnits.PRESSURE_SI)
+                * (1.0d + Consts.TEMP_LAPSE_RATE.doubleValue(CustomUnits.TEMP_GRADIENT_SI)
+                * (altitude.doubleValue(SI.METER) / Consts.REF_TEMP_SEA_LEVEL.doubleValue(CustomUnits.TEMP_GRADIENT_SI)));
+        return Amount.valueOf(result, CustomUnits.PRESSURE_SI);
+    }
+
+    /**
+     * Obtains the mach true number (M), using the standard expression to estimate the true mach
+     * number of the aircraft at a given altitude
+     * @param IAS the indicated airspeed (m/s) (SI)
+     * @param airDensity the air density (Kg/m3) (SI)
+     * @return the mach true number
+     */
+    public static Amount<Velocity> getMachTrue(Amount<Velocity> IAS, Amount<VolumetricDensity> airDensity) {
+        Double result = Math.sqrt(5.0d * (Math.pow(((Consts.AIR_DENSITY_SEA_LEVEL.doubleValue(CustomUnits.VOLUMETRIC_DENSITY_SI)
+                / airDensity.doubleValue(CustomUnits.VOLUMETRIC_DENSITY_SI))
+                * (Math.pow(Math.pow(IAS.doubleValue(SI.METERS_PER_SECOND) / 661.5d, 2.0d), 3.5d) - 1.0d) + 1.0d), 0.286d) - 1.0d));
+        return Amount.valueOf(result, NonSI.MACH);
     }
 
 }
