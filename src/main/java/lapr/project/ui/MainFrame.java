@@ -6,6 +6,8 @@ package lapr.project.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -195,10 +197,18 @@ public class MainFrame extends JFrame implements ProjectHandler {
         createFlightInfoButton = new JButton("New Flight Info");
         createFlightInfoButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         createFlightInfoButton.setEnabled(false);
+        createFlightInfoButton.addActionListener((ActionEvent ae) -> {
+            FlightInfoDialog flightInfoDialog = new FlightInfoDialog(this, simulator, getActiveProject());
+            flightInfoDialog.setVisible(true);
+        });
 
         createSimulationButton = new JButton("New Simulation");
         createSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         createSimulationButton.setEnabled(false);
+        createSimulationButton.addActionListener((ActionEvent ae) -> {
+            SimulateFlightDialog simulateFlightDialog = new SimulateFlightDialog(this);
+            simulateFlightDialog.setVisible(true);
+        });
 
         buttonsPanel.add(openSimulationButton);
         buttonsPanel.add(createFlightInfoButton);
