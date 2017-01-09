@@ -3,7 +3,9 @@
  */
 package lapr.project.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -16,7 +18,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.datalayer.DbConnection;
 import lapr.project.model.AircraftType;
+import lapr.project.model.FlightPattern;
 import lapr.project.model.MotorType;
+import oracle.jdbc.OracleTypes;
 import org.jscience.physics.amount.Amount;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -217,10 +221,46 @@ public class Import {
      * Imports the airports from xml, saving them on database.
      *
      * @param xmlFile XML file with the airports
+     * @param projectSerieNumber the project serie number (id_project)
      * @return true if it is successfully imported, false otherwise
+     * @throws org.xml.sax.SAXException
+     * @throws java.io.IOException
+     * @throws javax.xml.parsers.ParserConfigurationException
      */
-    public static boolean importAirportsFromXml(File xmlFile) {
-        // TODO implement this
+    public static boolean importAirportsFromXml(File xmlFile, int projectSerieNumber) throws SAXException, IOException, ParserConfigurationException, SQLException {
+        // set up dom
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(xmlFile);
+        doc.getDocumentElement().normalize();
+
+        // iterate airports dom
+        NodeList airportsNodeList = doc.getElementsByTagName("airport");
+        int airportsLength = airportsNodeList.getLength();
+        for (int i = 0; i < airportsLength; i++) {
+            Node airportNode = airportsNodeList.item(i);
+            if (airportNode.getNodeType() == Node.ELEMENT_NODE) {
+                // airport
+                Element airportElement = (Element) airportNode;
+                String IATA = airportElement.getAttribute("id");
+                String name = airportElement.getElementsByTagName("name").item(0).getTextContent();
+                String town = airportElement.getElementsByTagName("town").item(0).getTextContent();
+                String country = airportElement.getElementsByTagName("country").item(0).getTextContent();
+                // location
+                Element locationElement = (Element) airportElement.getElementsByTagName("location").item(0);
+                Double latitude = (Double.parseDouble(locationElement.getElementsByTagName("latitude").item(0).getTextContent()));
+                Double longitude = (Double.parseDouble(locationElement.getElementsByTagName("longitude").item(0).getTextContent()));
+
+                String id = getCoordinateIdFromDB(latitude, longitude);
+
+                String altitude = locationElement.getElementsByTagName("altitude").item(0).getTextContent();
+                Double doubleAltitude = Regex.getValue(altitude);
+
+                // TODO test this
+                addAirportToDatabase(projectSerieNumber, IATA, name, town, country, id, doubleAltitude);
+
+            }
+        }
         return true;
     }
 
@@ -303,4 +343,115 @@ public class Import {
             callableStatement.executeUpdate();
         }
     }
+
+    /**
+     * Adds the airport to database.
+     */
+    private static void addAirportToDatabase(int idProject, String IATA, String name, String town,
+            String country, String idCoordinate, double altitude) throws SQLException {
+
+        String query = "{call PC_CREATE_AIRPORT(?, ?, ?, ?, ?, ?, ?)}";
+
+        try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.setDouble(1, idProject);
+            callableStatement.setString(2, IATA);
+            callableStatement.setString(3, name);
+            callableStatement.setString(4, town);
+            callableStatement.setString(5, country);
+            callableStatement.setString(6, idCoordinate);
+            callableStatement.setDouble(7, altitude);
+
+            callableStatement.executeUpdate();
+        }
+    }
+
+    /**
+     * Gets the ID of a Coordinate stored in the database.
+     *
+     * @param latitude the latitude of the coordinate
+     * @param longitude the longitude of the coordinate
+     * @return the id of the coordinate
+     * @throws SQLException
+     */
+    public static String getCoordinateIdFromDB(Double latitude, Double longitude) throws SQLException {
+        String idCoordinate;
+        String query = "{?= call FC_GET_ID_COORDINATE(?, ?)}";
+
+        try (Connection connection = DbConnection.getConnection();
+                CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.registerOutParameter(1, OracleTypes.VARCHAR);
+            callableStatement.setDouble(2, latitude);
+            callableStatement.setDouble(3, longitude);
+
+            callableStatement.executeUpdate();
+
+            idCoordinate = callableStatement.getString(1);
+        }
+        return idCoordinate;
+    }
+
+    /**
+     * Imports a csv file with the flight pattern of an aircraft.
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static FlightPattern importFlightPattern(File file) throws IOException {
+        FlightPattern fp = new FlightPattern();
+        Amount[][] matrix = fp.getFlightProfile();
+
+        BufferedReader bufferedReader;
+        bufferedReader = new BufferedReader(new FileReader(file));
+        String currentLine;
+        int i; //lines in dest matrix
+        int k = 0; //columns in dest matrix
+        for (int line = 0; (currentLine = bufferedReader.readLine()) != null; line++) {
+            i = 0;
+            String[] data = currentLine.split(",");
+            String givenUnit = data[1];
+            Unit unit = getUnit(givenUnit);
+            for (int column = 2; column < data.length; column++) {
+                matrix[i][k] = Amount.valueOf(Double.parseDouble(data[column]), unit);
+                i++;
+            }
+            k++;
+        }
+        bufferedReader.close();
+        fp.setFlightProfile(matrix);
+
+        return fp;
+
+    }
+
+    /**
+     * Returns the unit for each of the import csv file cases.
+     *
+     * @param string the received string
+     * @return the unit
+     */
+    private static Unit getUnit(String string) {
+        Unit unit = null;
+        switch (string.toLowerCase().trim()) {
+            case "ft":
+                unit = NonSI.FOOT;
+                break;
+            case "m":
+                unit = SI.METER;
+                break;
+            case "knot":
+                unit = NonSI.KNOT;
+                break;
+            case "m/s":
+                unit = SI.METERS_PER_SECOND;
+                break;
+            case "ft/s":
+                unit = CustomUnits.FEET_PER_SECOND;
+                break;
+        }
+        return unit;
+    }
+
 }
