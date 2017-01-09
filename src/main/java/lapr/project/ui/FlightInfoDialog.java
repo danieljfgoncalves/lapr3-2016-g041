@@ -168,17 +168,40 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      */
     private JTextField txtClass5;
 
+    /**
+     * The max number of passengers label for class 1.
+     */
     private JLabel class1Label;
+
+    /**
+     * The max number of passengers label for class 2.
+     */
     private JLabel class2Label;
+
+    /**
+     * The max number of passengers label for class 3.
+     */
     private JLabel class3Label;
+
+    /**
+     * The max number of passengers label for class 4.
+     */
     private JLabel class4Label;
+
+    /**
+     * The max number of passengers label for class 5.
+     */
     private JLabel class5Label;
 
     /**
      * The list with aircraft classes.
      */
-    private ArrayList<JTextField> listClassTxt;
-    private ArrayList<JLabel> listClassLabels;
+    private final ArrayList<JTextField> listClassTxt;
+
+    /**
+     * The list with the class labels.
+     */
+    private final ArrayList<JLabel> listClassLabels;
 
     /**
      * Selected number of classes in the aircraft.
@@ -421,13 +444,16 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @return the aircraft info form
      */
     private Component createAircraftInfoForm() {
-        JPanel aircraftInfoForm = new JPanel();
-        GroupLayout layout = new GroupLayout(aircraftInfoForm);
-        aircraftInfoForm.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
+        JPanel aircraftInfoForm = new JPanel(new BorderLayout());
         aircraftInfoForm.setBackground(DEFAULT_COLOR);
         aircraftInfoForm.setBorder(DEFAULT_GREY_LINE_BORDER);
+
+        JPanel aircraftInfoGroupLayout = new JPanel();
+        GroupLayout layout = new GroupLayout(aircraftInfoGroupLayout);
+        aircraftInfoGroupLayout.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+        aircraftInfoGroupLayout.setBackground(DEFAULT_COLOR);
 
         JLabel selectAircraftModelLabel = new JLabel("Select the Aircraft Model:");
         selectAircraftModelLabel.setFont(FORM_LABEL_FONT);
@@ -455,6 +481,12 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
         JLabel companyNameLabel = new JLabel("Company Name:");
         companyNameLabel.setFont(FORM_LABEL_FONT);
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout());
+        JButton loadFlightPatternButton = createFlightPatButton();
+        buttonsPanel.add(loadFlightPatternButton);
+        buttonsPanel.setBackground(DEFAULT_COLOR);
+        buttonsPanel.setVisible(true);
 
         txtCompanyName = new JTextField();
         txtCompanyName.setPreferredSize(new Dimension(300, 25));
@@ -493,7 +525,23 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
                 )
         );
 
+        aircraftInfoForm.add(aircraftInfoGroupLayout, BorderLayout.NORTH);
+        aircraftInfoForm.add(buttonsPanel, BorderLayout.CENTER);
+
         return aircraftInfoForm;
+    }
+
+    /**
+     * The button to load a flight pattern.
+     *
+     * @return the load flight pattern button
+     */
+    private JButton createFlightPatButton() {
+        JButton button = new JButton("Load Aircraft Flight Pattern");
+        button.addActionListener((ActionEvent ae) -> {
+            // TODO
+        });
+        return button;
     }
 
     /**
