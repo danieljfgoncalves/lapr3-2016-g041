@@ -3,7 +3,9 @@
  */
 package lapr.project.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -16,6 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.datalayer.DbConnection;
 import lapr.project.model.AircraftType;
+import lapr.project.model.FlightPattern;
 import lapr.project.model.MotorType;
 import oracle.jdbc.OracleTypes;
 import org.jscience.physics.amount.Amount;
@@ -247,7 +250,7 @@ public class Import {
                 Element locationElement = (Element) airportElement.getElementsByTagName("location").item(0);
                 Double latitude = (Double.parseDouble(locationElement.getElementsByTagName("latitude").item(0).getTextContent()));
                 Double longitude = (Double.parseDouble(locationElement.getElementsByTagName("longitude").item(0).getTextContent()));
-                
+
                 String id = getCoordinateIdFromDB(latitude, longitude);
 
                 String altitude = locationElement.getElementsByTagName("altitude").item(0).getTextContent();
@@ -255,7 +258,7 @@ public class Import {
 
                 // TODO test this
                 addAirportToDatabase(projectSerieNumber, IATA, name, town, country, id, doubleAltitude);
-                
+
             }
         }
         return true;
@@ -346,7 +349,7 @@ public class Import {
      */
     private static void addAirportToDatabase(int idProject, String IATA, String name, String town,
             String country, String idCoordinate, double altitude) throws SQLException {
-        
+
         String query = "{call PC_CREATE_AIRPORT(?, ?, ?, ?, ?, ?, ?)}";
 
         try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
@@ -388,5 +391,67 @@ public class Import {
         }
         return idCoordinate;
     }
-    
+
+    /**
+     * Imports a csv file with the flight pattern of an aircraft.
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static FlightPattern importFlightPattern(File file) throws IOException {
+        FlightPattern fp = new FlightPattern();
+        Amount[][] matrix = fp.getFlightProfile();
+
+        BufferedReader bufferedReader;
+        bufferedReader = new BufferedReader(new FileReader(file));
+        String currentLine;
+        int i; //lines in dest matrix
+        int k = 0; //columns in dest matrix
+        for (int line = 0; (currentLine = bufferedReader.readLine()) != null; line++) {
+            i = 0;
+            String[] data = currentLine.split(",");
+            String givenUnit = data[1];
+            Unit unit = getUnit(givenUnit);
+            for (int column = 2; column < data.length; column++) {
+                matrix[i][k] = Amount.valueOf(Double.parseDouble(data[column]), unit);
+                i++;
+            }
+            k++;
+        }
+        bufferedReader.close();
+        fp.setFlightProfile(matrix);
+
+        return fp;
+
+    }
+
+    /**
+     * Returns the unit for each of the import csv file cases.
+     *
+     * @param string the received string
+     * @return the unit
+     */
+    private static Unit getUnit(String string) {
+        Unit unit = null;
+        switch (string.toLowerCase().trim()) {
+            case "ft":
+                unit = NonSI.FOOT;
+                break;
+            case "m":
+                unit = SI.METER;
+                break;
+            case "knot":
+                unit = NonSI.KNOT;
+                break;
+            case "m/s":
+                unit = SI.METERS_PER_SECOND;
+                break;
+            case "ft/s":
+                unit = CustomUnits.FEET_PER_SECOND;
+                break;
+        }
+        return unit;
+    }
+
 }
