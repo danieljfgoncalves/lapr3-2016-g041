@@ -16,11 +16,11 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import lapr.project.model.FlightInfo;
+import lapr.project.model.FlightSimulation;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
 import lapr.project.ui.components.CustomMenuBar;
-import lapr.project.ui.components.TableModelFlight;
+import lapr.project.ui.components.TableModelFlightSimulation;
 
 /**
  * The main frame for the application.
@@ -164,14 +164,12 @@ public class MainFrame extends JFrame implements ProjectHandler {
         JPanel tablePanel = new JPanel(new BorderLayout());
 
         // TODO remove this mock object
-        ArrayList<FlightInfo> flights = new ArrayList<>();
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
+        ArrayList<FlightSimulation> flightSimulations = new ArrayList<>();
+        flightSimulations.add(new FlightSimulation());
+        flightSimulations.add(new FlightSimulation());
+        flightSimulations.add(new FlightSimulation());
 
-        simulationsTable = new JTable(new TableModelFlight(flights));
+        simulationsTable = new JTable(new TableModelFlightSimulation(flightSimulations));
 
         JScrollPane scrollPane = new JScrollPane(simulationsTable);
         scrollPane.setBorder(PADDING_BORDER);
@@ -225,7 +223,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
      */
     private void refreshProject() {
         //Collections.sort(activeProject.getSimulations().getFlights());
-        //simulationsTable.setModel(new TableModelFlight(activeProject.getSimulations().getFlights()));
+        //simulationsTable.setModel(new TableModelFlightSimulation(activeProject.getSimulations().getFlights()));
         this.projectTitleLabel.setText(activeProject.getName());
         this.projectDescriptionLabel.setText(activeProject.getDescription());
         this.simulationsTable.setVisible(true);

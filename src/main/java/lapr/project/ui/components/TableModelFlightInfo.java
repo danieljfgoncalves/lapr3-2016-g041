@@ -13,16 +13,15 @@ import lapr.project.model.FlightInfo;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class TableModelFlight extends AbstractTableModel {
+public class TableModelFlightInfo extends AbstractTableModel {
 
     /**
      * Name of the table columns.
      */
-    private static final String[] COLUMNS_NAMES = {"Designator", "Flight Type",
-        "Aircraft", "Origin airport", "Destination Airport", "Scheduled Arrival"};
+    private static final String[] COLUMNS_NAMES = {"Designator", "Type",
+        "Model", "Origin", "Destination", "Classes"};
 
     /**
      * The list of flights.
@@ -34,7 +33,7 @@ public class TableModelFlight extends AbstractTableModel {
      *
      * @param flights the list of flights
      */
-    public TableModelFlight(List<FlightInfo> flights) {
+    public TableModelFlightInfo(List<FlightInfo> flights) {
         this.flights = flights;
     }
 
@@ -61,11 +60,15 @@ public class TableModelFlight extends AbstractTableModel {
             case 1:
                 return flights.get(rowIndex).getFlightType();
             case 2:
-                return flights.get(rowIndex).getAircraft();
+                return flights.get(rowIndex).getAircraft()
+                        .getAircraftModel().getModelID();
             case 3:
-                return flights.get(rowIndex).getOriginAirport();
+                return flights.get(rowIndex).getOriginAirport().getIATA();
             case 4:
-                return flights.get(rowIndex).getDestinationAirport();
+                return flights.get(rowIndex).getDestinationAirport().getIATA();
+            case 5:
+                return flights.get(rowIndex).getAircraft()
+                        .getMaxPassengerPerClass().size();
             default:
                 return null;
         }
