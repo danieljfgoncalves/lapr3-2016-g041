@@ -47,5 +47,10 @@ public class CustomUnits {
      * Pressure (N/m2)
      */
     public static final Unit PRESSURE_SI = SI.NEWTON.divide(SI.SQUARE_METRE);
+    
+    /**
+     * dw/dt fuel burn (N/s)
+     */
+    public static final Unit FUEL_BURN_SI = SI.NEWTON.divide(SI.SECOND);
 
 }
