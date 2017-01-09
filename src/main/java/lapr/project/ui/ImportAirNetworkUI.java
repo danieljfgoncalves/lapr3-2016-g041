@@ -3,13 +3,10 @@
  */
 package lapr.project.ui;
 
-import java.io.IOException;
 import javax.swing.JOptionPane;
-import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.controller.ImportAirNetworkController;
 import lapr.project.model.Project;
 import lapr.project.ui.components.ImportFileChooser;
-import org.xml.sax.SAXException;
 
 /**
  * Import Air Network UI.
@@ -53,7 +50,7 @@ public class ImportAirNetworkUI extends ImportFileChooser {
                     "Import Successful",
                     JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (SAXException | IOException | NumberFormatException | ParserConfigurationException ex) {
+        } catch (Exception ex) {
 
             JOptionPane.showMessageDialog(this,
                     String.format("Invalid File!%nPlease select a different file.%n(Error:%s)", ex.getMessage()),

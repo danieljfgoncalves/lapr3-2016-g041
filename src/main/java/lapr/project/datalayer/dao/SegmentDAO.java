@@ -4,7 +4,9 @@
 package lapr.project.datalayer.dao;
 
 import java.util.List;
+import lapr.project.model.Coordinate;
 import lapr.project.model.Segment;
+import lapr.project.utils.graph.map.MapEdge;
 
 /**
  * Interface to manage a segments's data acess object.
@@ -22,14 +24,14 @@ public interface SegmentDAO {
      * @param id segment id.
      * @throws java.lang.Exception
      */
-    Segment getSegment(String id) throws Exception;
+    MapEdge<Coordinate, Segment> getSegment(String id) throws Exception;
 
     /**
      * Obtains all segments from data source.
      *
      * @throws java.lang.Exception
      */
-    List<Segment> getSegments() throws Exception;
+    List<MapEdge<Coordinate, Segment>> getSegments() throws Exception;
 
     /**
      * Adds a new segment to data source.
@@ -37,5 +39,5 @@ public interface SegmentDAO {
      * @param segment the segment to add to data source.
      * @throws java.lang.Exception
      */
-    void addSegment(Segment segment) throws Exception;
+    void addSegment(MapEdge<Coordinate, Segment> edge) throws Exception;
 }

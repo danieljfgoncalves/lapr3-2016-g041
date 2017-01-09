@@ -12,7 +12,10 @@ import java.util.List;
 import javax.measure.unit.SI;
 import lapr.project.datalayer.DbConnection;
 import lapr.project.datalayer.dao.SegmentDAO;
+import lapr.project.model.Coordinate;
 import lapr.project.model.Segment;
+import lapr.project.utils.graph.map.MapEdge;
+import lapr.project.utils.graph.map.MapVertex;
 import oracle.jdbc.OracleTypes;
 import org.jscience.physics.amount.Amount;
 
@@ -48,7 +51,7 @@ public class SegmentOracle implements SegmentDAO {
      * @return a segment object
      * @throws Exception
      */
-    private Segment mapRow(ResultSet rs) throws Exception {
+    private MapEdge<Coordinate, Segment> mapRow(ResultSet rs) throws Exception {
 
         Segment segment = new Segment();
         segment.setId(rs.getString(1));
@@ -56,15 +59,19 @@ public class SegmentOracle implements SegmentDAO {
         segment.setWindIntensity(Amount.valueOf(rs.getDouble(3), SI.METERS_PER_SECOND));
         segment.setAltitude(Amount.valueOf(rs.getDouble(4), SI.METER));
 
-        return segment;
+        Coordinate origin = new Coordinate(rs.getString(5), rs.getDouble(6), rs.getDouble(7));
+        Coordinate dest = new Coordinate(rs.getString(8), rs.getDouble(9), rs.getDouble(10));
+
+        return new MapEdge<>(segment, 0, new MapVertex<Coordinate, Segment>(0, origin),
+                new MapVertex<Coordinate, Segment>(1, dest));
     }
 
     @Override
-    public Segment getSegment(String id) throws Exception {
+    public MapEdge<Coordinate, Segment> getSegment(String id) throws Exception {
         // TODO : Implement stored procedure.
         String query = "{? = call FC_GET_SEGMENT (?, ?)}";
 
-        Segment segment = null;
+        MapEdge<Coordinate, Segment> segment = null;
 
         try (Connection connection = DbConnection.getConnection(); CallableStatement statement = connection.prepareCall(query)) {
             // Function return
@@ -86,9 +93,9 @@ public class SegmentOracle implements SegmentDAO {
     }
 
     @Override
-    public List<Segment> getSegments() throws Exception {
+    public List<MapEdge<Coordinate, Segment>> getSegments() throws Exception {
 
-        List<Segment> segments = new ArrayList<>();
+        List<MapEdge<Coordinate, Segment>> segments = new ArrayList<>();
 
         // TODO : Implement stored procedure.
         String query = "{? = call FC_GET_SEGMENTS (?)}";
@@ -103,7 +110,7 @@ public class SegmentOracle implements SegmentDAO {
 
             try (ResultSet resultSet = (ResultSet) statement.getObject(1)) {
                 while (resultSet.next()) {
-                    Segment segment = mapRow(resultSet);
+                    MapEdge<Coordinate, Segment> segment = mapRow(resultSet);
                     if (segment != null) {
                         segments.add(segment);
                     } else {
@@ -117,9 +124,14 @@ public class SegmentOracle implements SegmentDAO {
     }
 
     @Override
-    public void addSegment(Segment segment) throws SQLException {
+    public void addSegment(MapEdge<Coordinate, Segment> edge) throws SQLException {
+
+        Segment segment = edge.getElement();
+        String originID = edge.getVOrig().getId();
+        String destID = edge.getVDest().getId();
+
         // TODO : Implement stored procedure.
-        String query = "{call PC_ADD_SEGMENT (?, ?, ?, ?)}";
+        String query = "{call PC_ADD_SEGMENT (?, ?, ?, ?, ?, ?, ?)}";
 
         try (Connection connection = DbConnection.getConnection(); CallableStatement statement = connection.prepareCall(query)) {
             // Procedure params
@@ -128,6 +140,9 @@ public class SegmentOracle implements SegmentDAO {
             statement.setDouble(3, segment.getWindIntensity().doubleValue(SI.METERS_PER_SECOND));
             statement.setDouble(4, segment.getAltitude().doubleValue(SI.METER));
             statement.setDouble(5, projectSerieNumber);
+            statement.setString(6, originID);
+            statement.setString(7, destID);
+
             // procedure call
             statement.executeUpdate();
         }

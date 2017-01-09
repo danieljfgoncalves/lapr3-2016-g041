@@ -4,19 +4,12 @@
 package lapr.project.model;
 
 import java.util.Objects;
-import lapr.project.utils.Importable;
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import java.io.*;
 import java.util.Iterator;
 import javax.measure.quantity.Length;
-import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
-import lapr.project.utils.Regex;
 import lapr.project.utils.graph.map.MapEdge;
 import lapr.project.utils.graph.map.MapGraph;
 import org.jscience.physics.amount.Amount;
-import org.xml.sax.SAXException;
 
 /**
  * Represents a airnetwork. (contains a graph of coordinates and segments)
@@ -27,7 +20,7 @@ import org.xml.sax.SAXException;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class AirNetwork implements Importable {
+public class AirNetwork {
 
     /**
      * Air Network
@@ -244,93 +237,4 @@ public class AirNetwork implements Importable {
 
         return "AirNetwork{\nnetwork=\n" + network + "\n}";
     }
-
-    @Override
-    public boolean importXml(File fileToImport)
-            throws SAXException, IOException, ParserConfigurationException,
-            NumberFormatException {
-
-        String filename = fileToImport.getName();
-        int dotIndex = filename.lastIndexOf('.');
-
-        if (dotIndex == -1 || !filename.substring(dotIndex).equalsIgnoreCase(".xml")) {
-            return false;
-        }
-
-        // Set up XML Dom
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document root = dBuilder.parse(fileToImport);
-        root.getDocumentElement().normalize();
-
-        // Iterate nodes (graph vertices)
-        NodeList verticesNL = root.getElementsByTagName("node");
-
-        for (int i = 0; i < verticesNL.getLength(); i++) {
-
-            Node node = verticesNL.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-
-                Element aElement = (Element) node;
-
-                Coordinate coordinate = new Coordinate();
-                // Set ID
-                coordinate.setId(aElement.getAttribute("id"));
-                // Set lat
-                coordinate.setLatitude(Double.parseDouble(aElement.getElementsByTagName("latitude").item(0).getTextContent()));
-                // Set lon
-                coordinate.setLongitude(Double.parseDouble(aElement.getElementsByTagName("longitude").item(0).getTextContent()));
-
-                if (!addJunction(coordinate)) {
-                    System.out.printf("Coordinate #%d: already inserted or malformed.%n", i);
-                }
-
-            }
-        }
-
-        // Iterate segments (graph edges)
-        NodeList edgesNL = root.getElementsByTagName("segment");
-
-        for (int i = 0; i < edgesNL.getLength(); i++) {
-
-            Node node = edgesNL.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-
-                Element aElement = (Element) node;
-
-                Segment segment = new Segment();
-                // Set ID
-                segment.setId(aElement.getAttribute("id"));
-                // Set wind
-                Element windElement = (Element) aElement.getElementsByTagName("wind").item(0);
-                // Set wind direction
-                String windDirection = windElement.getElementsByTagName("wind_direction").item(0).getTextContent();
-                Double valueWindD = Regex.getValue(windDirection);
-                segment.setWindDirection(Amount.valueOf(valueWindD, NonSI.DEGREE_ANGLE));
-                // Set wind intensity
-                String windIntensity = windElement.getElementsByTagName("wind_intensity").item(0).getTextContent();
-                Double valueWindI = Regex.getValue(windIntensity);
-                String unitWindI = Regex.getUnit(windIntensity);
-                segment.setWindIntensity(Amount.valueOf(valueWindI, (unitWindI.equalsIgnoreCase("knot")) ? NonSI.KNOT : SI.METERS_PER_SECOND));
-                // Get start & end of segment
-                String startID = aElement.getElementsByTagName("start_node").item(0).getTextContent();
-                String endID = aElement.getElementsByTagName("end_node").item(0).getTextContent();
-                // Add uni/bi-directional edges
-                String direction = aElement.getElementsByTagName("direction").item(0).getTextContent();
-                if (direction.equalsIgnoreCase("bidirectional")) {
-                    // add both directions
-                    boolean dir = addSegment(startID, endID, segment);
-                    boolean inverseDir = addSegment(endID, startID, segment);
-                    if (!dir || !inverseDir) {
-                        System.out.printf("Segment #%d: already inserted or malformed.%n", i);
-                    }
-                } else if (!addSegment(startID, endID, segment)) {
-                    System.out.printf("Segment #%d: already inserted or malformed.%n", i);
-                }
-            }
-        }
-
-        return true;
-    }
-
 }
