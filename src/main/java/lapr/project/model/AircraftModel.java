@@ -564,6 +564,25 @@ public class AircraftModel {
     public void setCdragFunction(double[][] cdragFunction) {
         this.cdragFunction = cdragFunction;
     }
+    
+    /**
+     * Obtains the cDrag_0 for a specific mach number.
+     *
+     * @return the cDrag_0 for a specific mach number.
+     */
+    public double getCdragFunction(double machNumber) {
+
+        double cDrag_0 = cdragFunction[0][1];
+
+        for (int i = 1; i < cdragFunction.length; i++) {
+            if (machNumber < cdragFunction[i][0]) {
+                cDrag_0 = cdragFunction[i - 1][1];
+                break;
+            }
+        }
+
+        return cDrag_0;
+    }
 
     @Override
     public int hashCode() {
