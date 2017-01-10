@@ -3,7 +3,6 @@
  */
 package lapr.project.model;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -244,76 +243,6 @@ public class AirNetworkTest {
         instance1.removeJunction(junction);
         int expResult = 2;
         int result = instance1.getNumJunctions();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of importXml method, of class AirNetwork.
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testImportXml01() throws Exception {
-        System.out.println("importXml");
-
-        File fileToImport = new File("xml_files" + File.separator + "TestSet01a_Network.xml");
-        instance = new AirNetwork();
-
-        assertTrue(instance.importXml(fileToImport));
-    }
-
-    /**
-     * Test of importXml method, of class AirNetwork.
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testImportXml02() throws Exception {
-        System.out.println("importXml");
-
-        File fileToImport = new File("xml_files" + File.separator + "Wrong");
-        instance = new AirNetwork();
-
-        assertFalse(instance.importXml(fileToImport));
-    }
-
-    /**
-     * Test of importXml method, of class AirNetwork.
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testImportXml03() throws Exception {
-        System.out.println("importXml");
-
-        File fileToImport = new File("xml_files" + File.separator + "TestSet01a_Network.xml");
-        AirNetwork expResult = new AirNetwork();
-
-        expResult.addJunction(new Coordinate("PT01", 41.2481003, -8.6813898));
-        expResult.addJunction(new Coordinate("PT02", 40.7812996, -8.6813898));
-        expResult.addJunction(new Coordinate("PT03", 38.7812996, -9.1359196));
-        expResult.addJunction(new Coordinate("PT04", 40.7812996, -6.6813898));
-        expResult.addJunction(new Coordinate("ES01", 40.4936, -3.56676));
-        expResult.addJunction(new Coordinate("ES02", 39.5517006, 2.7388101));
-
-        expResult.addSegment("PT01", "PT02", new Segment("PT01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
-        expResult.addSegment("PT02", "PT01", new Segment("PT01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(0.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
-
-        expResult.addSegment("PT02", "PT03", new Segment("PT02", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
-        expResult.addSegment("PT03", "PT02", new Segment("PT02", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(80.0, NonSI.KNOT)));
-
-        expResult.addSegment("PT02", "PT04", new Segment("PT03", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
-        expResult.addSegment("PT04", "PT02", new Segment("PT03", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
-
-        expResult.addSegment("PT04", "ES01", new Segment("PT04", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
-        expResult.addSegment("ES01", "PT04", new Segment("PT04", Amount.valueOf(0.0, SI.METER), Amount.valueOf(15.0, NonSI.DEGREE_ANGLE), Amount.valueOf(100.0, NonSI.KNOT)));
-
-        expResult.addSegment("ES01", "ES02", new Segment("ES01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
-        expResult.addSegment("ES02", "ES01", new Segment("ES01", Amount.valueOf(0.0, SI.METER), Amount.valueOf(45.0, NonSI.DEGREE_ANGLE), Amount.valueOf(85.0, NonSI.KNOT)));
-
-        AirNetwork result = new AirNetwork();
-        result.importXml(fileToImport);
-
         assertEquals(expResult, result);
     }
 

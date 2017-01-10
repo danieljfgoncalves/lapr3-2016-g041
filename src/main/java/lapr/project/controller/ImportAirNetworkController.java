@@ -4,11 +4,9 @@
 package lapr.project.controller;
 
 import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.model.AirNetwork;
 import lapr.project.model.Project;
-import org.xml.sax.SAXException;
+import lapr.project.utils.importable.AirNetworkXML;
 
 /**
  * Controller to import a airnetwork.
@@ -37,18 +35,25 @@ public class ImportAirNetworkController {
 
     /**
      * Imports an air network.
-     * 
+     *
      * @param fileToImport file containing xml to import
      * @return true if imported was successful
-     * @throws SAXException
-     * @throws IOException
-     * @throws ParserConfigurationException 
+     * @throws Exception
      */
-    public boolean importAirNetwork(File fileToImport) throws SAXException, IOException, ParserConfigurationException {
+    public boolean importAirNetwork(File fileToImport) throws Exception {
 
-        AirNetwork airNetwork = selectedProject.getAirNetwork();
+        AirNetworkXML importer = new AirNetworkXML(fileToImport);
 
-        return airNetwork.importXml(fileToImport);
+        AirNetwork airNetwork = (AirNetwork) importer.importFile();
+
+        if (airNetwork != null || !(airNetwork instanceof AirNetwork)) {
+
+            this.selectedProject.setAirNetwork(airNetwork);
+
+            return true;
+        }
+
+        return false;
     }
 
 }

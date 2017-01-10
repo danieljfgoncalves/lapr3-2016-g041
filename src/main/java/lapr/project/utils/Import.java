@@ -226,6 +226,7 @@ public class Import {
      * @throws org.xml.sax.SAXException
      * @throws java.io.IOException
      * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws java.sql.SQLException
      */
     public static boolean importAirportsFromXml(File xmlFile, int projectSerieNumber) throws SAXException, IOException, ParserConfigurationException, SQLException {
         // set up dom
@@ -261,17 +262,6 @@ public class Import {
 
             }
         }
-        return true;
-    }
-
-    /**
-     * Imports the air network from xml, saving them on database.
-     *
-     * @param xmlFile XML file with the air network
-     * @return true if it is successfully imported, false otherwise
-     */
-    public static boolean importAirNetworkFromXml(File xmlFile) {
-        // TODO implement this
         return true;
     }
 
