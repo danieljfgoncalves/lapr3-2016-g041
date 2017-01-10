@@ -547,13 +547,13 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         JButton button = new JButton("Load Aircraft Flight Pattern");
         button.addActionListener((ActionEvent ae) -> {
             //TESTING ONLY
-//            ImportFileChooser importFile = new ImportFileChooser();
-//            importFile.setSettings();
-//            try {
-//                Import.importFlightPattern(importFile.getSelectedFile());
-//            } catch (IOException ex) {
-//                Logger.getLogger(FlightInfoDialog.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            ImportFileChooser importFile = new ImportFileChooser();
+            importFile.setSettings();
+            try {
+                Import.importFlightPattern(importFile.getSelectedFile());
+            } catch (Exception ex) {
+                Logger.getLogger(FlightInfoDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         return button;
     }
