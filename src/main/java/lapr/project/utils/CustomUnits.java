@@ -27,25 +27,35 @@ public class CustomUnits {
      * TSFC unit in SI System of units (kg/s/N)
      */
     public static final Unit TSFC_SI = (SI.KILOGRAM.divide(SI.SECOND)).divide(SI.NEWTON);
-    
+
     /**
      * Square Foot unit (ft2)
      */
     public static final Unit<Area> SQUARE_FOOT = NonSI.FOOT.pow(2).asType(Area.class);
-    
+
     /**
-     * Temperature lapse rate unit (K/m) 
+     * Temperature lapse rate unit (K/m)
      */
     public static final Unit TEMP_GRADIENT_SI = SI.KELVIN.divide(SI.METER);
-    
+
     /**
      * Volumetric density (Kg/m3)
      */
     public static final Unit VOLUMETRIC_DENSITY_SI = SI.KILOGRAM.divide(SI.METER.pow(3));
-    
+
     /**
      * Pressure (N/m2)
      */
     public static final Unit PRESSURE_SI = SI.NEWTON.divide(SI.SQUARE_METRE);
+
+    /**
+     * dw/dt fuel burn (N/s)
+     */
+    public static final Unit FUEL_BURN_SI = SI.NEWTON.divide(SI.SECOND);
+
+    /**
+     * Rdesc (ft/s)
+     */
+    public static final Unit FEET_PER_SECOND = NonSI.FOOT.divide(SI.SECOND);
 
 }

@@ -80,11 +80,6 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
     private static final String WINDOW_TITLE = "Select or create a Project";
 
     /**
-     * Window's dimension.
-     */
-    private static final Dimension WINDOW_DIMENSION = new Dimension(600, 400);
-
-    /**
      * Padding border.
      */
     private final static EmptyBorder PADDING_BORDER = new EmptyBorder(10, 10, 10, 10);
@@ -117,7 +112,6 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         createComponents();
 
         pack();
-        setSize(WINDOW_DIMENSION);
         setMinimumSize(new Dimension(getWidth(), getHeight()));
         setLocationRelativeTo(mainFrame);
     }
@@ -128,8 +122,8 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
     private void createComponents() {
         JPanel componentsPanel = new JPanel(new BorderLayout(20, 20));
 
-        componentsPanel.add(createListPanel(), BorderLayout.CENTER);
-        componentsPanel.add(createButtonsPanel(), BorderLayout.SOUTH);
+        componentsPanel.add(createListPanel(), BorderLayout.NORTH);
+        componentsPanel.add(createButtonsPanel(), BorderLayout.CENTER);
 
         componentsPanel.setBorder(PADDING_BORDER);
         add(componentsPanel);
