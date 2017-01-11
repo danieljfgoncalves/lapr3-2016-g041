@@ -20,6 +20,14 @@ public class FlightPattern {
 
     /**
      * The matrix with the flight pattern data.
+     *
+     * |Altitude| vClimb | vDesc | rDesc | *not in the matrix*
+     *
+     * | value | value | value | value | 
+     * | value | value | value | value | 
+     * | value | value | value | value | 
+     * | (...) | (...) | (...) | (...) |
+     *
      */
     private Amount[][] matrix;
 
@@ -42,6 +50,26 @@ public class FlightPattern {
      * Factor in which the matrix is resized.
      */
     public static final float RESIZE_FACTOR = 1.5F;
+
+    /**
+     * The column with the vClimbs values.
+     */
+    public static final int ALTITUDE_COLUMN = 0;
+
+    /**
+     * The column with the vClimbs values.
+     */
+    public static final int VCLIMB_COLUMN = 1;
+
+    /**
+     * The column with the vDesc values.
+     */
+    public static final int VDESC_COLUMN = 2;
+
+    /**
+     * The column with the rDesc values.
+     */
+    public static final int RDESC_COLUMN = 3;
 
     /**
      * Creates an instance of a FlightPattern.
@@ -107,10 +135,60 @@ public class FlightPattern {
 
     /**
      * Gets the index of the last filled line.
-     * 
+     *
      * @return the lineNumber
      */
     public int numLines() {
         return lineIndex + 1;
+    }
+
+    /**
+     * Gets the vClimb value for a given altitude.
+     *
+     * @param altitude the given altitude
+     * @return the vClimb value for a given altitude
+     */
+    public Amount<Velocity> getVclimb(Amount<Length> altitude) {
+        int altitudeIndex = getAltitudeIndex(altitude);
+        return matrix[altitudeIndex][VCLIMB_COLUMN];
+    }
+
+    /**
+     * Gets the vDesc value for a given altitude.
+     *
+     * @param altitude the given altitude
+     * @return the vDesc value for a given altitude
+     */
+    public Amount<Velocity> getVdesc(Amount<Length> altitude) {
+        int altitudeIndex = getAltitudeIndex(altitude);
+        return matrix[altitudeIndex][VDESC_COLUMN];
+    }
+
+    /**
+     * Gets the rDesc value for a given altitude.
+     *
+     * @param altitude the given altitude
+     * @return the rDesc value for a given altitude
+     */
+    public Amount<Velocity> getRdesc(Amount<Length> altitude) {
+        int altitudeIndex = getAltitudeIndex(altitude);
+        return matrix[altitudeIndex][RDESC_COLUMN];
+    }
+
+    /**
+     * Gets the matrix line index of a given altitude
+     *
+     * @param altitude
+     * @return
+     */
+    public int getAltitudeIndex(Amount<Length> altitude) {
+        for (int i = 0; i < matrix.length; i++) {
+            if ((altitude.equals(matrix[i][ALTITUDE_COLUMN])
+                    || (altitude.isGreaterThan(matrix[i][ALTITUDE_COLUMN])
+                    && altitude.isLessThan(matrix[i + 1][ALTITUDE_COLUMN])))) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

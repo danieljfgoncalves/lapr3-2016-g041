@@ -1,7 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Package location for Model concept tests.
  */
 package lapr.project.model;
 
@@ -15,8 +13,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Tests for the class thrust function.
  *
- * @author Ivo Ferro
+ * @author Daniel Gonçalves - 1151452
+ * @author Eric Amaral - 1141570
+ * @author Ivo Ferro - 1151159
+ * @author Tiago Correia - 1151031
  */
 public class ThrustFunctionTest {
 
@@ -27,7 +29,7 @@ public class ThrustFunctionTest {
     @Before
     public void setUp() {
         instance = new ThrustFunction(Amount.valueOf(348.31E+03, SI.NEWTON),
-                Amount.valueOf(1.8E+05, SI.METERS_PER_SECOND),
+                Amount.valueOf(1.8E+05, SI.NEWTON),
                 Amount.valueOf(0.9, NonSI.MACH));
     }
 
@@ -52,10 +54,10 @@ public class ThrustFunctionTest {
     public void testGetSetThrustMaxSpeed() {
         System.out.println("getThrustMaxSpeed and setThrustMaxSpeed");
 
-        Amount<Velocity> thrustMaxSpeed = Amount.valueOf(9.9e6, SI.METERS_PER_SECOND);
+        Amount<Force> thrustMaxSpeed = Amount.valueOf(9.9e6, SI.NEWTON);
         instance.setThrustMaxSpeed(thrustMaxSpeed);
 
-        assertEquals(instance.getThrustMaxSpeed().doubleValue(SI.METERS_PER_SECOND), thrustMaxSpeed.doubleValue(SI.METERS_PER_SECOND), EPSILON);
+        assertEquals(instance.getThrustMaxSpeed().doubleValue(SI.NEWTON), thrustMaxSpeed.doubleValue(SI.NEWTON), EPSILON);
     }
 
     /**
@@ -91,7 +93,7 @@ public class ThrustFunctionTest {
         System.out.println("equals 2");
 
         Object obj = new ThrustFunction(Amount.valueOf(1E+01, SI.NEWTON),
-                Amount.valueOf(1E1, SI.METERS_PER_SECOND),
+                Amount.valueOf(1E1, SI.NEWTON),
                 Amount.valueOf(0.0001, NonSI.MACH));
 
         assertFalse(instance.equals(obj));
@@ -105,7 +107,7 @@ public class ThrustFunctionTest {
         System.out.println("equals 3");
 
         Object obj = new ThrustFunction(Amount.valueOf(348.31E+03, SI.NEWTON),
-                Amount.valueOf(1.8E+05, SI.METERS_PER_SECOND),
+                Amount.valueOf(1.8E+05, SI.NEWTON),
                 Amount.valueOf(0.9, NonSI.MACH));
 
         assertTrue(instance.equals(obj));

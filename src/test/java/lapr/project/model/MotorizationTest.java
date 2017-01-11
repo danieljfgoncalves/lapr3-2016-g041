@@ -37,7 +37,7 @@ public class MotorizationTest {
                 Amount.valueOf(1.6E-4, CustomUnits.TSFC_SI),
                 Amount.valueOf(0.96, Unit.ONE),
                 new ThrustFunction(Amount.valueOf(348.31E+03, SI.NEWTON),
-                        Amount.valueOf(1.8E+05, SI.METERS_PER_SECOND),
+                        Amount.valueOf(1.8E+05, SI.NEWTON),
                         Amount.valueOf(0.9, NonSI.MACH)));
     }
 
@@ -165,7 +165,7 @@ public class MotorizationTest {
                 Amount.valueOf(1.6E-4, CustomUnits.TSFC_SI),
                 Amount.valueOf(0.96, Unit.ONE),
                 new ThrustFunction(Amount.valueOf(348.31E+03, SI.NEWTON),
-                        Amount.valueOf(1.8E+05, SI.METERS_PER_SECOND),
+                        Amount.valueOf(1.8E+05, SI.NEWTON),
                         Amount.valueOf(0.9, NonSI.MACH)));
 
         assertTrue(instance.equals(obj));

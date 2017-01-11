@@ -6,9 +6,12 @@ package lapr.project.controller;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
+import lapr.project.datalayer.oracle.AircraftModelOracle;
+import lapr.project.model.AircraftModel;
 import lapr.project.model.Project;
-import lapr.project.utils.Import;
+import lapr.project.utils.importable.AircraftModelsXML;
 import org.xml.sax.SAXException;
 
 /**
@@ -45,8 +48,22 @@ public class ImportAircraftModelsController {
      * @throws ParserConfigurationException configurations errors
      * @throws java.sql.SQLException
      */
-    public boolean importFile(File file) throws SAXException, IOException, ParserConfigurationException, SQLException {
-        return Import.importAircraftModelsFromXml(file, project.getSerieNumber());
+    public boolean importAircraftModels(File file) throws SAXException, IOException, ParserConfigurationException, SQLException {
+        AircraftModelsXML importer = new AircraftModelsXML(file);
+
+        Object aircraftModelsObj = importer.importFile();
+
+        if (aircraftModelsObj != null && aircraftModelsObj instanceof List) {
+            AircraftModelOracle aircraftModelDAO = new AircraftModelOracle(project.getSerieNumber());
+
+            List<AircraftModel> aircraftModels = (List<AircraftModel>) aircraftModelsObj;
+            for (AircraftModel aircraftModel : aircraftModels) {
+                aircraftModelDAO.addAircraftModel((AircraftModel) aircraftModel);
+            }
+
+            return true;
+        }
+        return false;
     }
 
 }

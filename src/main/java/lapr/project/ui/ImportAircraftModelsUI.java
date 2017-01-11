@@ -47,7 +47,7 @@ public class ImportAircraftModelsUI extends ImportFileChooser {
 
         try {
             // Import selected File
-            controller.importFile(getSelectedFile());
+            controller.importAircraftModels(getSelectedFile());
             // If no critical error
             JOptionPane.showMessageDialog(this.getParent(),
                     "The air network was successfully added!",
