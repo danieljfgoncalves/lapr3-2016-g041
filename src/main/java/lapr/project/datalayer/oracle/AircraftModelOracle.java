@@ -172,7 +172,8 @@ public class AircraftModelOracle implements AircraftModelDAO {
                 + " ?, ?, ?, ?, ?,"
                 + " ?, ?, ?, ?, ?,"
                 + " ?, ?, ?, ?, ?,"
-                + " ?, ?, ?, ?, ?)}";
+                + " ?, ?, ?, ?, ?,"
+                + " ?)}";
 
         try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(query)) {
 
@@ -204,7 +205,20 @@ public class AircraftModelOracle implements AircraftModelDAO {
             callableStatement.setDouble(23, aircraftModel.getWingSpan().doubleValue(SI.METER));
             callableStatement.setDouble(24, aircraftModel.getAspectRatio().doubleValue(Unit.ONE));
             callableStatement.setDouble(25, aircraftModel.getE().doubleValue(Unit.ONE));
+            callableStatement.registerOutParameter(26, OracleTypes.INTEGER);
             callableStatement.executeUpdate();
+
+            int idAircraftModel = callableStatement.getInt(26);
+
+            for (double[] cdragFunction : aircraftModel.getCdragFunction()) {
+                String queryCdragFunction = "{call PC_CREATE_CDRAG_FUNCTION (?, ?, ?)}";
+                try (CallableStatement cdragCallableStatement = connection.prepareCall(queryCdragFunction)) {
+                    cdragCallableStatement.setDouble(1, cdragFunction[0]);
+                    cdragCallableStatement.setDouble(2, cdragFunction[1]);
+                    cdragCallableStatement.setDouble(3, idAircraftModel);
+                    cdragCallableStatement.executeUpdate();
+                }
+            }
         }
     }
 
