@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class Coordinate {
+public class Coordinate implements Junction {
 
     /**
      * The coordinate's ID.
@@ -159,4 +159,8 @@ public class Coordinate {
         return String.format("ID: %s%nLatitude: %.6f%nLongitude: %.6f%n", id, latitude, longitude);
     }
 
+    @Override
+    public Coordinate getCoordinate() {
+        return this;
+    }
 }

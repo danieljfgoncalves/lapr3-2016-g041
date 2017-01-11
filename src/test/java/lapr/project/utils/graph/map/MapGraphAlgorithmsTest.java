@@ -5,6 +5,8 @@
  */
 package lapr.project.utils.graph.map;
 
+import lapr.project.utils.graph.MapGraphAlgorithms;
+import lapr.project.utils.graph.MapGraph;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;

@@ -1,5 +1,7 @@
 package lapr.project.utils.graph.map;
 
+import lapr.project.utils.graph.MapEdge;
+import lapr.project.utils.graph.MapVertex;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

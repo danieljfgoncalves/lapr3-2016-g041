@@ -19,7 +19,7 @@ import org.jscience.physics.amount.Amount;
  * @author Ivo Ferro - 1151159
  * @author Tiago Correia - 1151031
  */
-public class Stop {
+public class Stop implements Junction {
 
     /**
      * Stop's airport
@@ -186,5 +186,10 @@ public class Stop {
     public String toString() {
         return String.format("Stop{airport=%s, minumum stop minutes=%d, schedule arrival=%s, departure time=%s",
                 this.airport, this.minimumStopMinutes.longValue(NonSI.MINUTE), this.scheduleArrival, this.departureTime);
+    }
+
+    @Override
+    public Coordinate getCoordinate() {
+        return airport.getCoordinates();
     }
 }

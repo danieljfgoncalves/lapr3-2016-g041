@@ -7,8 +7,8 @@ import java.util.Objects;
 import java.util.Iterator;
 import javax.measure.quantity.Length;
 import javax.measure.unit.SI;
-import lapr.project.utils.graph.map.MapEdge;
-import lapr.project.utils.graph.map.MapGraph;
+import lapr.project.utils.graph.MapEdge;
+import lapr.project.utils.graph.MapGraph;
 import org.jscience.physics.amount.Amount;
 
 /**
