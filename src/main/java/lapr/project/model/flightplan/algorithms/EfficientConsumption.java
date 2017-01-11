@@ -195,7 +195,7 @@ public class EfficientConsumption extends ShortestFlightPlan {
         boolean isStop = false;
         Iterator<Junction> it = junctions.iterator();
 
-        while (isStop && it.hasNext()) {
+        while (!isStop && it.hasNext()) {
 
             Junction next = it.next();
 
