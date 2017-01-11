@@ -632,7 +632,7 @@ public class Calculus {
      * Obtains the fuel burn calculation (dw/dt) (N/s)
      *
      * @param totalThrust the total thrust (N)
-     * @param timeStep the time step (s)
+     * @param timeStep the time step (dt) (s)
      * @param tsfc the thrust specific fuel consumption (Kg/s/N)_SI (N/s/N)_US
      * @return the fuel burn calculation (dw/dt) (N/s)
      */
