@@ -10,37 +10,45 @@ import lapr.project.model.Coordinate;
 import lapr.project.model.FlightSimulation;
 import lapr.project.model.Junction;
 import lapr.project.model.Segment;
+import lapr.project.utils.exceptions.InsufficientFuelException;
 import lapr.project.utils.graph.MapGraph;
 import lapr.project.utils.graph.MapGraphAlgorithms;
 
 /**
- * Abstract class to represent shortest flight plan (example distance, time, etc.).
+ * Abstract class to represent shortest flight plan (example distance, time,
+ * etc.).
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
  * @author Tiago Correia - 1151031
  */
-public abstract class ShortestFlightPlan {
+public abstract class ShortestFlightPlan implements FlightPlan {
 
     /**
-     * Adds weight to path if any alteration is need when passing a waypoint or a stop.
-     * 
+     * Adds weight to path if any alteration is need when passing a waypoint or
+     * a stop.
+     *
      * @param junction the junction to analyse
-     * @return 
+     * @return the extra weight from a stop/waypoint.
      */
     protected abstract double addStopWeight(Junction junction);
 
+    protected abstract double pathAlgorithm(MapGraph<Coordinate, Segment> network, Coordinate vOrig, Coordinate vDest,
+            LinkedList<Coordinate> efficientPath, FlightSimulation flight, List<Junction> junctions)
+            throws InsufficientFuelException;
+
     /**
      * Calculates the shortest path passing through all waypoints & stops.
-     * 
+     *
      * @param graph the airnetwork
      * @param flight the flight to simulate
      * @param shortestPath list of coordinates that form the flight plan
      * @return the distance (meters, time, etc.)
+     * @throws lapr.project.utils.exceptions.InsufficientFuelException
      */
-    protected double shortestPath(MapGraph<Coordinate, Segment> graph, FlightSimulation flight,
-            LinkedList<Coordinate> shortestPath) {
+    protected double shortestFlightPlan(MapGraph<Coordinate, Segment> graph, FlightSimulation flight,
+            LinkedList<Coordinate> shortestPath) throws InsufficientFuelException {
 
         Coordinate vOrig = flight.getFlightInfo().getOriginAirport().getCoordinates();
         Coordinate vDest = flight.getFlightInfo().getDestinationAirport().getCoordinates();
@@ -74,7 +82,7 @@ public abstract class ShortestFlightPlan {
             for (Junction junction : junctions) {
 
                 LinkedList<Coordinate> temp = new LinkedList<>();
-                double dist = MapGraphAlgorithms.shortestPath(graph, currentVert, junction.getCoordinate(), temp);
+                double dist = pathAlgorithm(graph, currentVert, junction.getCoordinate(), temp, flight, junctions);
                 if (dist > 0 && dist < minDist) {
                     minDist = dist;
                     pathToNextVert = temp;
