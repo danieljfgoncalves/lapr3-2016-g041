@@ -3,7 +3,7 @@
  */
 package lapr.project.utils.graph.matrix;
 
-import lapr.project.utils.graph.matrix.MatrixGraph;
+import lapr.project.utils.graph.MatrixGraph;
 import java.util.Iterator;
 import org.junit.Test;
 import static org.junit.Assert.*;

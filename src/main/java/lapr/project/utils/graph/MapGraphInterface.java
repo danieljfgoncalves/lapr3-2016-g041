@@ -1,7 +1,7 @@
 /*
  * Package for generic concepts related to graphs.
  */
-package lapr.project.utils.graph.map;
+package lapr.project.utils.graph;
 
 /**
  * Interface for a Map Graph.

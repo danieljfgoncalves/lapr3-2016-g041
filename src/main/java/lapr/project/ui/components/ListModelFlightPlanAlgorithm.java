@@ -5,7 +5,7 @@ package lapr.project.ui.components;
 
 import java.util.List;
 import javax.swing.AbstractListModel;
-import lapr.project.model.FlightPlanAlgorithm;
+import lapr.project.model.flightplan.FlightPlan;
 
 /**
  * List model for flight plan algorithms.
@@ -15,19 +15,19 @@ import lapr.project.model.FlightPlanAlgorithm;
  * @author Ivo Ferro - 1151159
  * @author Tiago Correia - 1151031
  */
-public class ListModelFlightPlanAlgorithm extends AbstractListModel<FlightPlanAlgorithm> {
+public class ListModelFlightPlanAlgorithm extends AbstractListModel<FlightPlan> {
 
     /**
      * Flight plan algorithms.
      */
-    private final List<FlightPlanAlgorithm> flightPlanAlgorithms;
+    private final List<FlightPlan> flightPlanAlgorithms;
 
     /**
      * Creates an instance of list model flight plan algorithm.
      *
      * @param flightPlanAlgorithms flight plan algorithms.
      */
-    public ListModelFlightPlanAlgorithm(List<FlightPlanAlgorithm> flightPlanAlgorithms) {
+    public ListModelFlightPlanAlgorithm(List<FlightPlan> flightPlanAlgorithms) {
         this.flightPlanAlgorithms = flightPlanAlgorithms;
     }
 
@@ -37,7 +37,7 @@ public class ListModelFlightPlanAlgorithm extends AbstractListModel<FlightPlanAl
     }
 
     @Override
-    public FlightPlanAlgorithm getElementAt(int i) {
+    public FlightPlan getElementAt(int i) {
         return this.flightPlanAlgorithms.get(i);
     }
 

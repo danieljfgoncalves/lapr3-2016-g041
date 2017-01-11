@@ -34,8 +34,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import lapr.project.model.FlightInfo;
-import lapr.project.model.FlightPlanAlgorithm;
-import lapr.project.model.flightplan.algorithms.ShortestFlightPlan;
+import lapr.project.model.flightplan.FlightPlan;
+import lapr.project.model.flightplan.algorithms.ShortestDistance;
 import lapr.project.ui.components.ListModelFlightPlanAlgorithm;
 import lapr.project.ui.components.TableModelFlightInfo;
 
@@ -523,24 +523,24 @@ public class SimulateFlightDialog extends JDialog {
         algorithmSelectionLabel.setFont(FORM_LABEL_FONT);
 
         // TODO remove this mock object
-        ArrayList<FlightPlanAlgorithm> flightPlanAlgorithms = new ArrayList<>();
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
-        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        ArrayList<FlightPlan> flightPlanAlgorithms = new ArrayList<>();
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
+        flightPlanAlgorithms.add(new ShortestDistance());
 
         JList algorithmList = new JList(new ListModelFlightPlanAlgorithm(flightPlanAlgorithms));
         algorithmList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
