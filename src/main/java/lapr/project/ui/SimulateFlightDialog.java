@@ -3,28 +3,40 @@
  */
 package lapr.project.ui;
 
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import lapr.project.model.FlightInfo;
+import lapr.project.model.FlightPlanAlgorithm;
+import lapr.project.model.flightplan.algorithms.ShortestFlightPlan;
+import lapr.project.ui.components.ListModelFlightPlanAlgorithm;
 import lapr.project.ui.components.TableModelFlightInfo;
 
 /**
@@ -36,11 +48,6 @@ import lapr.project.ui.components.TableModelFlightInfo;
  * @author Tiago Correia - 1151031
  */
 public class SimulateFlightDialog extends JDialog {
-
-    /**
-     * The parent frame.
-     */
-    private final JFrame parentFrame;
 
     /**
      * Title for the frame.
@@ -145,17 +152,17 @@ public class SimulateFlightDialog extends JDialog {
     /**
      * Creates an instance of simulate flight dialog.
      *
-     * @param parentFrame the parent frame
+     * @param parentWindow the parent window
      */
-    public SimulateFlightDialog(JFrame parentFrame) {
-        super(parentFrame, WINDOW_TITLE, true);
-        this.parentFrame = parentFrame;
+    public SimulateFlightDialog(Window parentWindow) {
+        super(parentWindow, WINDOW_TITLE);
+        setModal(true);
 
         createComponents();
 
         pack();
         setMinimumSize(new Dimension(getWidth(), getHeight()));
-        setLocationRelativeTo(parentFrame);
+        setLocationRelativeTo(parentWindow);
     }
 
     /**
@@ -263,8 +270,7 @@ public class SimulateFlightDialog extends JDialog {
      */
     private JPanel createFormsPanel() {
         cardLayout = new CardLayout();
-        formsPanel = new JPanel();
-        formsPanel.setLayout(cardLayout);
+        formsPanel = new JPanel(cardLayout);
 
         formsPanel.add(createSelectFlightInfoPanel(), "1");
         formsPanel.add(createFieldsPanel(), "2");
@@ -303,7 +309,7 @@ public class SimulateFlightDialog extends JDialog {
         selectFlightInfoPanel.setBackground(DEFAULT_COLOR);
         selectFlightInfoPanel.setBorder(BorderFactory.createCompoundBorder(DEFAULT_GREY_LINE_BORDER, PADDING_BORDER));
 
-        JLabel selectFlightInfoLabel = new JLabel("Select the flight info", SwingConstants.CENTER);
+        JLabel selectFlightInfoLabel = new JLabel("Select the flight info:", SwingConstants.CENTER);
         selectFlightInfoLabel.setFont(FORM_LABEL_FONT);
 
         selectFlightInfoPanel.add(selectFlightInfoLabel, BorderLayout.NORTH);
@@ -312,6 +318,11 @@ public class SimulateFlightDialog extends JDialog {
         return selectFlightInfoPanel;
     }
 
+    /**
+     * Creates the flight info table.
+     *
+     * @return flight info table
+     */
     private JPanel createFlightInfoTablePanel() {
         JPanel flightInfoTablePanel = new JPanel(new BorderLayout());
         flightInfoTablePanel.setBackground(DEFAULT_COLOR);
@@ -337,6 +348,7 @@ public class SimulateFlightDialog extends JDialog {
         flights.add(new FlightInfo());
 
         JTable flightInfoTable = new JTable(new TableModelFlightInfo(flights));
+        flightInfoTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JScrollPane scrollPane = new JScrollPane(flightInfoTable);
         scrollPane.setBorder(PADDING_BORDER);
@@ -352,6 +364,148 @@ public class SimulateFlightDialog extends JDialog {
         fieldsPanel.setBackground(DEFAULT_COLOR);
         fieldsPanel.setBorder(DEFAULT_GREY_LINE_BORDER);
 
+        JPanel fieldsWrapperLayout = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        GroupLayout groupLayout = new GroupLayout(fieldsWrapperLayout);
+        fieldsWrapperLayout.setLayout(groupLayout);
+        groupLayout.setAutoCreateGaps(true);
+        groupLayout.setAutoCreateContainerGaps(true);
+        fieldsWrapperLayout.setBackground(DEFAULT_COLOR);
+
+        // Labels
+        JLabel departueDateLabel = new JLabel("Departure Date:");
+        departueDateLabel.setFont(FORM_LABEL_FONT);
+        JLabel scheduledArrivalLabel = new JLabel("Scheduled Arrival Date:");
+        scheduledArrivalLabel.setFont(FORM_LABEL_FONT);
+        JLabel crewElementsLabel = new JLabel("Number of crew elements:");
+        crewElementsLabel.setFont(FORM_LABEL_FONT);
+        JLabel effectiveCargoLabel = new JLabel("Effective cargo weight:");
+        effectiveCargoLabel.setFont(FORM_LABEL_FONT);
+        JLabel effectiveFuelLoadLabel = new JLabel("Effective fuel load:");
+        effectiveFuelLoadLabel.setFont(FORM_LABEL_FONT);
+        JLabel class1MembersLabel = new JLabel("Number of elements in class 1:");
+        class1MembersLabel.setFont(FORM_LABEL_FONT);
+        JLabel class2MembersLabel = new JLabel("Number of elements in class 2:");
+        class2MembersLabel.setFont(FORM_LABEL_FONT);
+        JLabel class3MembersLabel = new JLabel("Number of elements in class 3:");
+        class3MembersLabel.setFont(FORM_LABEL_FONT);
+        JLabel class4MembersLabel = new JLabel("Number of elements in class 4:");
+        class4MembersLabel.setFont(FORM_LABEL_FONT);
+        JLabel class5MembersLabel = new JLabel("Number of elements in class 5:");
+        class5MembersLabel.setFont(FORM_LABEL_FONT);
+
+        Locale locale = new Locale("en");
+        DatePickerSettings departureDateSettings = new DatePickerSettings(locale);
+        TimePickerSettings departureTimeSettings = new TimePickerSettings(locale);
+        DatePickerSettings arrivalDateSettings = new DatePickerSettings(locale);
+        TimePickerSettings arrivalTimeSettings = new TimePickerSettings(locale);
+
+        final Dimension LOCAL_TEXT_FIELD_DIMENSION = new Dimension(60, 23);
+
+        // Inputs
+        DateTimePicker departureDateTimePicker = new DateTimePicker(departureDateSettings, departureTimeSettings);
+        DateTimePicker arrivalDateTimePicker = new DateTimePicker(arrivalDateSettings, arrivalTimeSettings);
+        JTextField crewElementsTextField = new JTextField(10);
+        crewElementsTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+        JTextField effectiveCargoTextField = new JTextField(10);
+        effectiveCargoTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+        JTextField effectiveFuelLoadTextField = new JTextField(10);
+        effectiveFuelLoadTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+        JTextField class1MembersTextField = new JTextField(10);
+        class1MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+        JTextField class2MembersTextField = new JTextField(10);
+        class2MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+        JTextField class3MembersTextField = new JTextField(10);
+        class3MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+        JTextField class4MembersTextField = new JTextField(10);
+        class4MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+        JTextField class5MembersTextField = new JTextField(10);
+        class5MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+
+        //align horizontally
+        groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(departueDateLabel)
+                        .addComponent(scheduledArrivalLabel)
+                        .addComponent(crewElementsLabel)
+                        .addComponent(effectiveCargoLabel)
+                        .addComponent(effectiveFuelLoadLabel)
+                        .addComponent(class1MembersLabel)
+                        .addComponent(class2MembersLabel)
+                        .addComponent(class3MembersLabel)
+                        .addComponent(class4MembersLabel)
+                        .addComponent(class5MembersLabel)
+                )
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(departureDateTimePicker, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(arrivalDateTimePicker, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(crewElementsTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(effectiveCargoTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(effectiveFuelLoadTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(class1MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(class2MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(class3MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(class4MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(class5MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                )
+        );
+
+        //align vertically
+        groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(departueDateLabel)
+                        .addComponent(departureDateTimePicker, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(scheduledArrivalLabel)
+                        .addComponent(arrivalDateTimePicker, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(crewElementsLabel)
+                        .addComponent(crewElementsTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(effectiveCargoLabel)
+                        .addComponent(effectiveCargoTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(effectiveFuelLoadLabel)
+                        .addComponent(effectiveFuelLoadTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class1MembersLabel)
+                        .addComponent(class1MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class2MembersLabel)
+                        .addComponent(class2MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class3MembersLabel)
+                        .addComponent(class3MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class4MembersLabel)
+                        .addComponent(class4MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(class5MembersLabel)
+                        .addComponent(class5MembersTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                )
+        );
+
+        fieldsPanel.add(fieldsWrapperLayout);
+
         return fieldsPanel;
     }
 
@@ -361,9 +515,42 @@ public class SimulateFlightDialog extends JDialog {
      * @return algorigthm selection panel
      */
     private JPanel createSelectAlgorithmPanel() {
-        JPanel selectAlgorithmPanel = new JPanel();
+        JPanel selectAlgorithmPanel = new JPanel(new BorderLayout(10, 10));
         selectAlgorithmPanel.setBackground(DEFAULT_COLOR);
         selectAlgorithmPanel.setBorder(DEFAULT_GREY_LINE_BORDER);
+
+        JLabel algorithmSelectionLabel = new JLabel("Select the pretended path algorithm:", SwingConstants.CENTER);
+        algorithmSelectionLabel.setFont(FORM_LABEL_FONT);
+
+        // TODO remove this mock object
+        ArrayList<FlightPlanAlgorithm> flightPlanAlgorithms = new ArrayList<>();
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+        flightPlanAlgorithms.add(new ShortestFlightPlan());
+
+        JList algorithmList = new JList(new ListModelFlightPlanAlgorithm(flightPlanAlgorithms));
+        algorithmList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JScrollPane scrollPane = new JScrollPane(algorithmList);
+        scrollPane.setBorder(PADDING_BORDER);
+        scrollPane.setBackground(DEFAULT_COLOR);
+
+        selectAlgorithmPanel.add(algorithmSelectionLabel, BorderLayout.NORTH);
+        selectAlgorithmPanel.add(scrollPane, BorderLayout.CENTER);
 
         return selectAlgorithmPanel;
     }

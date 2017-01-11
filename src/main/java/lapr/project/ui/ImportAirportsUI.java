@@ -3,13 +3,12 @@
  */
 package lapr.project.ui;
 
-import java.io.IOException;
+import java.util.List;
 import javax.swing.JOptionPane;
-import javax.xml.parsers.ParserConfigurationException;
 import lapr.project.controller.ImportAirportsController;
+import lapr.project.model.Airport;
 import lapr.project.model.Project;
 import lapr.project.ui.components.ImportFileChooser;
-import org.xml.sax.SAXException;
 
 /**
  * Import Airports UI.
@@ -46,14 +45,16 @@ public class ImportAirportsUI extends ImportFileChooser {
 
         try {
             // Import selected File
-            controller.importFile(getSelectedFile());
+            
+            List<Airport> listAirports = controller.importAirports(getSelectedFile());
+            controller.saveToDatabase(listAirports);
             // If no critical error
             JOptionPane.showMessageDialog(this.getParent(),
                     "The airports were successfully added!",
                     "Import Successful",
                     JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (SAXException | IOException | NumberFormatException | ParserConfigurationException ex) {
+        } catch (Exception ex) {
 
             JOptionPane.showMessageDialog(this,
                     String.format("Invalid File!%nPlease select a different file.%n(Error:%s)", ex.getMessage()),

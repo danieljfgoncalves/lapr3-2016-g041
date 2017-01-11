@@ -38,6 +38,8 @@ import org.xml.sax.SAXException;
  */
 public class Import {
 
+    private static final int NUMBER_OF_HEADERS = 4;
+
     /**
      * Imports the aircraft models from xml, saving them on database.
      *
@@ -385,36 +387,75 @@ public class Import {
     /**
      * Imports a csv file with the flight pattern of an aircraft.
      *
-     * @param file
-     * @return
-     * @throws IOException
+     * @param file the given file
+     * @return the imported flight pattern in the format:
+     * 
+     * |Altitude| vClimb | vDesc | rDesc |  *not in the matrix*
+     * 
+     * | value  |  value | value | value | 
+     * | value  |  value | value | value |
+     * | value  |  value | value | value |
+     * | (...)  |  (...) | (...) | (...) |
+     * 
+     * @throws Exception
      */
-    public static FlightPattern importFlightPattern(File file) throws IOException {
+    public static FlightPattern importFlightPattern(File file) throws Exception {
         FlightPattern fp = new FlightPattern();
-        Amount[][] matrix = fp.getFlightProfile();
+
+        String[][] aux = csvToMatrix(file);
+
+        Unit altitudeUnit = getUnit(aux[0][1]);
+        Unit vClimbUnit = getUnit(aux[1][1]);
+        Unit vDescUnit = getUnit(aux[2][1]);
+        Unit rDescUnit = getUnit(aux[3][1]);
+
+        for (int i = 2; i < aux[0].length; i++) {
+
+            Double altitude = Double.parseDouble(aux[0][i]);
+            Double vClimb = Double.parseDouble(aux[1][i]);
+            Double vDesc = Double.parseDouble(aux[2][i]);
+            Double rDesc = Double.parseDouble(aux[3][i]);
+
+            fp.insertLine(Amount.valueOf(altitude, altitudeUnit),
+                    Amount.valueOf(vClimb, vClimbUnit),
+                    Amount.valueOf(vDesc, vDescUnit),
+                    Amount.valueOf(rDesc, rDescUnit));
+        }
+        return fp;
+
+    }
+
+    /**
+     * Imports the dat from a csv file to a matrix.
+     * 
+     * @param file the given file
+     * 
+     * @return matrix:
+     * Altitude | unit | value | value | value |
+     * vClimb   | unit | value | value | (...) |
+     * vDesc    | unit | value | value | (...) |
+     * rDesc    | unit | value | value | (...) |
+     * 
+     * @throws Exception 
+     */
+    private static String[][] csvToMatrix(File file) throws Exception {
+
+        String[][] matrix = new String[4][];
 
         BufferedReader bufferedReader;
         bufferedReader = new BufferedReader(new FileReader(file));
         String currentLine;
-        int i; //lines in dest matrix
-        int k = 0; //columns in dest matrix
-        for (int line = 0; (currentLine = bufferedReader.readLine()) != null; line++) {
-            i = 0;
-            String[] data = currentLine.split(",");
-            String givenUnit = data[1];
-            Unit unit = getUnit(givenUnit);
-            for (int column = 2; column < data.length; column++) {
-                matrix[i][k] = Amount.valueOf(Double.parseDouble(data[column]), unit);
-                i++;
-            }
-            k++;
+        int i = 0;
+        while ((currentLine = bufferedReader.readLine()) != null) {
+            matrix[i] = currentLine.replaceAll("\\s|\\t", "").split(",");
+            i++;
         }
         bufferedReader.close();
-        fp.setFlightProfile(matrix);
 
-        return fp;
-
+        return matrix;
     }
+
+   
 
     /**
      * Returns the unit for each of the import csv file cases.
