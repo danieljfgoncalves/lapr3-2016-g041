@@ -52,9 +52,9 @@ public class EfficientConsumption extends ShortestFlightPlan {
         LinkedList<Coordinate> coordinates = new LinkedList<>();
 
         // Find best shortest path between orgin & dest, passing through waypoints/stops
-        double distance = shortestFlightPlan(graph, flight, coordinates);
+        double consumption = shortestFlightPlan(graph, flight, coordinates);
 
-        if (distance < 1 || coordinates.isEmpty()) {
+        if (consumption < 1 || coordinates.isEmpty()) {
             throw new FailedAnalysisException();
         }
         // Get segments from ordered coordinates.
@@ -69,7 +69,7 @@ public class EfficientConsumption extends ShortestFlightPlan {
             first = second;
         }
 
-        return Amount.valueOf(distance, SI.METER);
+        return Amount.valueOf(consumption, SI.KILOGRAM);
     }
 
     private double efficientPath(MapGraph<Coordinate, Segment> network, Coordinate vOrig, Coordinate vDest,
