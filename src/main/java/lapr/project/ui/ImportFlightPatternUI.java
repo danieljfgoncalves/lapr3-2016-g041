@@ -3,37 +3,25 @@
  */
 package lapr.project.ui;
 
-import java.util.List;
 import javax.swing.JOptionPane;
-import lapr.project.controller.ImportAirportsController;
-import lapr.project.model.Airport;
-import lapr.project.model.Project;
+import lapr.project.controller.ImportFlightPatternController;
 import lapr.project.ui.components.ImportFileChooser;
 
 /**
- * Import Airports UI.
+ * Import Flight Pattern UI.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
-public class ImportAirportsUI extends ImportFileChooser {
-
-    /**
-     * Selected Project.
-     */
-    private final Project activeProject;
+public class ImportFlightPatternUI extends ImportFileChooser {
 
     /**
      * Creates an instance of the custom file chooser.
      *
-     * @param project
      */
-    public ImportAirportsUI(Project project) {
-
-        this.activeProject = project;
+    public ImportFlightPatternUI() {
     }
 
     @Override
@@ -41,16 +29,14 @@ public class ImportAirportsUI extends ImportFileChooser {
         super.approveSelection();
 
         // Create import controller
-        ImportAirportsController controller = new ImportAirportsController(activeProject);
+        ImportFlightPatternController controller = new ImportFlightPatternController();
 
         try {
             // Import selected File
-            
-            List<Airport> listAirports = controller.importAirports(getSelectedFile());
-            controller.saveToDatabase(listAirports);
+            controller.importFlightPattern(getSelectedFile());
             // If no critical error
             JOptionPane.showMessageDialog(this.getParent(),
-                    "The airports were successfully added!",
+                    "The flight pattern was successfully loaded!",
                     "Import Successful",
                     JOptionPane.INFORMATION_MESSAGE);
 
@@ -62,4 +48,5 @@ public class ImportAirportsUI extends ImportFileChooser {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }

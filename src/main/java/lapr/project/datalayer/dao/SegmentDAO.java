@@ -6,7 +6,7 @@ package lapr.project.datalayer.dao;
 import java.util.List;
 import lapr.project.model.Coordinate;
 import lapr.project.model.Segment;
-import lapr.project.utils.graph.map.MapEdge;
+import lapr.project.utils.graph.MapEdge;
 
 /**
  * Interface to manage a segments's data acess object.

@@ -167,7 +167,7 @@ public class CalculusTest {
         Amount<Velocity> machNumber = Amount.valueOf(0.85, NonSI.MACH);
 
         Amount<Velocity> expResult = Amount.valueOf(251.1, SI.METERS_PER_SECOND);
-        Amount<Velocity> result = Calculus.getTAS(altitude, machNumber);
+        Amount<Velocity> result = Calculus.calculateTAS(altitude, machNumber);
 
         assertEquals(expResult.doubleValue(SI.METERS_PER_SECOND), result.doubleValue(SI.METERS_PER_SECOND), EPSILON);
     }
@@ -201,7 +201,7 @@ public class CalculusTest {
         Amount<Angle> angleRelativeToY = Amount.valueOf(15, NonSI.DEGREE_ANGLE);
 
         Amount<Velocity> expResult = Amount.valueOf(261.75, SI.METERS_PER_SECOND);
-        Amount<Velocity> result = Calculus.getGS(altitude, machNumber, windSpeed, angleRelativeToY);
+        Amount<Velocity> result = Calculus.calculateGS(altitude, machNumber, windSpeed, angleRelativeToY);
 
         assertEquals(expResult.doubleValue(SI.METERS_PER_SECOND), result.doubleValue(SI.METERS_PER_SECOND), EPSILON);
     }

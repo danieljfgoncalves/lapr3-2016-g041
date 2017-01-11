@@ -4,10 +4,10 @@
 package lapr.project.controller;
 
 import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.List;
+import lapr.project.model.Airport;
 import lapr.project.model.Project;
-import org.xml.sax.SAXException;
+import lapr.project.utils.importable.AirportXML;
 
 /**
  * Controller to import airports.
@@ -22,7 +22,7 @@ public class ImportAirportsController {
     /**
      * The project.
      */
-    private final Project project;
+    private final Project selectedProject;
 
     /**
      * Creates an instance of ImportAirportsController.
@@ -30,21 +30,30 @@ public class ImportAirportsController {
      * @param project project to be imported
      */
     public ImportAirportsController(Project project) {
-        this.project = project;
+        this.selectedProject = project;
     }
 
     /**
-     * Imports a given XML file.
+     * Imports a list of airports from a xml file.
      *
-     * @param file file to import
-     * @return true if it is successfully imported, false otherwise
-     * @throws SAXException parser error
-     * @throws IOException invalid file or path
-     * @throws ParserConfigurationException configurations errors
+     * @param fileToImport file containing xml to import
+     * @return the imported list of airports or null if null
+     * @throws Exception
      */
-    public boolean importFile(File file) throws SAXException, IOException, ParserConfigurationException {
-        // TODO reimplement with database
-        return true;
+    public List<Airport> importAirports(File fileToImport) throws Exception {
+        AirportXML importer = new AirportXML(fileToImport);
+        List<Airport> airports = (List<Airport>) importer.importFile();
 
+        if (airports == null) {
+            return null;
+        }
+
+        return airports;
+    }
+
+    public void saveToDatabase(List<Airport> airports) {
+        for (Airport airport : airports) {
+            //TODO
+        }
     }
 }

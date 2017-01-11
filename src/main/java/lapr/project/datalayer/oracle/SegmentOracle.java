@@ -14,8 +14,8 @@ import lapr.project.datalayer.DbConnection;
 import lapr.project.datalayer.dao.SegmentDAO;
 import lapr.project.model.Coordinate;
 import lapr.project.model.Segment;
-import lapr.project.utils.graph.map.MapEdge;
-import lapr.project.utils.graph.map.MapVertex;
+import lapr.project.utils.graph.MapEdge;
+import lapr.project.utils.graph.MapVertex;
 import oracle.jdbc.OracleTypes;
 import org.jscience.physics.amount.Amount;
 

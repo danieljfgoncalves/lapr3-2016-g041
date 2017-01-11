@@ -22,12 +22,12 @@ public class ImportAirNetworkController {
     /**
      * The selected project.
      */
-    private Project selectedProject;
+    private final Project selectedProject;
 
     /**
      * Creates an instance of the controller.
      *
-     * @param Project the selected project
+     * @param project the selected project
      */
     public ImportAirNetworkController(Project project) {
         this.selectedProject = project;
@@ -44,11 +44,11 @@ public class ImportAirNetworkController {
 
         AirNetworkXML importer = new AirNetworkXML(fileToImport);
 
-        AirNetwork airNetwork = (AirNetwork) importer.importFile();
+        Object airNetwork = importer.importFile();
 
-        if (airNetwork != null || !(airNetwork instanceof AirNetwork)) {
+        if (airNetwork != null && airNetwork instanceof AirNetwork) {
 
-            this.selectedProject.setAirNetwork(airNetwork);
+            this.selectedProject.setAirNetwork((AirNetwork) airNetwork);
 
             return true;
         }

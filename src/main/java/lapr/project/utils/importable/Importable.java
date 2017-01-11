@@ -3,11 +3,9 @@
  */
 package lapr.project.utils.importable;
 
-import java.io.File;
-
 /**
  * Interface to manage import from a file.
- * 
+ *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159

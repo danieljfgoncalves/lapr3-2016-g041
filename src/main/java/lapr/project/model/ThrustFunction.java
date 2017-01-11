@@ -26,9 +26,9 @@ public class ThrustFunction {
     private Amount<Force> thrust0;
 
     /**
-     * The thrust max speed (SI = m/s).
+     * The thrust max speed (SI = N).
      */
-    private Amount<Velocity> thrustMaxSpeed;
+    private Amount<Force> thrustMaxSpeed;
 
     /**
      * The max speed.
@@ -43,7 +43,7 @@ public class ThrustFunction {
     /**
      * The default thrust max speed.
      */
-    private static final Amount<Velocity> DEFAULT_THRUST_MAX_SPEED = Amount.valueOf(3.0E+05, SI.METERS_PER_SECOND);
+    private static final Amount<Force> DEFAULT_THRUST_MAX_SPEED = Amount.valueOf(3.0E+05, SI.NEWTON);
 
     /**
      * The default max speed.
@@ -66,7 +66,7 @@ public class ThrustFunction {
      * @param thrustMaxSpeed the thrust max speed
      * @param maxSpeed the max speed
      */
-    public ThrustFunction(Amount<Force> thrust0, Amount<Velocity> thrustMaxSpeed, Amount<Velocity> maxSpeed) {
+    public ThrustFunction(Amount<Force> thrust0, Amount<Force> thrustMaxSpeed, Amount<Velocity> maxSpeed) {
         this.thrust0 = thrust0;
         this.thrustMaxSpeed = thrustMaxSpeed;
         this.maxSpeed = maxSpeed;
@@ -107,7 +107,7 @@ public class ThrustFunction {
      *
      * @return thrust max speed
      */
-    public Amount<Velocity> getThrustMaxSpeed() {
+    public Amount<Force> getThrustMaxSpeed() {
         return thrustMaxSpeed;
     }
 
@@ -116,7 +116,7 @@ public class ThrustFunction {
      *
      * @param thrustMaxSpeed thrust max speed
      */
-    public void setThrustMaxSpeed(Amount<Velocity> thrustMaxSpeed) {
+    public void setThrustMaxSpeed(Amount<Force> thrustMaxSpeed) {
         this.thrustMaxSpeed = thrustMaxSpeed;
     }
 
@@ -160,7 +160,7 @@ public class ThrustFunction {
         final double EPSILON = 0.01;
 
         return Math.abs(this.thrust0.doubleValue(SI.NEWTON) - other.thrust0.doubleValue(SI.NEWTON)) < EPSILON
-                && Math.abs(this.thrustMaxSpeed.doubleValue(SI.METERS_PER_SECOND) - other.thrustMaxSpeed.doubleValue(SI.METERS_PER_SECOND)) < EPSILON
+                && Math.abs(this.thrustMaxSpeed.doubleValue(SI.NEWTON) - other.thrustMaxSpeed.doubleValue(SI.NEWTON)) < EPSILON
                 && Math.abs(this.maxSpeed.doubleValue(NonSI.MACH) - other.maxSpeed.doubleValue(NonSI.MACH)) < EPSILON;
     }
 

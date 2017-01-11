@@ -13,8 +13,6 @@ import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,10 +29,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import lapr.project.controller.ImportFlightPatternController;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.FlightInfo;
-import lapr.project.model.FlightPattern;
 import lapr.project.model.FlightSimulator;
 import lapr.project.model.FlightType;
 import lapr.project.model.Project;
@@ -547,13 +545,8 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
         JButton button = new JButton("Load Aircraft Flight Pattern");
         button.addActionListener((ActionEvent ae) -> {
             //TESTING ONLY
-//            ImportFileChooser importFile = new ImportFileChooser();
-//            importFile.setSettings();
-//            try {
-//                Import.importFlightPattern(importFile.getSelectedFile());
-//            } catch (IOException ex) {
-//                Logger.getLogger(FlightInfoDialog.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            ImportFlightPatternUI importUI = new ImportFlightPatternUI();
+            importUI.setSettings();
         });
         return button;
     }

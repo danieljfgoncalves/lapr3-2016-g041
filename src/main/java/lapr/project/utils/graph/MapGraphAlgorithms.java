@@ -1,7 +1,7 @@
 /*
  * Package for generic concepts related to graphs.
  */
-package lapr.project.utils.graph.map;
+package lapr.project.utils.graph;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -79,6 +79,7 @@ public class MapGraphAlgorithms {
 
     /**
      * Performs depth-first search starting in a Vertex
+     *
      * @param <V> Generic Vertex
      * @param <E> Generic Edge
      * @param g MapGraph instance
@@ -214,7 +215,7 @@ public class MapGraphAlgorithms {
      * @param pathkeys minimum path vertices keys
      * @param path stack with the minimum path (correct order)
      */
-    private static <V, E> void getPath(MapGraph<V, E> g, V vOrig, V vDest, V[] verts, int[] pathKeys, LinkedList<V> path) {
+    public static <V, E> void getPath(MapGraph<V, E> g, V vOrig, V vDest, V[] verts, int[] pathKeys, LinkedList<V> path) {
 
         int vDestID = g.getKey(vDest);
 
@@ -272,7 +273,7 @@ public class MapGraphAlgorithms {
      *
      * @param path stack with path
      */
-    private static <V, E> LinkedList<V> revPath(LinkedList<V> path) {
+    public static <V, E> LinkedList<V> revPath(LinkedList<V> path) {
 
         LinkedList<V> pathcopy = new LinkedList<>(path);
         LinkedList<V> pathrev = new LinkedList<>();
