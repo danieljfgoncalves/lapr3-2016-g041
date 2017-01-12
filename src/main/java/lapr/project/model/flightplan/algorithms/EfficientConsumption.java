@@ -52,9 +52,9 @@ public class EfficientConsumption extends ShortestFlightPlan {
         LinkedList<Coordinate> coordinates = new LinkedList<>();
 
         // Find best shortest path between orgin & dest, passing through waypoints/stops
-        double distance = shortestFlightPlan(graph, flight, coordinates);
+        double consumption = shortestFlightPlan(graph, flight, coordinates);
 
-        if (distance < 1 || coordinates.isEmpty()) {
+        if (consumption < 1 || coordinates.isEmpty()) {
             throw new FailedAnalysisException();
         }
         // Get segments from ordered coordinates.
@@ -69,7 +69,7 @@ public class EfficientConsumption extends ShortestFlightPlan {
             first = second;
         }
 
-        return Amount.valueOf(distance, SI.METER);
+        return Amount.valueOf(consumption, SI.KILOGRAM);
     }
 
     private double efficientPath(MapGraph<Coordinate, Segment> network, Coordinate vOrig, Coordinate vDest,
@@ -149,7 +149,8 @@ public class EfficientConsumption extends ShortestFlightPlan {
                     descDistance = 0; // Method
                 }
 
-                Amount<Length> virtualDist = Calculus.virtualDistance(edge.getWeight(), flight, edge.getElement());
+                Amount<Length> virtualDist = Calculus.virtualDistance(edge.getWeight(), flight, edge.getElement(),
+                        edge.getVOrig(), edge.getVDest());
                 // Subtract climbing & descending (distance) from distance
                 double climbAndDescDistance = climbDistance + descDistance;
                 virtualDist = virtualDist.minus(Amount.valueOf(climbAndDescDistance, SI.METER));
@@ -158,7 +159,7 @@ public class EfficientConsumption extends ShortestFlightPlan {
                 double consumption = climbConsumption;
                 // TODO: reorganize params & units
                 Amount<Mass> currentFuel = flight.getEffectiveFuel().minus(Amount.valueOf(climbConsumption, SI.KILOGRAM));
-                consumption += Calculus.getFuelConsumption(flight, currentFuel, Amount.valueOf(0.84, NonSI.MACH), virtualDist).doubleValue(SI.CUBIC_METRE);
+                consumption += Calculus.getFuelConsumption(flight, currentFuel, Amount.valueOf(0.84, NonSI.MACH), virtualDist).doubleValue(SI.KILOGRAM);
                 consumption += descConsumption;
 
                 if (!visited[g.getKey(vAdj)] && dist[g.getKey(vAdj)] > dist[vOrigValue] + consumption) {

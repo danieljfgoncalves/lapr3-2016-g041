@@ -4,9 +4,12 @@
 package lapr.project.utils;
 
 import javax.measure.quantity.Area;
+import javax.measure.quantity.Pressure;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
+import org.jscience.physics.amount.Amount;
+import org.jscience.physics.amount.Constants;
 
 /**
  * Custom Conversion algorithms.
@@ -27,6 +30,11 @@ public class CustomUnits {
      * TSFC unit in SI System of units (kg/s/N)
      */
     public static final Unit TSFC_SI = (SI.KILOGRAM.divide(SI.SECOND)).divide(SI.NEWTON);
+    
+    /**
+     * TSFC unit in SI System of units (N/N/S)
+     */
+    public static final Unit TSFC_NNS = (SI.NEWTON).divide(SI.NEWTON).divide(SI.SECOND);
 
     /**
      * Square Foot unit (ft2)
@@ -46,7 +54,7 @@ public class CustomUnits {
     /**
      * Pressure (N/m2)
      */
-    public static final Unit PRESSURE_SI = SI.NEWTON.divide(SI.SQUARE_METRE);
+    public static final Unit<Pressure> PRESSURE_SI = SI.NEWTON.divide(SI.SQUARE_METRE).asType(Pressure.class);
 
     /**
      * dw/dt fuel burn (N/s)

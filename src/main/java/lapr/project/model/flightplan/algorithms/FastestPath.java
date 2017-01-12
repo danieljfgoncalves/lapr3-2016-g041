@@ -6,6 +6,7 @@ package lapr.project.model.flightplan.algorithms;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.measure.quantity.Angle;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Velocity;
 import javax.measure.unit.NonSI;
@@ -71,8 +72,11 @@ public class FastestPath extends ShortestFlightPlan {
                 subToDist += descDist;
                 addToTime += descTime;
             }
+            
+            Amount<Angle> flightDirection = Calculus.direction(edge.getVOrig(), edge.getVDest());
+            
             double groundSpeed = Calculus.calculateGS(altitude, machNumber,
-                    edge.getElement().getWindIntensity(), edge.getElement().getWindDirection()).doubleValue(SI.METERS_PER_SECOND);
+                    edge.getElement().getWindIntensity(), edge.getElement().getWindDirection(), flightDirection).doubleValue(SI.METERS_PER_SECOND);
             double cruiseDistance = edge.getWeight() - subToDist;
             
             double cruiseTime = cruiseDistance / groundSpeed;
