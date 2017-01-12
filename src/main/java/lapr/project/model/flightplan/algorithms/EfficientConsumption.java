@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
-import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import lapr.project.model.AirNetwork;
 import lapr.project.model.Calculus;
@@ -131,9 +130,12 @@ public class EfficientConsumption extends ShortestFlightPlan {
         dist[g.getKey(vOrig)] = 0;
         Amount<Mass> initialFuel = flight.getEffectiveFuel();
 
-        // TODO : orgin flight departure (calculate climb)
-        double climbConsumption = 0; // Method
-        double climbDistance = 0; // Method
+        // Orgin flight departure (calculate climb)
+        double climbConsumption = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
+                .getConsumption().doubleValue(SI.KILOGRAM);
+        double climbDistance = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
+                .getDistance().doubleValue(SI.METER);
+        // Initialize Landing values
         double descConsumption = 0; // Start at zero
         double descDistance = 0; // Start at zero
 
@@ -145,21 +147,22 @@ public class EfficientConsumption extends ShortestFlightPlan {
                 Coordinate vAdj = g.opposite(vOrig, edge);
 
                 if (isTechnicalStop(vAdj, junctions)) {
-                    descConsumption = 0; // Method
-                    descDistance = 0; // Method
+                    descConsumption = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
+                            .getConsumption().doubleValue(SI.KILOGRAM);
+                    descDistance = Calculus.calculateLanding(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
+                            .getDistance().doubleValue(SI.METER);
                 }
-
-                Amount<Length> virtualDist = Calculus.virtualDistance(edge.getWeight(), flight, edge.getElement(),
-                        edge.getVOrig(), edge.getVDest());
                 // Subtract climbing & descending (distance) from distance
-                double climbAndDescDistance = climbDistance + descDistance;
-                virtualDist = virtualDist.minus(Amount.valueOf(climbAndDescDistance, SI.METER));
+                double cruiseDistance = edge.getWeight() - (climbDistance + descDistance);
+                Amount<Length> virtualDist = Calculus.virtualDistance(cruiseDistance, flight, edge.getElement(),
+                        edge.getVOrig(), edge.getVDest());
 
                 // Add climbing consumption
                 double consumption = climbConsumption;
                 // TODO: reorganize params & units
                 Amount<Mass> currentFuel = flight.getEffectiveFuel().minus(Amount.valueOf(climbConsumption, SI.KILOGRAM));
-                consumption += Calculus.getFuelConsumption(flight, currentFuel, Amount.valueOf(0.84, NonSI.MACH), virtualDist).doubleValue(SI.KILOGRAM);
+                flight.setEffectiveFuel(currentFuel);
+                consumption += Calculus.calculateCruise(flight, virtualDist).getConsumption().doubleValue(SI.KILOGRAM);
                 consumption += descConsumption;
 
                 if (!visited[g.getKey(vAdj)] && dist[g.getKey(vAdj)] > dist[vOrigValue] + consumption) {
@@ -171,22 +174,24 @@ public class EfficientConsumption extends ShortestFlightPlan {
             vOrig = null;
             double minimunDistance = Double.POSITIVE_INFINITY;
 
+            Amount<Mass> nextFuel = Amount.valueOf(0d, SI.KILOGRAM);
             for (Coordinate ver : vertices) {
                 int vId = g.getKey(ver);
                 if (visited[vId] == false && dist[vId] < minimunDistance) {
                     vOrig = ver;
                     minimunDistance = dist[vId];
-                    Amount<Mass> nextFuel = initialFuel.minus(Amount.valueOf(dist[vId], SI.KILOGRAM));
-                    if (nextFuel.doubleValue(SI.KILOGRAM) < 1) {
-                        throw new InsufficientFuelException();
-                    }
-                    flight.setEffectiveFuel(nextFuel);
-
-                    if (isTechnicalStop(vOrig, junctions)) {
-                        climbConsumption = 0; // Method
-                        climbDistance = 0; // Method
-                    }
+                    nextFuel = initialFuel.minus(Amount.valueOf(dist[vId], SI.KILOGRAM));
                 }
+            }
+            if (nextFuel.doubleValue(SI.KILOGRAM) < 1) {
+                throw new InsufficientFuelException();
+            }
+            flight.setEffectiveFuel(nextFuel);
+            if (isTechnicalStop(vOrig, junctions)) {
+                climbConsumption = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
+                        .getConsumption().doubleValue(SI.KILOGRAM);
+                climbDistance = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
+                        .getDistance().doubleValue(SI.METER);
             }
         }
     }
