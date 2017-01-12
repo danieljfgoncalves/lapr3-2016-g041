@@ -3,6 +3,7 @@
  */
 package lapr.project.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -33,7 +34,7 @@ public class FlightSimulationTest {
 
         instance = new FlightSimulation(1, new FlightInfo(), new GregorianCalendar(2016, 12, 25),
                 new GregorianCalendar(2016, 12, 25), 6, Amount.valueOf(2d, SI.KILO(SI.KILOGRAM)),
-                Amount.valueOf(100d, SI.KILO(SI.KILOGRAM)), new LinkedList<>());
+                Amount.valueOf(100d, SI.KILO(SI.KILOGRAM)), new LinkedList<>(), new ArrayList<>());
     }
 
     /**
@@ -198,8 +199,8 @@ public class FlightSimulationTest {
         int result = instance.compareTo(instance2);
         assertEquals(expResult, result);
     }
-    
-        /**
+
+    /**
      * Test of compareTo method, of class FlightSimulation.
      */
     @Test

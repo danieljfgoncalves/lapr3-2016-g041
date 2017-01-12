@@ -3,6 +3,7 @@
  */
 package lapr.project.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -63,6 +64,11 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
     private LinkedList<Segment> flightplan;
 
     /**
+     * The number of passengers per class.
+     */
+    private List<Integer> passengersPerClass;
+
+    /**
      * Default flight id.
      */
     private static final int DEFAULT_ID = 0;
@@ -100,6 +106,7 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
         this.effectiveCargo = DEFAULT_CARGO;
         this.effectiveFuel = DEFAULT_FUEL;
         this.flightplan = new LinkedList<>();
+        this.passengersPerClass = new ArrayList<>();
     }
 
     /**
@@ -113,10 +120,12 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
      * @param effectiveCargo effective cargo
      * @param effectiveFuel effective fuel
      * @param flightplan the flight plan
+     * @param passengersPerClass effective number of passegners per class
      */
     public FlightSimulation(int id, FlightInfo flightInfo, Calendar scheduledArrival,
             Calendar departureDate, int effectiveCrew, Amount<Mass> effectiveCargo,
-            Amount<Mass> effectiveFuel, List<Segment> flightplan) {
+            Amount<Mass> effectiveFuel, List<Segment> flightplan,
+            List<Integer> passengersPerClass) {
 
         this.id = id;
         this.flightInfo = flightInfo;
@@ -126,6 +135,7 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
         this.effectiveCargo = effectiveCargo;
         this.effectiveFuel = effectiveFuel;
         this.flightplan = new LinkedList<>(flightplan);
+        this.passengersPerClass = passengersPerClass;
     }
 
     /**
@@ -143,6 +153,7 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
         this.effectiveCargo = other.effectiveCargo;
         this.effectiveFuel = other.effectiveFuel;
         this.flightplan = new LinkedList<>(other.getFlightplan());
+        this.passengersPerClass = new ArrayList<>(other.passengersPerClass);
     }
 
     /**
@@ -287,6 +298,24 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
      */
     public void setFlightplan(LinkedList<Segment> flightplan) {
         this.flightplan = flightplan;
+    }
+
+    /**
+     * Gets the effective number of passengers per class.
+     * 
+     * @return effective number of passengers per class
+     */
+    public List<Integer> getPassengersPerClass() {
+        return passengersPerClass;
+    }
+
+    /**
+     * Sets the effective number of passengers per class.
+     * 
+     * @param passengersPerClass effective number of passengers per class
+     */
+    public void setPassengersPerClass(List<Integer> passengersPerClass) {
+        this.passengersPerClass = passengersPerClass;
     }
 
     @Override

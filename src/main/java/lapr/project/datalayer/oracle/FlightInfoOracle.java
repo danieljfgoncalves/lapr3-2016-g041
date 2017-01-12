@@ -147,6 +147,7 @@ public class FlightInfoOracle implements FlightInfoDao {
         try (CallableStatement callableStatementWaypoints = connection.prepareCall(queryWaypoints)) {
             callableStatementWaypoints.registerOutParameter(1, OracleTypes.CURSOR);
             callableStatementWaypoints.setDouble(2, idFlightInfo);
+            callableStatementWaypoints.executeUpdate();
             try (ResultSet resultSetWaypoints = (ResultSet) callableStatementWaypoints.getObject(1)) {
                 while (resultSetWaypoints.next()) {
                     String waypointCoordinateCode = resultSetWaypoints.getString(1);
@@ -163,6 +164,7 @@ public class FlightInfoOracle implements FlightInfoDao {
         try (CallableStatement callableStatementClasses = connection.prepareCall(queryClasses)) {
             callableStatementClasses.registerOutParameter(1, OracleTypes.CURSOR);
             callableStatementClasses.setDouble(2, idFlightInfo);
+            callableStatementClasses.executeUpdate();
             try (ResultSet resultSetClasses = (ResultSet) callableStatementClasses.getObject(1)) {
                 while (resultSetClasses.next()) {
                     maxPassengersPerClass.add(resultSetClasses.getInt(1));
@@ -176,6 +178,7 @@ public class FlightInfoOracle implements FlightInfoDao {
         try (CallableStatement callableStatementFlightPattern = connection.prepareCall(queryFlightPattern)) {
             callableStatementFlightPattern.registerOutParameter(1, OracleTypes.CURSOR);
             callableStatementFlightPattern.setDouble(2, idFlightInfo);
+            callableStatementFlightPattern.executeUpdate();
             try (ResultSet resultSetFlightPattern = (ResultSet) callableStatementFlightPattern.getObject(1)) {
                 while (resultSetFlightPattern.next()) {
                     Amount<Length> altitude = Amount.valueOf(resultSetFlightPattern.getDouble(1), SI.METER);

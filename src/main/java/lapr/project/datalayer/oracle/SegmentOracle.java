@@ -32,7 +32,7 @@ public class SegmentOracle implements SegmentDAO {
     /**
      * Project's id.
      */
-    private int projectSerieNumber;
+    private final int projectSerieNumber;
 
     /**
      * Constructor of a segment oracle class.
@@ -51,7 +51,7 @@ public class SegmentOracle implements SegmentDAO {
      * @return a segment object
      * @throws Exception
      */
-    private MapEdge<Coordinate, Segment> mapRow(ResultSet rs) throws Exception {
+    private MapEdge<Coordinate, Segment> mapRow(ResultSet rs) throws SQLException {
 
         Segment segment = new Segment();
         segment.setId(rs.getString(1));
@@ -67,7 +67,7 @@ public class SegmentOracle implements SegmentDAO {
     }
 
     @Override
-    public MapEdge<Coordinate, Segment> getSegment(String id) throws Exception {
+    public MapEdge<Coordinate, Segment> getSegment(String id) throws SQLException {
         // TODO : Implement stored procedure.
         String query = "{? = call FC_GET_SEGMENT (?, ?)}";
 
@@ -93,7 +93,7 @@ public class SegmentOracle implements SegmentDAO {
     }
 
     @Override
-    public List<MapEdge<Coordinate, Segment>> getSegments() throws Exception {
+    public List<MapEdge<Coordinate, Segment>> getSegments() throws SQLException {
 
         List<MapEdge<Coordinate, Segment>> segments = new ArrayList<>();
 
