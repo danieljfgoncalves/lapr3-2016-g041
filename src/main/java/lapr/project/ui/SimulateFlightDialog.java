@@ -14,10 +14,15 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -33,9 +38,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import lapr.project.controller.SimulateFlightController;
 import lapr.project.model.FlightInfo;
+import lapr.project.model.FlightSimulation;
+import lapr.project.model.Project;
 import lapr.project.model.flightplan.FlightPlan;
-import lapr.project.model.flightplan.algorithms.ShortestDistance;
 import lapr.project.ui.components.ListModelFlightPlanAlgorithm;
 import lapr.project.ui.components.TableModelFlightInfo;
 
@@ -48,6 +57,16 @@ import lapr.project.ui.components.TableModelFlightInfo;
  * @author Tiago Correia - 1151031
  */
 public class SimulateFlightDialog extends JDialog {
+
+    /**
+     * The flights info.
+     */
+    private static List<FlightInfo> flightsInfo;
+
+    /**
+     * The controller to simulate flights.
+     */
+    private static SimulateFlightController controller;
 
     /**
      * Title for the frame.
@@ -78,6 +97,11 @@ public class SimulateFlightDialog extends JDialog {
      * The previous button.
      */
     private JButton previousButton;
+
+    /**
+     * The finish button.
+     */
+    private JButton finishButton;
 
     /**
      * The select flight info label.
@@ -153,16 +177,28 @@ public class SimulateFlightDialog extends JDialog {
      * Creates an instance of simulate flight dialog.
      *
      * @param parentWindow the parent window
+     * @param selectedProject
      */
-    public SimulateFlightDialog(Window parentWindow) {
+    public SimulateFlightDialog(Window parentWindow, Project selectedProject) {
         super(parentWindow, WINDOW_TITLE);
-        setModal(true);
+        try {
+            setModal(true);
 
-        createComponents();
+            controller = new SimulateFlightController(selectedProject.getSerieNumber());
+            flightsInfo = controller.getFlightsInfo();
+            createComponents();
 
-        pack();
-        setMinimumSize(new Dimension(getWidth(), getHeight()));
-        setLocationRelativeTo(parentWindow);
+            pack();
+            setMinimumSize(new Dimension(getWidth(), getHeight()));
+            setLocationRelativeTo(parentWindow);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "The server is busy. Try later.",
+                    "Database busy",
+                    JOptionPane.WARNING_MESSAGE);
+            Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -327,27 +363,7 @@ public class SimulateFlightDialog extends JDialog {
         JPanel flightInfoTablePanel = new JPanel(new BorderLayout());
         flightInfoTablePanel.setBackground(DEFAULT_COLOR);
 
-        // TODO remove this mock object
-        ArrayList<FlightInfo> flights = new ArrayList<>();
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-
-        JTable flightInfoTable = new JTable(new TableModelFlightInfo(flights));
+        JTable flightInfoTable = new JTable(new TableModelFlightInfo(flightsInfo));
         flightInfoTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JScrollPane scrollPane = new JScrollPane(flightInfoTable);
@@ -522,28 +538,28 @@ public class SimulateFlightDialog extends JDialog {
         JLabel algorithmSelectionLabel = new JLabel("Select the pretended path algorithm:", SwingConstants.CENTER);
         algorithmSelectionLabel.setFont(FORM_LABEL_FONT);
 
-        // TODO remove this mock object
-        ArrayList<FlightPlan> flightPlanAlgorithms = new ArrayList<>();
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
+        List<FlightPlan> flightPlanAlgorithms = new ArrayList<>();
+        try {
+            flightPlanAlgorithms = controller.getFlightPlans();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error reading the algorithms",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
 
         JList algorithmList = new JList(new ListModelFlightPlanAlgorithm(flightPlanAlgorithms));
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer) algorithmList.getCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
         algorithmList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        algorithmList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                finishButton.setEnabled(!algorithmList.isSelectionEmpty());
+            }
+        });
 
         JScrollPane scrollPane = new JScrollPane(algorithmList);
         scrollPane.setBorder(PADDING_BORDER);
@@ -577,6 +593,7 @@ public class SimulateFlightDialog extends JDialog {
                     fieldsLabel.setFont(PLAIN_LABEL_FONT);
                     break;
                 case 2:
+                    finishButton.setEnabled(false);
                     nextButton.setEnabled(true);
                     fieldsLabel.setFont(BOLD_LABEL_FONT);
                     selectAlgorithmLabel.setFont(PLAIN_LABEL_FONT);
@@ -621,11 +638,22 @@ public class SimulateFlightDialog extends JDialog {
      * @return the finish button
      */
     private JButton createFinishButton() {
-        JButton finishButton = new JButton("Finish");
+        finishButton = new JButton("Finish");
         finishButton.setPreferredSize(BUTTON_PREFERRED_SIZE);
+        finishButton.setEnabled(false);
 
         finishButton.addActionListener((ActionEvent ae) -> {
-            // TODO
+            try {
+                FlightSimulation flightSimulation = new FlightSimulation();
+                controller.createFlightSimulation(flightSimulation);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "The server is busy. Try later.",
+                        "Database busy",
+                        JOptionPane.WARNING_MESSAGE);
+                Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         return finishButton;
     }
@@ -652,7 +680,7 @@ public class SimulateFlightDialog extends JDialog {
         JFrame f = new JFrame();
         f.setVisible(true);
 
-        SimulateFlightDialog d = new SimulateFlightDialog(f);
+        SimulateFlightDialog d = new SimulateFlightDialog(f, new Project());
         d.setVisible(true);
     }
 }

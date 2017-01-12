@@ -58,8 +58,7 @@ public class FastestPath extends ShortestFlightPlan {
         Amount<Length> altitude = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseAltitude();
         Amount<Velocity> machNumber = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseSpeed();
         List<Stop> stops = flight.getFlightInfo().getStops();
-        
-        
+
         MapGraph<Coordinate, Segment> graph = network.getNetwork().clone();
         for (MapEdge<Coordinate, Segment> edge : graph.edges()) {
 
@@ -68,17 +67,17 @@ public class FastestPath extends ShortestFlightPlan {
             if (isTechnicalStop(edge.getVOrig(), stops) || edge.getVOrig().equals(vOrig)) {
                 subToDist += climbDist;
                 addToTime += climbTime;
-            } else if(isTechnicalStop(edge.getVDest(), stops) || edge.getVDest().equals(vDest)) {
+            } else if (isTechnicalStop(edge.getVDest(), stops) || edge.getVDest().equals(vDest)) {
                 subToDist += descDist;
                 addToTime += descTime;
             }
-            
+
             Amount<Angle> flightDirection = Calculus.direction(edge.getVOrig(), edge.getVDest());
-            
+
             double groundSpeed = Calculus.calculateGS(altitude, machNumber,
                     edge.getElement().getWindIntensity(), edge.getElement().getWindDirection(), flightDirection).doubleValue(SI.METERS_PER_SECOND);
             double cruiseDistance = edge.getWeight() - subToDist;
-            
+
             double cruiseTime = cruiseDistance / groundSpeed;
 
             edge.setWeight(cruiseTime + addToTime);
@@ -141,6 +140,11 @@ public class FastestPath extends ShortestFlightPlan {
             List<Junction> junctions) throws InsufficientFuelException {
 
         return MapGraphAlgorithms.shortestPath(network, vOrig, vDest, efficientPath);
+    }
+
+    @Override
+    public String toString() {
+        return getDescription();
     }
 
 }

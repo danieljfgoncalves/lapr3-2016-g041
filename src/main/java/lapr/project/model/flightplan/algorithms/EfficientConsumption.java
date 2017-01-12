@@ -225,4 +225,9 @@ public class EfficientConsumption extends ShortestFlightPlan {
         return DESCRIPTION;
     }
 
+    @Override
+    public String toString() {
+        return getDescription();
+    }
+
 }
