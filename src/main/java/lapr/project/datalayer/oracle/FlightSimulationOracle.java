@@ -153,8 +153,45 @@ public class FlightSimulationOracle implements FlightSimulationDAO {
     }
 
     @Override
-    public void addFlightSimulation(FlightSimulation flightSimulation) throws Exception {
-        // TODO implement this
+    public void addFlightSimulation(FlightSimulation flightSimulation) throws SQLException {
+        String queryAddFlightSimulation = "{call PC_ADD_FLIGHT_SIMULATION "
+                + "(?, ?, ?, ?,"
+                + " ?, ?, ?, ?)}";
+
+        try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatement = connection.prepareCall(queryAddFlightSimulation)) {
+            callableStatement.registerOutParameter(1, OracleTypes.INTEGER);
+            callableStatement.setDouble(2, projectSerieNumber);
+            callableStatement.setString(3, flightSimulation.getFlightInfo().getDesignator());
+            callableStatement.setDate(4, new java.sql.Date(flightSimulation.getScheduledArrival().getTimeInMillis()));
+            callableStatement.setDate(5, new java.sql.Date(flightSimulation.getDepartureDate().getTimeInMillis()));
+            callableStatement.setDouble(6, flightSimulation.getEffectiveCrew());
+            callableStatement.setDouble(7, flightSimulation.getEffectiveCargo().doubleValue(SI.KILOGRAM));
+            callableStatement.setDouble(8, flightSimulation.getEffectiveFuel().doubleValue(SI.KILOGRAM));
+            callableStatement.executeUpdate();
+
+            int idFlightSimulation = callableStatement.getInt(1);
+
+            String queryClass = "{call PC_ADD_AIRCRAFT_CLASS (?, ?)}";
+            for (Integer passengersOnClass : flightSimulation.getPassengersPerClass()) {
+                try (CallableStatement callableStatementClass = connection.prepareCall(queryClass)) {
+                    callableStatementClass.setDouble(1, idFlightSimulation);
+                    callableStatementClass.setDouble(2, passengersOnClass);
+                    callableStatementClass.executeUpdate();
+                }
+            }
+
+            String queryFlightPlan = "{call PC_ADD_FLIGHT_PLAN (?, ?, ?, ?)}";
+            LinkedList<Segment> flightplan = flightSimulation.getFlightplan();
+            for (int i = 0; i < flightplan.size(); i++) {
+                try (CallableStatement callableStatementFlightPlan = connection.prepareCall(queryFlightPlan)) {
+                    callableStatementFlightPlan.setDouble(1, projectSerieNumber);
+                    callableStatementFlightPlan.setDouble(2, idFlightSimulation);
+                    callableStatementFlightPlan.setString(3, flightplan.get(i).getId());
+                    callableStatementFlightPlan.setDouble(4, i);
+                    callableStatementFlightPlan.executeUpdate();
+                }
+            }
+        }
     }
 
 }
