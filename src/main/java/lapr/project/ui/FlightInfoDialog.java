@@ -14,8 +14,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -29,17 +27,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import lapr.project.controller.ImportFlightPatternController;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.FlightInfo;
 import lapr.project.model.FlightSimulator;
 import lapr.project.model.FlightType;
 import lapr.project.model.Project;
-import lapr.project.ui.components.ImportFileChooser;
 import lapr.project.ui.components.ListCellRendererAircraftModel;
 import lapr.project.ui.components.ListCellRendererAirport;
-import lapr.project.utils.Import;
 
 /**
  * The frame to create project.
@@ -158,6 +153,7 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * The class 2 text field.
      */
     private JTextField txtClass2;
+
     /**
      * The class 3 text field.
      */
@@ -449,9 +445,10 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @return the aircraft info form
      */
     private Component createAircraftInfoForm() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel aircraftInfoForm = new JPanel(new BorderLayout());
-        aircraftInfoForm.setBackground(DEFAULT_COLOR);
-        aircraftInfoForm.setBorder(DEFAULT_GREY_LINE_BORDER);
+        panel.setBackground(DEFAULT_COLOR);
+        panel.setBorder(DEFAULT_GREY_LINE_BORDER);
 
         JPanel aircraftInfoGroupLayout = new JPanel();
         GroupLayout layout = new GroupLayout(aircraftInfoGroupLayout);
@@ -532,8 +529,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
         aircraftInfoForm.add(aircraftInfoGroupLayout, BorderLayout.NORTH);
         aircraftInfoForm.add(buttonsPanel, BorderLayout.CENTER);
+        panel.add(aircraftInfoForm);
 
-        return aircraftInfoForm;
+        return panel;
     }
 
     /**
@@ -557,13 +555,16 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @return the aircraft configuration form panel
      */
     private Component createSetAircraftConfigurationForm() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel.setBackground(DEFAULT_COLOR);
+        panel.setBorder(DEFAULT_GREY_LINE_BORDER);
+
         JPanel aircraftConfigForm = new JPanel();
+        aircraftConfigForm.setBackground(DEFAULT_COLOR);
         GroupLayout layout = new GroupLayout(aircraftConfigForm);
         aircraftConfigForm.setLayout(layout);
         layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-        aircraftConfigForm.setBackground(DEFAULT_COLOR);
-        aircraftConfigForm.setBorder(DEFAULT_GREY_LINE_BORDER);
+        layout.setAutoCreateContainerGaps(false);
 
         class1Label = new JLabel("Max number of passengers in class 1:");
         class1Label.setFont(FORM_LABEL_FONT);
@@ -693,7 +694,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
                 )
         );
 
-        return aircraftConfigForm;
+        panel.add(aircraftConfigForm);
+
+        return panel;
     }
 
     /**
@@ -845,11 +848,14 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @return the name form panel
      */
     private Component createNameForm() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel.setBackground(DEFAULT_COLOR);
+        panel.setBorder(DEFAULT_GREY_LINE_BORDER);
+
         JPanel nameForm = new JPanel();
+        nameForm.setBackground(DEFAULT_COLOR);
         GroupLayout layout = new GroupLayout(nameForm);
         nameForm.setLayout(layout);
-        nameForm.setBackground(DEFAULT_COLOR);
-        nameForm.setBorder(DEFAULT_GREY_LINE_BORDER);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
@@ -861,7 +867,7 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
 
         //align horizontally
         layout.setHorizontalGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(insertNameLabel)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -878,7 +884,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
                                 GroupLayout.PREFERRED_SIZE))
         );
 
-        return nameForm;
+        panel.add(nameForm);
+
+        return panel;
     }
 
     /**

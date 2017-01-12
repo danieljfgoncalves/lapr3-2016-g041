@@ -6,6 +6,9 @@ package lapr.project.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.measure.quantity.Mass;
+import javax.measure.unit.SI;
+import org.jscience.physics.amount.Amount;
 
 /**
  * Represents an aircraft.
@@ -26,59 +29,81 @@ public class Aircraft {
      * The aircraft model.
      */
     private AircraftModel aircraftModel;
-    
+
     /**
      * The company name.
      */
     private String company;
 
     /**
+     * The max cargo.
+     */
+    private Amount<Mass> maxCargo;
+
+    /**
      * The number of elements in the flight crew.
      */
     private Integer maxCrew;
-    
+
     /**
      * The number of seats in each class.
      */
     private List<Integer> maxPassengerPerClass;
 
     /**
-     * Default value for company name.
+     * The aircraft flight pattern.
      */
-    private static final String DEFAULT_COMPANY = "unknown company";
+    private FlightPattern flightPattern;
 
     /**
      * Default value for the number of elements in the flight crew.
      */
-    private static final Integer DEFAULT_NUMBER_FLIGHT_MAX_CREW = 120;
+    private static final Integer DEFAULT_ID = -1;
 
     /**
-     * Creates an empty instance of aircraft.
+     * Default value for company name.
+     */
+    private static final String DEFAULT_COMPANY = "unknown company";
+
+    private static final Amount<Mass> DEFAULT_MAX_CARGO = Amount.valueOf(50000, SI.KILOGRAM);
+
+    /**
+     * Default value for the number of elements in the flight crew.
+     */
+    private static final Integer DEFAULT_MAX_CREW = 120;
+
+    /**
+     * Creates an aircraft with their default values.
      */
     public Aircraft() {
-        int lower = 1, upper = 1000;
-        this.id = (int) (Math.random() * (upper - lower)) + lower;
-        this.company = DEFAULT_COMPANY;
+        this.id = DEFAULT_ID;
         this.aircraftModel = new AircraftModel();
+        this.company = DEFAULT_COMPANY;
+        this.maxCargo = DEFAULT_MAX_CARGO;
+        this.maxCrew = DEFAULT_MAX_CREW;
         this.maxPassengerPerClass = new ArrayList<>();
-        this.maxCrew = DEFAULT_NUMBER_FLIGHT_MAX_CREW;
+        this.flightPattern = new FlightPattern();
     }
 
     /**
-     * Creates an aircraft receiving their attributes.
+     * Creates an aircraft receiving their parameters.
      *
-     * @param registration
-     * @param aircraftModel
-     * @param company
-     * @param maxPassengerPerClass
-     * @param maxCrew
+     * @param id aircraft ID
+     * @param aircraftModel aircraft model
+     * @param company company
+     * @param maxCargo max cargo
+     * @param maxCrew max crew
+     * @param maxPassengerPerClass max passengers per class
+     * @param flightPattern flight pattern
      */
-    public Aircraft(Integer registration, AircraftModel aircraftModel, String company, List maxPassengerPerClass, Integer maxCrew) {
-        this.id = registration;
+    public Aircraft(Integer id, AircraftModel aircraftModel, String company, Amount<Mass> maxCargo, Integer maxCrew, List<Integer> maxPassengerPerClass, FlightPattern flightPattern) {
+        this.id = id;
         this.aircraftModel = aircraftModel;
         this.company = company;
-        this.maxPassengerPerClass = new ArrayList<>(maxPassengerPerClass);
+        this.maxCargo = maxCargo;
         this.maxCrew = maxCrew;
+        this.maxPassengerPerClass = maxPassengerPerClass;
+        this.flightPattern = flightPattern;
     }
 
     /**
@@ -92,6 +117,7 @@ public class Aircraft {
         this.company = otherAircraft.company;
         this.maxPassengerPerClass = new ArrayList<>(otherAircraft.getMaxPassengerPerClass());
         this.maxCrew = otherAircraft.maxCrew;
+        this.flightPattern = otherAircraft.flightPattern;
     }
 
     /**
@@ -111,20 +137,22 @@ public class Aircraft {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     /**
      * Obtains the aircraft model.
+     *
      * @return aircraft model
      */
-    public AircraftModel getAircraftModel(){
+    public AircraftModel getAircraftModel() {
         return this.aircraftModel;
     }
-    
+
     /**
      * Modifies the aircraft model.
+     *
      * @param aircraftModel the new aircraft model
      */
-    public void setAircraftModel(AircraftModel aircraftModel){
+    public void setAircraftModel(AircraftModel aircraftModel) {
         this.aircraftModel = aircraftModel;
     }
 
@@ -165,6 +193,24 @@ public class Aircraft {
     }
 
     /**
+     * Gets the max cargo.
+     *
+     * @return max cago
+     */
+    public Amount<Mass> getMaxCargo() {
+        return maxCargo;
+    }
+
+    /**
+     * Sets the max cargo.
+     *
+     * @param maxCargo max cargo
+     */
+    public void setMaxCargo(Amount<Mass> maxCargo) {
+        this.maxCargo = maxCargo;
+    }
+
+    /**
      * Gets the number of flight crew.
      *
      * @return number of flight crew
@@ -180,6 +226,24 @@ public class Aircraft {
      */
     public void setMaxCrew(Integer maxCrew) {
         this.maxCrew = maxCrew;
+    }
+
+    /**
+     * Gets the flight pattern.
+     *
+     * @return flight pattern
+     */
+    public FlightPattern getFlightPattern() {
+        return flightPattern;
+    }
+
+    /**
+     * Sets the flight pattern.
+     *
+     * @param flightPattern flight pattern
+     */
+    public void setFlightPattern(FlightPattern flightPattern) {
+        this.flightPattern = flightPattern;
     }
 
     @Override
@@ -204,7 +268,7 @@ public class Aircraft {
 
     @Override
     public String toString() {
-        return String.format("Aircraft{id=\"%d\", aircraftModel=\"%s\", company=\"%s\", maxPassengerPerClass=\"%s\", maxCrew=\"%d\"}",
-                this.id, this.aircraftModel, this.company, this.maxPassengerPerClass, this.maxCrew);
+        return String.format("Aircraft{id=%d, aircraftModel=aircraftModel, company=%s, maxCargo=%s, maxCrew=%d, maxPassengerPerClass=%s}",
+                id, company, maxCargo, maxCrew, maxPassengerPerClass);
     }
 }

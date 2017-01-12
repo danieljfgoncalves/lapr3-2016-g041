@@ -77,10 +77,10 @@ public class ShortestDistance extends ShortestFlightPlan {
     }
 
     @Override
-    protected double pathAlgorithm(MapGraph<Coordinate, Segment> network, Coordinate vOrig, 
-            Coordinate vDest, LinkedList<Coordinate> efficientPath, FlightSimulation flight, 
+    protected double pathAlgorithm(MapGraph<Coordinate, Segment> network, Coordinate vOrig,
+            Coordinate vDest, LinkedList<Coordinate> efficientPath, FlightSimulation flight,
             List<Junction> junctions) throws InsufficientFuelException {
-        
+
         return MapGraphAlgorithms.shortestPath(network, vOrig, vDest, efficientPath);
     }
 
