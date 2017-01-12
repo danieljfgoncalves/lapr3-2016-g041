@@ -27,6 +27,15 @@ public interface FlightPlan {
      * @param flight The selected flight
      * @param flightplan the flight plan to insert
      * @return the criteria total amount (distance, consumption, etc.)
+     * @throws java.lang.Exception
      */
-    Amount<?> generateFlightPlan(AirNetwork network, FlightSimulation flight, LinkedList<Segment> flightplan) throws FailedAnalysisException;
+    Amount<?> generateFlightPlan(AirNetwork network, FlightSimulation flight, LinkedList<Segment> flightplan) 
+            throws Exception;
+    
+    /**
+     * Obtains the algorithm description. 
+     * 
+     * @return 
+     */
+    String getDescription();
 }

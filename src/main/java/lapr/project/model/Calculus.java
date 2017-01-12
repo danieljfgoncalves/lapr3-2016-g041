@@ -145,6 +145,22 @@ public class Calculus {
         // -> (θ+360) % 360
         return Amount.valueOf(((angle.doubleValue(NonSI.DEGREE_ANGLE) + 360.0) % 360.0), NonSI.DEGREE_ANGLE);
     }
+    
+    public static Amount<Length> virtualDistance(double realDistance, FlightSimulation flight, Segment segment) {
+        
+        Amount<Length> altitude = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseAltitude();
+        Amount<Velocity> mach = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseSpeed();
+        Amount<Velocity> windSpeed = segment.getWindIntensity();
+        Amount<Angle> windDirection = segment.getWindDirection();
+        
+        double realDuration = realDistance / calculateTAS(altitude, mach).doubleValue(SI.METERS_PER_SECOND);
+        double virtualDuration = realDistance / calculateGS(altitude, mach, windSpeed, windDirection).doubleValue(SI.METERS_PER_SECOND);
+        double factor = (virtualDuration / realDuration) - realDuration;
+        
+        double virtualDistance = realDistance + (realDistance * factor);
+        
+        return Amount.valueOf(virtualDistance, SI.METER);
+    }
 
     /**
      * Gets the lift force.
@@ -160,7 +176,7 @@ public class Calculus {
         
         return (Amount<Force>) getLiftCoefficient(altitude, mass, wingsArea, machNumber)
                 .times(getAirDensity(altitude))
-                .times(getTAS(altitude, machNumber).pow(2))
+                .times(calculateTAS(altitude, machNumber).pow(2))
                 .times(wingsArea)
                 .divide(Amount.valueOf(2, Unit.ONE));
     }
@@ -182,7 +198,7 @@ public class Calculus {
                 .times(Constants.g)
                 .divide(getAirDensity(altitude)
                         .times(wingsArea)
-                        .times(getTAS(altitude, machNumber).pow(2)));
+                        .times(calculateTAS(altitude, machNumber).pow(2)));
     }
 
     /**
@@ -278,7 +294,7 @@ public class Calculus {
      * @return the True Air Speed (TAS) (velocity of aircraft relative to the
      * air) (m/s)
      */
-    public static Amount<Velocity> getTAS(Amount<Length> altitude, Amount<Velocity> machNumber) {
+    public static Amount<Velocity> calculateTAS(Amount<Length> altitude, Amount<Velocity> machNumber) {
         
         double tas = getSpeedOfSound(altitude).doubleValue(SI.METERS_PER_SECOND) * machNumber.doubleValue(NonSI.MACH);
         
@@ -294,10 +310,10 @@ public class Calculus {
      * @param angleRelativeToY angle relative to y
      * @return the ground speed (GS) (m/s)
      */
-    public static Amount<Velocity> getGS(Amount<Length> altitude, Amount<Velocity> machNumber,
+    public static Amount<Velocity> calculateGS(Amount<Length> altitude, Amount<Velocity> machNumber,
             Amount<Velocity> windSpeed, Amount<Angle> angleRelativeToY) {
         
-        Amount<Velocity> tas = getTAS(altitude, machNumber);
+        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
         Amount<Velocity> portionWindSpeed = getPortionWindSpeed(windSpeed, angleRelativeToY);
         
         return tas.plus(portionWindSpeed);
@@ -375,7 +391,7 @@ public class Calculus {
         
         return (Amount<Force>) getDragCoefficient(altitude, mass, dragCoefficient0, aspectRatio, wingArea, e, machNumber)
                 .times(getAirDensity(altitude))
-                .times((getTAS(altitude, machNumber)).pow(2))
+                .times((calculateTAS(altitude, machNumber)).pow(2))
                 .times(wingArea)
                 .divide(Amount.valueOf(2, Unit.ONE));
     }
@@ -400,7 +416,7 @@ public class Calculus {
         
         return (Amount<Force>) getDragCoefficient(altitude, mass, dragCoefficient0, aspectRatio, wingArea, e, machNumber)
                 .times(getAirDensity(altitude))
-                .times((getTAS(altitude, machNumber)).pow(2))
+                .times((calculateTAS(altitude, machNumber)).pow(2))
                 .times(wingArea)
                 .divide(Amount.valueOf(2, Unit.ONE));
     }
@@ -426,7 +442,7 @@ public class Calculus {
         Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
         Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
                 wingsArea, e, machNumber, aspectRatio);
-        Amount<Velocity> tas = getTAS(altitude, machNumber);
+        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
         
         Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));
         Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI)))
@@ -456,7 +472,7 @@ public class Calculus {
         Amount<Dimensionless> aspectRatio = flight.getFlightInfo().getAircraft().getAircraftModel().getAspectRatio();
         Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
                 wingsArea, e, machNumber, aspectRatio);
-        Amount<Velocity> tas = getTAS(altitude, machNumber);
+        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
         
         Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));
         Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI)))
@@ -487,7 +503,7 @@ public class Calculus {
         Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
         Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
                 wingsArea, e, machNumber, aspectRatio);
-        Amount<Velocity> tas = getTAS(altitude, machNumber);
+        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
         
         Double finalWeight = initialWeight.doubleValue(SI.KILOGRAM) / Math.pow(Math.E, (distance.doubleValue(SI.KILOMETER)
                 * tsfc.doubleValue(CustomUnits.TSFC_SI) / ((liftForce.doubleValue(SI.NEWTON) / dragForce.doubleValue(SI.NEWTON))
@@ -517,7 +533,7 @@ public class Calculus {
         Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
         Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
                 wingsArea, e, machNumber, aspectRatio);
-        Amount<Velocity> tas = getTAS(altitude, machNumber);
+        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
         
         Double finalWeight = initialWeight.doubleValue(SI.KILOGRAM) / Math.pow(Math.E, (distance.doubleValue(SI.KILOMETER)
                 * tsfc.doubleValue(CustomUnits.TSFC_SI) / ((liftForce.doubleValue(SI.NEWTON) / dragForce.doubleValue(SI.NEWTON))
@@ -616,7 +632,7 @@ public class Calculus {
      * Obtains the fuel burn calculation (dw/dt) (N/s)
      *
      * @param totalThrust the total thrust (N)
-     * @param timeStep the time step (s)
+     * @param timeStep the time step (dt) (s)
      * @param tsfc the thrust specific fuel consumption (Kg/s/N)_SI (N/s/N)_US
      * @return the fuel burn calculation (dw/dt) (N/s)
      */
