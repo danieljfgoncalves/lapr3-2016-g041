@@ -6,6 +6,7 @@ package lapr.project.datalayer.oracle;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.measure.unit.SI;
@@ -37,7 +38,6 @@ public class AirportOracle implements AirportDAO {
      * @param projectSerieNumber project serie number
      */
     public AirportOracle(int projectSerieNumber) {
-
         this.projectSerieNumber = projectSerieNumber;
     }
 
@@ -64,7 +64,7 @@ public class AirportOracle implements AirportDAO {
 
     @Override
     public Airport getAirport(String iata) throws Exception {
-   
+
         String query = "{? = call FC_GET_AIRPORT (?, ?)}";
 
         Airport airport = null;
@@ -90,7 +90,7 @@ public class AirportOracle implements AirportDAO {
 
     @Override
     public List<Airport> getAirports() throws Exception {
-        
+
         List<Airport> airports = new ArrayList<>();
 
         String query = "{? = call FC_GET_AIRPORTS (?)}";
@@ -120,7 +120,7 @@ public class AirportOracle implements AirportDAO {
 
     @Override
     public void addAirport(Airport airport) throws Exception {
-    
+
         String query = "{call PC_CREATE_AIRPORT (?, ?, ?, ?, ?, ?, ?)}";
 
         try (Connection connection = DbConnection.getConnection(); CallableStatement statement = connection.prepareCall(query)) {
@@ -135,6 +135,27 @@ public class AirportOracle implements AirportDAO {
             // procedure call
             statement.executeUpdate();
         }
+    }
+
+    @Override
+    public String getCoordinateIdFromDB(Double latitude, Double longitude, int numSerie) throws SQLException {
+        String query = "{?= call FC_GET_ID_COORDINATE(?, ?, ?)}";
+        
+        String idCoordinate = "";
+
+        try (Connection connection = DbConnection.getConnection();
+                CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.registerOutParameter(1, OracleTypes.VARCHAR);
+            callableStatement.setString(2, String.valueOf(latitude));
+            callableStatement.setString(3, String.valueOf(longitude));
+            callableStatement.setDouble(4, numSerie);
+
+            callableStatement.executeUpdate();
+
+            idCoordinate = callableStatement.getString(1);
+        }
+        return idCoordinate;
     }
 
 }
