@@ -121,8 +121,8 @@ public class CoordinateOracle implements CoordinateDAO {
         try (Connection connection = DbConnection.getConnection(); CallableStatement statement = connection.prepareCall(query)) {
             // Procedure params
             statement.setString(1, coordinate.getId());
-            statement.setDouble(2, coordinate.getLatitude());
-            statement.setDouble(3, coordinate.getLongitude());
+            statement.setString(2, String.valueOf(coordinate.getLatitude()));
+            statement.setString(3, String.valueOf(coordinate.getLongitude()));
             statement.setDouble(4, projectSerieNumber);
             // procedure call
             statement.executeUpdate();

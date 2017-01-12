@@ -44,15 +44,8 @@ import lapr.project.ui.components.ListCellRendererAirport;
  * @author Ivo Ferro - 1151159
  * @author Tiago Correia - 1151031
  *
- * @param <T> window that extend ProjectHandler
- *
  */
-public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog {
-
-    /**
-     * The parent window.
-     */
-    private final T parentWindow;
+public class FlightInfoDialog extends JDialog {
 
     /**
      * The active project.
@@ -291,10 +284,9 @@ public class FlightInfoDialog<T extends Window & ProjectHandler> extends JDialog
      * @param simulator the simulator
      * @param project
      */
-    public FlightInfoDialog(T parentWindow, FlightSimulator simulator, Project project) {
+    public FlightInfoDialog(Window parentWindow, FlightSimulator simulator, Project project) {
         super(parentWindow, WINDOW_TITLE);
         setModal(true);
-        this.parentWindow = parentWindow;
         this.project = project;
         this.setResizable(false);
 

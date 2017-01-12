@@ -43,7 +43,9 @@ public class ImportAirNetworkUI extends ImportFileChooser {
 
         try {
             // Import selected File
-            controller.importAirNetwork(getSelectedFile());
+            if(controller.importAirNetwork(getSelectedFile())){
+                controller.saveToDatabase();
+            };
             // If no critical error
             JOptionPane.showMessageDialog(this.getParent(),
                     "The air network was successfully added!",
