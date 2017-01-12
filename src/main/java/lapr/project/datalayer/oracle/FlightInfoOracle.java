@@ -15,6 +15,7 @@ import javax.measure.quantity.Duration;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.quantity.Velocity;
+import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import lapr.project.datalayer.DbConnection;
 import lapr.project.datalayer.dao.FlightInfoDao;
@@ -116,6 +117,7 @@ public class FlightInfoOracle implements FlightInfoDao {
         try (CallableStatement callableStatementStops = connection.prepareCall(queryStops)) {
             callableStatementStops.registerOutParameter(1, OracleTypes.CURSOR);
             callableStatementStops.setDouble(2, idFlightInfo);
+            callableStatementStops.executeUpdate();
             try (ResultSet resultSetStops = (ResultSet) callableStatementStops.getObject(1)) {
                 while (resultSetStops.next()) {
                     String stopAirportIata = resultSetStops.getString(1);
@@ -241,7 +243,77 @@ public class FlightInfoOracle implements FlightInfoDao {
 
     @Override
     public void addFlightInfo(FlightInfo flightInfo) throws SQLException {
-        // TODO add flight info
+        String queryFlightInfo = "{call PC_ADD_FLIGHT_INFO "
+                + "(?, ?, ?, ?, ?,"
+                + " ?, ?, ?, ?, ?,"
+                + " ?)}";
+
+        try (Connection connection = DbConnection.getConnection(); CallableStatement callableStatementFlightInfo = connection.prepareCall(queryFlightInfo)) {
+            callableStatementFlightInfo.registerOutParameter(1, OracleTypes.INTEGER);
+            callableStatementFlightInfo.registerOutParameter(2, OracleTypes.INTEGER);
+            callableStatementFlightInfo.setDouble(3, projectSerieNumber);
+            callableStatementFlightInfo.setString(4, flightInfo.getDesignator());
+            callableStatementFlightInfo.setString(5, flightInfo.getOriginAirport().getIATA());
+            callableStatementFlightInfo.setString(6, flightInfo.getDestinationAirport().getIATA());
+            callableStatementFlightInfo.setString(7,
+                    flightInfo.getFlightType().equals(FlightType.REGULAR)
+                    ? "Regular" : "Charter");
+            callableStatementFlightInfo.setString(8, flightInfo.getAircraft()
+                    .getAircraftModel().getModelID());
+            callableStatementFlightInfo.setString(9, flightInfo.getAircraft().getCompany());
+            callableStatementFlightInfo.setDouble(10, flightInfo.getAircraft()
+                    .getMaxCargo().doubleValue(SI.KILOGRAM));
+            callableStatementFlightInfo.setDouble(11, flightInfo.getAircraft().getMaxCrew());
+            callableStatementFlightInfo.executeUpdate();
+
+            int idFlightInfo = callableStatementFlightInfo.getInt(1);
+            int idAircraft = callableStatementFlightInfo.getInt(2);
+
+            String queryFlightPattern = "{call PC_ADD_FLIGHT_PATTERN (?, ?, ?, ?, ?)}";
+            Amount[][] matrixFlightPattern = flightInfo.getAircraft().getFlightPattern().getFlightProfile();
+            for (Amount[] matrixFlightPatternRow : matrixFlightPattern) {
+                try (CallableStatement callableStatementFlightPattern = connection.prepareCall(queryFlightPattern)) {
+                    callableStatementFlightPattern.setDouble(1, idAircraft);
+                    callableStatementFlightPattern.setDouble(2, matrixFlightPatternRow[0].doubleValue(SI.METER));
+                    callableStatementFlightPattern.setDouble(3, matrixFlightPatternRow[1].doubleValue(SI.METRES_PER_SECOND));
+                    callableStatementFlightPattern.setDouble(4, matrixFlightPatternRow[2].doubleValue(SI.METRES_PER_SECOND));
+                    callableStatementFlightPattern.setDouble(5, matrixFlightPatternRow[3].doubleValue(SI.METERS_PER_SECOND));
+                    callableStatementFlightPattern.executeUpdate();
+                }
+            }
+
+            String queryClass = "{call PC_ADD_CLASS (?, ?)}";
+            for (Integer maxPassengers : flightInfo.getAircraft().getMaxPassengerPerClass()) {
+                try (CallableStatement callableStatementClass = connection.prepareCall(queryClass)) {
+                    callableStatementClass.setDouble(1, idAircraft);
+                    callableStatementClass.setDouble(2, maxPassengers);
+                    callableStatementClass.executeUpdate();
+                }
+            }
+
+            String queryWaypoints = "{call PC_ADD_WAYPOINTS (?, ?, ?)}";
+            for (Coordinate waypoint : flightInfo.getWaypoints()) {
+                try (CallableStatement callableStatementWaypoints = connection.prepareCall(queryWaypoints)) {
+                    callableStatementWaypoints.setDouble(1, projectSerieNumber);
+                    callableStatementWaypoints.setString(2, waypoint.getId());
+                    callableStatementWaypoints.setDouble(3, idFlightInfo);
+                    callableStatementWaypoints.executeUpdate();
+                }
+            }
+
+            String queryFlightStop = "{call PC_ADD_FLIGHT_STOP (?, ?, ?, ?, ?, ?)}";
+            for (Stop stop : flightInfo.getStops()) {
+                try (CallableStatement callableStatementStop = connection.prepareCall(queryFlightStop)) {
+                    callableStatementStop.setDouble(1, projectSerieNumber);
+                    callableStatementStop.setDouble(2, idFlightInfo);
+                    callableStatementStop.setString(3, stop.getAirport().getIATA());
+                    callableStatementStop.setDouble(4, stop.getMinimumStopMinutes().doubleValue(NonSI.MINUTE));
+                    callableStatementStop.setDate(5, new java.sql.Date(stop.getDepartureTime().getTimeInMillis()));
+                    callableStatementStop.setDate(6, new java.sql.Date(stop.getScheduleArrival().getTimeInMillis()));
+                    callableStatementStop.executeUpdate();
+                }
+            }
+        }
     }
 
 }
