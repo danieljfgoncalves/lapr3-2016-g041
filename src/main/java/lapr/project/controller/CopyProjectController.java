@@ -4,8 +4,20 @@
 package lapr.project.controller;
 
 import java.sql.SQLException;
+import java.util.List;
+import lapr.project.datalayer.dao.AircraftModelDAO;
+import lapr.project.datalayer.dao.ProjectDAO;
+import lapr.project.datalayer.oracle.AircraftModelOracle;
+import lapr.project.datalayer.oracle.AirportOracle;
+import lapr.project.datalayer.oracle.CoordinateOracle;
+import lapr.project.datalayer.oracle.ProjectOracle;
+import lapr.project.datalayer.oracle.SegmentOracle;
+import lapr.project.model.AircraftModel;
+import lapr.project.model.Airport;
+import lapr.project.model.Coordinate;
 import lapr.project.model.Project;
-import lapr.project.model.FlightSimulator;
+import lapr.project.model.Segment;
+import lapr.project.utils.graph.MapEdge;
 
 /**
  * Represents a CopyProjectController.
@@ -20,22 +32,24 @@ public class CopyProjectController {
     /**
      * The copy of a project.
      */
-    private final Project projectCopy;
+    private Project projectCopy;
 
     /**
-     * The simulator.
+     * The project to copy.
      */
-    private final FlightSimulator flightSimulator;
+    private final Project originalProject;
+
+    private ProjectDAO projectDAO;
 
     /**
      * Creates an instance of the controller.
      *
-     * @param flightSimulator the simulator
-     * @param project the selected project
+     * @param originalProject the project to copy
      */
-    public CopyProjectController(FlightSimulator flightSimulator, Project project) {
-        this.flightSimulator = flightSimulator;
+    public CopyProjectController(Project originalProject) {
+        this.originalProject = originalProject;
         projectCopy = new Project();
+        projectDAO = new ProjectOracle();
     }
 
     /**
@@ -47,32 +61,74 @@ public class CopyProjectController {
      * does not exist, false otherwise
      * @throws java.sql.SQLException
      */
-    public boolean setCopyProjectData(String name, String description) throws SQLException {
-        if (projectCopy.validateName() && flightSimulator.validateProjectName(name)) {
+    public boolean createProjectCopy(String name, String description) throws SQLException, Exception {
+
+        if (projectCopy.validateName() && projectDAO.validateProjectName(name)) {
+            projectCopy = projectDAO.createEmptyProject();
             projectCopy.setName(name);
             projectCopy.setDescription(description);
+            projectDAO.updateProjectNameAndDescription(projectCopy);
+            copyProject();
             return true;
         }
         return false;
     }
 
     /**
-     * Validates if the project does not exist in the flight simulator.
+     * Gets the created project.
      *
-     * @return true if the project does not exist and is added to the project
-     * list, false otherwise
-     * @throws java.sql.SQLException
+     * @return created project
+     * @throws java.lang.Exception
      */
-    public boolean addProjectCopy() throws SQLException {
-        return flightSimulator.validateProjectName(projectCopy.getName()) ? flightSimulator.addProject(projectCopy) : false;
+    public Project getCopiedProject() throws Exception {
+        return projectDAO.getProject(projectCopy.getSerieNumber());
     }
 
-    /**
-     * Get the copied project.
-     *
-     * @return copied project
-     */
-    public Project getCopiedProject() {
-        return this.projectCopy;
+    public void deleteProject() throws Exception {
+        projectDAO.deleteProject(projectCopy.getSerieNumber());
+    }
+
+    public void copyProject() throws Exception {
+        AirportOracle originalAirportDAO = new AirportOracle(originalProject.getSerieNumber());
+        SegmentOracle originalSegmentDAO = new SegmentOracle(originalProject.getSerieNumber());
+        CoordinateOracle originalCoordinateDAO = new CoordinateOracle(originalProject.getSerieNumber());
+        AircraftModelDAO originalAircraftModelDAO = new AircraftModelOracle(originalProject.getSerieNumber());
+
+        AirportOracle copyAirportDAO = new AirportOracle(projectCopy.getSerieNumber());
+        SegmentOracle copySegmentDAO = new SegmentOracle(projectCopy.getSerieNumber());
+        CoordinateOracle copyCoordinateDAO = new CoordinateOracle(projectCopy.getSerieNumber());
+        AircraftModelOracle copyAircraftModelDAO = new AircraftModelOracle(projectCopy.getSerieNumber());
+
+        //adds coordinates to copy project
+        List<Coordinate> coordinates = originalCoordinateDAO.getCoordinates();
+        if (!coordinates.isEmpty()) {
+            for (Coordinate coordinate : coordinates) {
+                copyCoordinateDAO.addCoordinate(coordinate);
+            }
+        }
+
+        //adds segments to copy project
+        List<MapEdge<Coordinate, Segment>> segments = originalSegmentDAO.getSegments();
+        if (!segments.isEmpty()) {
+            for (MapEdge<Coordinate, Segment> segment : segments) {
+                copySegmentDAO.addSegment(segment);
+            }
+        }
+
+        //adds airports to copy project
+        List<Airport> airports = originalAirportDAO.getAirports();
+        if (!airports.isEmpty()) {
+            for (Airport airport : airports) {
+                copyAirportDAO.addAirport(airport);
+            }
+        }
+
+        //adds aircraft model
+        List<AircraftModel> aircraftModels = originalAircraftModelDAO.getAircraftModels();
+        if (!aircraftModels.isEmpty()) {
+            for (AircraftModel aircraftModel : aircraftModels) {
+                copyAircraftModelDAO.addAircraftModel(aircraftModel);
+            }
+        }
     }
 }

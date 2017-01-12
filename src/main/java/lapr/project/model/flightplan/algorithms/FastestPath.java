@@ -166,4 +166,9 @@ public class FastestPath extends ShortestFlightPlan {
         return MapGraphAlgorithms.shortestPath(network, vOrig, vDest, efficientPath);
     }
 
+    @Override
+    public String toString() {
+        return getDescription();
+    }
+
 }

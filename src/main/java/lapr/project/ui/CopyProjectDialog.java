@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -20,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import lapr.project.controller.CopyProjectController;
+import lapr.project.datalayer.dao.ProjectDAO;
+import lapr.project.datalayer.oracle.ProjectOracle;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
 
@@ -53,7 +57,7 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
     /**
      * The flight simulator.
      */
-    private final FlightSimulator flightSimulator;
+    private final ProjectDAO projectDAO;
 
     /**
      * The name text field;
@@ -102,8 +106,8 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
         setModal(true);
 
         this.parentWindow = parentWindow;
-        this.flightSimulator = simulator;
-        this.controller = new CopyProjectController(simulator, project);
+        this.projectDAO = new ProjectOracle();
+        this.controller = new CopyProjectController(project);
         this.project = project;
 
         createComponents();
@@ -213,25 +217,20 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
 
         copyProjectButton.addActionListener((ActionEvent ae) -> {
             try {
-                if (!(controller.setCopyProjectData(nameTextField.getText(), descriptionTextField.getText()))) {
+                if (!(controller.createProjectCopy(nameTextField.getText(), descriptionTextField.getText()))) {
                     throw new IllegalArgumentException("The given name already exists or is invalid. Please try again!");
-                } else if (!controller.addProjectCopy()) {
+                } else {
                     JOptionPane.showMessageDialog(rootPane,
                             "A project with the same serie number already exists!",
                             "Copy Project",
                             JOptionPane.WARNING_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(rootPane,
-                            "Project successfully copied!",
-                            "Copy Project",
-                            JOptionPane.INFORMATION_MESSAGE);
                 }
 
                 parentWindow.activateProject(controller.getCopiedProject());
                 dispose();
 
                 if (parentWindow instanceof ProjectSelectionDialog) {
-                    ((ProjectSelectionDialog) parentWindow).refreshProjectsList(this.flightSimulator.getProjects());
+                    ((ProjectSelectionDialog) parentWindow).refreshProjectsList(this.projectDAO.getProjects());
                 }
 
             } catch (IllegalArgumentException ex) {
@@ -241,11 +240,18 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
                         "Error",
                         JOptionPane.WARNING_MESSAGE);
             } catch (SQLException ex) {
+                try {
+                    controller.deleteProject();
+                } catch (Exception ex1) {
+                    Logger.getLogger(CopyProjectDialog.class.getName()).log(Level.SEVERE, null, ex1);
+                }
                 JOptionPane.showMessageDialog(
                         null,
                         "There was an error trying to read data from database.",
                         "Data Error",
                         JOptionPane.WARNING_MESSAGE);
+            } catch (Exception ex) {
+                Logger.getLogger(CopyProjectDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
