@@ -4,8 +4,16 @@
 package lapr.project.controller;
 
 import java.io.File;
+import java.sql.SQLException;
+import lapr.project.datalayer.dao.CoordinateDAO;
+import lapr.project.datalayer.dao.SegmentDAO;
+import lapr.project.datalayer.oracle.CoordinateOracle;
+import lapr.project.datalayer.oracle.SegmentOracle;
 import lapr.project.model.AirNetwork;
+import lapr.project.model.Coordinate;
 import lapr.project.model.Project;
+import lapr.project.model.Segment;
+import lapr.project.utils.graph.MapEdge;
 import lapr.project.utils.importable.AirNetworkXML;
 
 /**
@@ -54,6 +62,19 @@ public class ImportAirNetworkController {
         }
 
         return false;
+    }
+    
+    public void saveToDatabase() throws SQLException, Exception{
+        CoordinateDAO coordinateDAO = new CoordinateOracle(selectedProject.getSerieNumber());
+        SegmentDAO segmentDAO = new SegmentOracle(selectedProject.getSerieNumber());
+        
+        for(Coordinate coordinate : selectedProject.getAirNetwork().getJunctions()){
+            coordinateDAO.addCoordinate(coordinate);
+        }
+        for (MapEdge<Coordinate, Segment> edge : selectedProject.getAirNetwork().getSegments()) {
+            segmentDAO.addSegment(edge);
+        }
+        
     }
 
 }

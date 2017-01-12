@@ -45,9 +45,10 @@ public class ImportAirportsUI extends ImportFileChooser {
 
         try {
             // Import selected File
-            
-            List<Airport> listAirports = controller.importAirports(getSelectedFile());
-            controller.saveToDatabase(listAirports);
+
+            if (controller.importAirports(getSelectedFile())) {
+                controller.saveToDatabase();
+            };
             // If no critical error
             JOptionPane.showMessageDialog(this.getParent(),
                     "The airports were successfully added!",
