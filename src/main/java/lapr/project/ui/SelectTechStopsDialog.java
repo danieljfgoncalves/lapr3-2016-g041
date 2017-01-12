@@ -18,6 +18,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import lapr.project.model.Airport;
@@ -44,6 +45,11 @@ public class SelectTechStopsDialog extends JDialog {
      * The combo box with the airports for technical stops.
      */
     private JComboBox<Airport> airportComboBox;
+
+    /**
+     * The minimum stop time text field.
+     */
+    private JTextField txtMinStopTime;
 
     /**
      * The open project.
@@ -122,6 +128,7 @@ public class SelectTechStopsDialog extends JDialog {
         panel.setBorder(DEFAULT_GREY_LINE_BORDER);
 
         JLabel selectTechStopLabel = new JLabel("Select Airport for technical stop:");
+        JLabel minimumStopTimeLabel = new JLabel("Minimum stop time (minutes):");
 
         JComboBox<Airport> techStopComboBox = new JComboBox<>();
         techStopComboBox.setPreferredSize(new Dimension(420, 25));
@@ -137,13 +144,19 @@ public class SelectTechStopsDialog extends JDialog {
             }
         });
 
+        txtMinStopTime = new JTextField();
+        txtMinStopTime.setPreferredSize(new Dimension(50, 25));
+
         //align horizontally
         layout.setHorizontalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                         .addComponent(selectTechStopLabel)
+                        .addComponent(minimumStopTimeLabel)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(techStopComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMinStopTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
                                 GroupLayout.PREFERRED_SIZE)
                 )
         );
@@ -153,6 +166,10 @@ public class SelectTechStopsDialog extends JDialog {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(selectTechStopLabel)
                         .addComponent(techStopComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(minimumStopTimeLabel)
+                        .addComponent(txtMinStopTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
                                 GroupLayout.PREFERRED_SIZE))
         );
 
