@@ -25,12 +25,8 @@ public class DbConnection {
 
     /**
      * The database user name.
-     *
-     * Group account: LAPR3_41
-     *
-     * Ivo account: bddad_2dk_6b
      */
-    private static final String DB_USERNAME = "bddad_2dk_6b";
+    private static final String DB_USERNAME = "LAPR3_41";
 
     /**
      * The database password.
