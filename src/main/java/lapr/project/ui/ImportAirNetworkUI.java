@@ -23,6 +23,11 @@ public class ImportAirNetworkUI extends ImportFileChooser {
      * Selected Project.
      */
     private final Project selectedProject;
+    
+    /**
+     * If succesfully imported.
+     */
+    private boolean success = false;
 
     /**
      * Creates an instance of the custom file chooser.
@@ -43,8 +48,11 @@ public class ImportAirNetworkUI extends ImportFileChooser {
 
         try {
             // Import selected File
-            controller.importAirNetwork(getSelectedFile());
+            if(controller.importAirNetwork(getSelectedFile())){
+                controller.saveToDatabase();
+            };
             // If no critical error
+            success = true;
             JOptionPane.showMessageDialog(this.getParent(),
                     "The air network was successfully added!",
                     "Import Successful",
@@ -59,4 +67,7 @@ public class ImportAirNetworkUI extends ImportFileChooser {
         }
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
 }

@@ -14,10 +14,20 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.measure.quantity.Mass;
+import javax.measure.unit.SI;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -33,11 +43,18 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import lapr.project.controller.SimulateFlightController;
 import lapr.project.model.FlightInfo;
+import lapr.project.model.FlightSimulation;
+import lapr.project.model.Project;
+import lapr.project.model.Segment;
 import lapr.project.model.flightplan.FlightPlan;
-import lapr.project.model.flightplan.algorithms.ShortestDistance;
 import lapr.project.ui.components.ListModelFlightPlanAlgorithm;
 import lapr.project.ui.components.TableModelFlightInfo;
+import lapr.project.utils.Util;
+import org.jscience.physics.amount.Amount;
 
 /**
  * Dialog to simulate a flight info
@@ -48,6 +65,16 @@ import lapr.project.ui.components.TableModelFlightInfo;
  * @author Tiago Correia - 1151031
  */
 public class SimulateFlightDialog extends JDialog {
+
+    /**
+     * The flights info.
+     */
+    private static List<FlightInfo> flightsInfo;
+
+    /**
+     * The controller to simulate flights.
+     */
+    private static SimulateFlightController controller;
 
     /**
      * Title for the frame.
@@ -80,6 +107,11 @@ public class SimulateFlightDialog extends JDialog {
     private JButton previousButton;
 
     /**
+     * The finish button.
+     */
+    private JButton finishButton;
+
+    /**
      * The select flight info label.
      */
     private JLabel selectFLightInfoLabel;
@@ -93,6 +125,20 @@ public class SimulateFlightDialog extends JDialog {
      * The select algorithm label.
      */
     private JLabel selectAlgorithmLabel;
+
+    /**
+     * The input components.
+     */
+    private JTable flightInfoTable;
+    private JList<FlightPlan> algorithmList;
+    private DateTimePicker departureDateTimePicker, arrivalDateTimePicker;
+    private JTextField crewElementsTextField, effectiveCargoTextField,
+            effectiveFuelLoadTextField, class1MembersTextField,
+            class2MembersTextField, class3MembersTextField,
+            class4MembersTextField, class5MembersTextField;
+
+    private List<JTextField> membersPerClassTextFields;
+    private List<JLabel> membersPerClassLayers;
 
     /**
      * Padding border.
@@ -153,16 +199,29 @@ public class SimulateFlightDialog extends JDialog {
      * Creates an instance of simulate flight dialog.
      *
      * @param parentWindow the parent window
+     * @param selectedProject
      */
-    public SimulateFlightDialog(Window parentWindow) {
+    public SimulateFlightDialog(Window parentWindow, Project selectedProject) {
         super(parentWindow, WINDOW_TITLE);
         setModal(true);
 
-        createComponents();
+        try {
+            controller = new SimulateFlightController(selectedProject.getSerieNumber());
+            flightsInfo = controller.getFlightsInfo();
+            createComponents();
 
-        pack();
-        setMinimumSize(new Dimension(getWidth(), getHeight()));
-        setLocationRelativeTo(parentWindow);
+            pack();
+            setMinimumSize(new Dimension(getWidth(), getHeight()));
+            setLocationRelativeTo(parentWindow);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "The server is busy. Try later.",
+                    "Database busy",
+                    JOptionPane.WARNING_MESSAGE);
+            Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
+            dispose();
+        }
     }
 
     /**
@@ -327,27 +386,7 @@ public class SimulateFlightDialog extends JDialog {
         JPanel flightInfoTablePanel = new JPanel(new BorderLayout());
         flightInfoTablePanel.setBackground(DEFAULT_COLOR);
 
-        // TODO remove this mock object
-        ArrayList<FlightInfo> flights = new ArrayList<>();
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-        flights.add(new FlightInfo());
-
-        JTable flightInfoTable = new JTable(new TableModelFlightInfo(flights));
+        flightInfoTable = new JTable(new TableModelFlightInfo(flightsInfo));
         flightInfoTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JScrollPane scrollPane = new JScrollPane(flightInfoTable);
@@ -382,16 +421,28 @@ public class SimulateFlightDialog extends JDialog {
         effectiveCargoLabel.setFont(FORM_LABEL_FONT);
         JLabel effectiveFuelLoadLabel = new JLabel("Effective fuel load:");
         effectiveFuelLoadLabel.setFont(FORM_LABEL_FONT);
+
         JLabel class1MembersLabel = new JLabel("Number of elements in class 1:");
-        class1MembersLabel.setFont(FORM_LABEL_FONT);
         JLabel class2MembersLabel = new JLabel("Number of elements in class 2:");
-        class2MembersLabel.setFont(FORM_LABEL_FONT);
         JLabel class3MembersLabel = new JLabel("Number of elements in class 3:");
-        class3MembersLabel.setFont(FORM_LABEL_FONT);
         JLabel class4MembersLabel = new JLabel("Number of elements in class 4:");
-        class4MembersLabel.setFont(FORM_LABEL_FONT);
         JLabel class5MembersLabel = new JLabel("Number of elements in class 5:");
+        class1MembersLabel.setFont(FORM_LABEL_FONT);
+        class2MembersLabel.setFont(FORM_LABEL_FONT);
+        class3MembersLabel.setFont(FORM_LABEL_FONT);
+        class4MembersLabel.setFont(FORM_LABEL_FONT);
         class5MembersLabel.setFont(FORM_LABEL_FONT);
+
+        membersPerClassLayers = new ArrayList<>();
+        membersPerClassLayers.add(class1MembersLabel);
+        membersPerClassLayers.add(class2MembersLabel);
+        membersPerClassLayers.add(class3MembersLabel);
+        membersPerClassLayers.add(class4MembersLabel);
+        membersPerClassLayers.add(class5MembersLabel);
+        for (JLabel membersPerClassLayer : membersPerClassLayers) {
+            membersPerClassLayer.setFont(FORM_LABEL_FONT);
+            membersPerClassLayer.setVisible(false);
+        }
 
         Locale locale = new Locale("en");
         DatePickerSettings departureDateSettings = new DatePickerSettings(locale);
@@ -402,24 +453,31 @@ public class SimulateFlightDialog extends JDialog {
         final Dimension LOCAL_TEXT_FIELD_DIMENSION = new Dimension(60, 23);
 
         // Inputs
-        DateTimePicker departureDateTimePicker = new DateTimePicker(departureDateSettings, departureTimeSettings);
-        DateTimePicker arrivalDateTimePicker = new DateTimePicker(arrivalDateSettings, arrivalTimeSettings);
-        JTextField crewElementsTextField = new JTextField(10);
+        departureDateTimePicker = new DateTimePicker(departureDateSettings, departureTimeSettings);
+        arrivalDateTimePicker = new DateTimePicker(arrivalDateSettings, arrivalTimeSettings);
+        crewElementsTextField = new JTextField(10);
         crewElementsTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
-        JTextField effectiveCargoTextField = new JTextField(10);
+        effectiveCargoTextField = new JTextField(10);
         effectiveCargoTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
-        JTextField effectiveFuelLoadTextField = new JTextField(10);
+        effectiveFuelLoadTextField = new JTextField(10);
         effectiveFuelLoadTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
-        JTextField class1MembersTextField = new JTextField(10);
-        class1MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
-        JTextField class2MembersTextField = new JTextField(10);
-        class2MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
-        JTextField class3MembersTextField = new JTextField(10);
-        class3MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
-        JTextField class4MembersTextField = new JTextField(10);
-        class4MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
-        JTextField class5MembersTextField = new JTextField(10);
-        class5MembersTextField.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+
+        class1MembersTextField = new JTextField(10);
+        class2MembersTextField = new JTextField(10);
+        class3MembersTextField = new JTextField(10);
+        class4MembersTextField = new JTextField(10);
+        class5MembersTextField = new JTextField(10);
+
+        membersPerClassTextFields = new ArrayList<>();
+        membersPerClassTextFields.add(class1MembersTextField);
+        membersPerClassTextFields.add(class2MembersTextField);
+        membersPerClassTextFields.add(class3MembersTextField);
+        membersPerClassTextFields.add(class4MembersTextField);
+        membersPerClassTextFields.add(class5MembersTextField);
+        for (JTextField membersInClass : membersPerClassTextFields) {
+            membersInClass.setPreferredSize(LOCAL_TEXT_FIELD_DIMENSION);
+            membersInClass.setVisible(false);
+        }
 
         //align horizontally
         groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
@@ -522,28 +580,28 @@ public class SimulateFlightDialog extends JDialog {
         JLabel algorithmSelectionLabel = new JLabel("Select the pretended path algorithm:", SwingConstants.CENTER);
         algorithmSelectionLabel.setFont(FORM_LABEL_FONT);
 
-        // TODO remove this mock object
-        ArrayList<FlightPlan> flightPlanAlgorithms = new ArrayList<>();
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
-        flightPlanAlgorithms.add(new ShortestDistance());
+        List<FlightPlan> flightPlanAlgorithms = new ArrayList<>();
+        try {
+            flightPlanAlgorithms = controller.getFlightPlans();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error reading the algorithms",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
 
-        JList algorithmList = new JList(new ListModelFlightPlanAlgorithm(flightPlanAlgorithms));
+        algorithmList = new JList<>(new ListModelFlightPlanAlgorithm(flightPlanAlgorithms));
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer) algorithmList.getCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
         algorithmList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        algorithmList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                finishButton.setEnabled(!algorithmList.isSelectionEmpty());
+            }
+        });
 
         JScrollPane scrollPane = new JScrollPane(algorithmList);
         scrollPane.setBorder(PADDING_BORDER);
@@ -577,6 +635,7 @@ public class SimulateFlightDialog extends JDialog {
                     fieldsLabel.setFont(PLAIN_LABEL_FONT);
                     break;
                 case 2:
+                    finishButton.setEnabled(false);
                     nextButton.setEnabled(true);
                     fieldsLabel.setFont(BOLD_LABEL_FONT);
                     selectAlgorithmLabel.setFont(PLAIN_LABEL_FONT);
@@ -600,11 +659,20 @@ public class SimulateFlightDialog extends JDialog {
             currentForm++;
             switch (currentForm) {
                 case 2:
+                    if (flightInfoTable.getSelectedRow() > -1) {
+                        int classesCount = flightsInfo.get(flightInfoTable.getSelectedRow())
+                                .getAircraft().getMaxPassengerPerClass().size();
+                        for (int i = 0; i < classesCount; i++) {
+                            membersPerClassLayers.get(i).setVisible(true);
+                            membersPerClassTextFields.get(i).setVisible(true);
+                        }
+                    }
                     previousButton.setEnabled(true);
                     selectFLightInfoLabel.setFont(PLAIN_LABEL_FONT);
                     fieldsLabel.setFont(BOLD_LABEL_FONT);
                     break;
                 case 3:
+                    finishButton.setEnabled(!algorithmList.isSelectionEmpty());
                     nextButton.setEnabled(false);
                     fieldsLabel.setFont(PLAIN_LABEL_FONT);
                     selectAlgorithmLabel.setFont(BOLD_LABEL_FONT);
@@ -621,11 +689,22 @@ public class SimulateFlightDialog extends JDialog {
      * @return the finish button
      */
     private JButton createFinishButton() {
-        JButton finishButton = new JButton("Finish");
+        finishButton = new JButton("Finish");
         finishButton.setPreferredSize(BUTTON_PREFERRED_SIZE);
+        finishButton.setEnabled(false);
 
         finishButton.addActionListener((ActionEvent ae) -> {
-            // TODO
+            try {
+                FlightSimulation flightSimulation = setupFlightSimulation();
+                controller.createFlightSimulation(flightSimulation);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "The server is busy. Try later.",
+                        "Database busy",
+                        JOptionPane.WARNING_MESSAGE);
+                Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         return finishButton;
     }
@@ -648,11 +727,48 @@ public class SimulateFlightDialog extends JDialog {
         return cancelButton;
     }
 
+    /**
+     * Sets up the flight simulation.
+     *
+     * @return flight simulation
+     */
+    private FlightSimulation setupFlightSimulation() {
+
+        FlightInfo flightInfo = flightsInfo.get(flightInfoTable.getSelectedRow());
+        Calendar scheduledArrival = null, departureDate = null;
+        try {
+            scheduledArrival = Util.toCalendar(arrivalDateTimePicker);
+            departureDate = Util.toCalendar(departureDateTimePicker);
+        } catch (ParseException ex) {
+            Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        int effectiveCrew = Integer.parseInt(effectiveCargoTextField.getText());
+        Amount<Mass> effectiveCargo = Amount.valueOf(Double.
+                parseDouble(effectiveCargoTextField.getText()), SI.KILOGRAM);
+        Amount<Mass> effectiveFuel = Amount.valueOf(Double.
+                parseDouble(effectiveFuelLoadTextField.getText()), SI.KILOGRAM);
+
+        List<Integer> passengersPerClass = new ArrayList<>();
+
+        int classesCount = flightInfo.getAircraft()
+                .getMaxPassengerPerClass().size();
+        for (int i = 0; i < classesCount; i++) {
+            passengersPerClass.add(Integer
+                    .parseInt(membersPerClassTextFields.get(i).getText()));
+        }
+
+        LinkedList<Segment> flightplan = new LinkedList<>(); // TODO run algorithm
+
+        return new FlightSimulation(-1, flightInfo, scheduledArrival,
+                departureDate, effectiveCrew, effectiveCargo,
+                effectiveFuel, flightplan, passengersPerClass);
+    }
+
     public static void main(String[] args) {
         JFrame f = new JFrame();
         f.setVisible(true);
 
-        SimulateFlightDialog d = new SimulateFlightDialog(f);
+        SimulateFlightDialog d = new SimulateFlightDialog(f, new Project());
         d.setVisible(true);
     }
 }

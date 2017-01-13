@@ -3,10 +3,8 @@
  */
 package lapr.project.ui;
 
-import java.util.List;
 import javax.swing.JOptionPane;
 import lapr.project.controller.ImportAirportsController;
-import lapr.project.model.Airport;
 import lapr.project.model.Project;
 import lapr.project.ui.components.ImportFileChooser;
 
@@ -45,9 +43,10 @@ public class ImportAirportsUI extends ImportFileChooser {
 
         try {
             // Import selected File
-            
-            List<Airport> listAirports = controller.importAirports(getSelectedFile());
-            controller.saveToDatabase(listAirports);
+
+            if (controller.importAirports(getSelectedFile(), activeProject)) {
+                controller.saveToDatabase();
+            };
             // If no critical error
             JOptionPane.showMessageDialog(this.getParent(),
                     "The airports were successfully added!",

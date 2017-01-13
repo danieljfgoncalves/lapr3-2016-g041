@@ -3,8 +3,11 @@
  */
 package lapr.project.ui;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import lapr.project.controller.ImportFlightPatternController;
+import lapr.project.model.FlightPattern;
 import lapr.project.ui.components.ImportFileChooser;
 
 /**
@@ -16,6 +19,8 @@ import lapr.project.ui.components.ImportFileChooser;
  * @author Tiago Correia - 1151031
  */
 public class ImportFlightPatternUI extends ImportFileChooser {
+
+    private FlightPattern flightPattern;
 
     /**
      * Creates an instance of the custom file chooser.
@@ -33,7 +38,7 @@ public class ImportFlightPatternUI extends ImportFileChooser {
 
         try {
             // Import selected File
-            controller.importFlightPattern(getSelectedFile());
+            flightPattern = controller.importFlightPattern(getSelectedFile());
             // If no critical error
             JOptionPane.showMessageDialog(this.getParent(),
                     "The flight pattern was successfully loaded!",
@@ -49,4 +54,30 @@ public class ImportFlightPatternUI extends ImportFileChooser {
         }
     }
 
+    @Override
+    public void setSettings() {
+        // Select only files
+        setFileSelectionMode(JFileChooser.FILES_ONLY);
+        // Add importable file types (e.g. xml, ...)
+        FileNameExtensionFilter csvFiler = new FileNameExtensionFilter("CSV Files", "csv");
+        addChoosableFileFilter(csvFiler);
+        /* ***** add more if needed ***** */
+        // Set Default Filter
+        setFileFilter(csvFiler);
+        // Set the import button
+        setApproveButtonText("Import");
+        // Set the mnemonic
+        setApproveButtonMnemonic('i');
+        // Show Open Dialog
+        showOpenDialog(null);
+    }
+
+    /**
+     * Gets the imported flight pattern.
+     * 
+     * @return flight pattern
+     */
+    public FlightPattern getFlightPattern() {
+        return flightPattern;
+    }
 }

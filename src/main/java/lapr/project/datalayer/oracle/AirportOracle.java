@@ -6,6 +6,7 @@ package lapr.project.datalayer.oracle;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.measure.unit.SI;
@@ -37,7 +38,6 @@ public class AirportOracle implements AirportDAO {
      * @param projectSerieNumber project serie number
      */
     public AirportOracle(int projectSerieNumber) {
-
         this.projectSerieNumber = projectSerieNumber;
     }
 
@@ -46,9 +46,9 @@ public class AirportOracle implements AirportDAO {
      *
      * @param rs the DB result set
      * @return an airport object
-     * @throws Exception
+     * @throws SQLException sql exception
      */
-    private Airport mapRow(ResultSet rs) throws Exception {
+    private Airport mapRow(ResultSet rs) throws SQLException {
 
         Airport airport = new Airport();
         airport.setIATA(rs.getString(1));
@@ -63,8 +63,8 @@ public class AirportOracle implements AirportDAO {
     }
 
     @Override
-    public Airport getAirport(String iata) throws Exception {
-   
+    public Airport getAirport(String iata) throws SQLException {
+
         String query = "{? = call FC_GET_AIRPORT (?, ?)}";
 
         Airport airport = null;
@@ -89,8 +89,8 @@ public class AirportOracle implements AirportDAO {
     }
 
     @Override
-    public List<Airport> getAirports() throws Exception {
-        
+    public List<Airport> getAirports() throws SQLException {
+
         List<Airport> airports = new ArrayList<>();
 
         String query = "{? = call FC_GET_AIRPORTS (?)}";
@@ -119,8 +119,8 @@ public class AirportOracle implements AirportDAO {
     }
 
     @Override
-    public void addAirport(Airport airport) throws Exception {
-    
+    public void addAirport(Airport airport) throws SQLException {
+
         String query = "{call PC_CREATE_AIRPORT (?, ?, ?, ?, ?, ?, ?)}";
 
         try (Connection connection = DbConnection.getConnection(); CallableStatement statement = connection.prepareCall(query)) {
@@ -135,6 +135,27 @@ public class AirportOracle implements AirportDAO {
             // procedure call
             statement.executeUpdate();
         }
+    }
+
+    @Override
+    public String getCoordinateIdFromDB(Double latitude, Double longitude, int numSerie) throws SQLException {
+        String query = "{?= call FC_GET_ID_COORDINATE(?, ?, ?)}";
+
+        String idCoordinate = "";
+
+        try (Connection connection = DbConnection.getConnection();
+                CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.registerOutParameter(1, OracleTypes.VARCHAR);
+            callableStatement.setString(2, String.valueOf(latitude));
+            callableStatement.setString(3, String.valueOf(longitude));
+            callableStatement.setDouble(4, numSerie);
+
+            callableStatement.executeUpdate();
+
+            idCoordinate = callableStatement.getString(1);
+        }
+        return idCoordinate;
     }
 
 }
