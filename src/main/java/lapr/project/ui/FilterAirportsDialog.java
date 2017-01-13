@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +34,13 @@ import lapr.project.ui.components.ListCellRendererAirport;
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
  * @author Tiago Correia - 1151031
- *
  */
 public class FilterAirportsDialog extends JDialog {
 
     /**
      * The parent frame.
      */
-    private final JDialog parentFrame;
+    private final Window parentFrame;
 
     /**
      * The airports list.
@@ -87,8 +87,9 @@ public class FilterAirportsDialog extends JDialog {
      *
      * @param parentFrame the parent frame
      * @param airports list of airports
+     * @param flightSimulations
      */
-    public FilterAirportsDialog(JDialog parentFrame, List<Airport> airports, List<FlightSimulation> flightSimulations) {
+    public FilterAirportsDialog(Window parentFrame, List<Airport> airports, List<FlightSimulation> flightSimulations) {
         super(parentFrame, WINDOW_TITLE);
         setModal(true);
         this.setResizable(false);
@@ -215,8 +216,8 @@ public class FilterAirportsDialog extends JDialog {
             if (!filteredSimulations.isEmpty()) {
                 int selection = JOptionPane.showConfirmDialog(null, "Simulations added successfully!", "Simulation Filter", JOptionPane.DEFAULT_OPTION);
                 if (selection == JOptionPane.OK_OPTION) {
+
                     dispose();
-                    //TODO
                 }
             } else {
                 int selection = JOptionPane.showConfirmDialog(null, "There is no simulations with selected airports!", "Simulation Filter", JOptionPane.DEFAULT_OPTION);
@@ -233,7 +234,6 @@ public class FilterAirportsDialog extends JDialog {
      *
      * @return the cancel button
      */
-
     private JButton createCancelButton() {
         JButton button = new JButton("Cancel");
         button.addActionListener((ActionEvent ae) -> {

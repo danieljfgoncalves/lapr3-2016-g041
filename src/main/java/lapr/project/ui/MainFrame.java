@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,7 +25,9 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import lapr.project.datalayer.dao.FlightSimulationDAO;
+import lapr.project.datalayer.oracle.AirportOracle;
 import lapr.project.datalayer.oracle.FlightSimulationOracle;
+import lapr.project.model.Airport;
 import lapr.project.model.FlightSimulation;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
@@ -228,10 +231,26 @@ public class MainFrame extends JFrame implements ProjectHandler {
             SimulateFlightDialog simulateFlightDialog = new SimulateFlightDialog(this, activeProject);
             simulateFlightDialog.setVisible(true);
         });
+        
+        JButton exportSimulations = new JButton("Export filtered");
+        exportSimulations.setPreferredSize(BUTTON_PREFERED_SIZE);
+        exportSimulations.addActionListener((ActionEvent ae) -> {
+            AirportOracle airportDAO = new AirportOracle(activeProject.getSerieNumber());
+            List<Airport> airports = new ArrayList<>();
+            try {
+                airports = airportDAO.getAirports();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            FilterAirportsDialog filterAirportsDialog = new FilterAirportsDialog(this, airports, simulations);
+            filterAirportsDialog.setVisible(true);
+        });
 
         buttonsPanel.add(openSimulationButton);
+        buttonsPanel.add(exportSimulations);
         buttonsPanel.add(createFlightInfoButton);
         buttonsPanel.add(createSimulationButton);
+        
 
         return buttonsPanel;
     }
