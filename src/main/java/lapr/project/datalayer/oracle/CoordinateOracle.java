@@ -50,8 +50,8 @@ public class CoordinateOracle implements CoordinateDAO {
 
         Coordinate coordinate = new Coordinate();
         coordinate.setId(rs.getString(1));
-        coordinate.setLatitude(rs.getDouble(2));
-        coordinate.setLatitude(rs.getDouble(3));
+        coordinate.setLatitude(Double.parseDouble(rs.getString(2)));
+        coordinate.setLongitude(Double.parseDouble(rs.getString(3)));
 
         return coordinate;
     }

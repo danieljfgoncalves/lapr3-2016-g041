@@ -7,7 +7,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import lapr.project.datalayer.DbConnection;
@@ -26,8 +25,29 @@ import oracle.jdbc.OracleTypes;
 public class ProjectOracle implements ProjectDAO {
 
     @Override
-    public Project getProject(Integer projectSerieNumber) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Project getProject(int projectSerieNumber) throws Exception {
+        Project project = new Project();
+
+        String query = "{?= call FC_GET_PROJECT(?)}";
+
+        try (Connection connection = DbConnection.getConnection();
+                CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.registerOutParameter(1, OracleTypes.CURSOR);
+            callableStatement.setDouble(2, projectSerieNumber);
+            callableStatement.executeUpdate();
+
+            try (ResultSet resultSet = (ResultSet) callableStatement.getObject(1)) {
+                while (resultSet.next()) {
+                    int serieNumber = resultSet.getInt(1);
+                    String name = resultSet.getString(2);
+                    String description = resultSet.getString(3);
+
+                    project = new Project(serieNumber, name, description);
+                }
+            }
+        }
+        return project;
     }
 
     @Override

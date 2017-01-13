@@ -6,7 +6,10 @@ package lapr.project.controller;
 import java.sql.SQLException;
 import java.util.List;
 import lapr.project.datalayer.dao.AircraftModelDAO;
+import lapr.project.datalayer.dao.AirportDAO;
+import lapr.project.datalayer.dao.CoordinateDAO;
 import lapr.project.datalayer.dao.ProjectDAO;
+import lapr.project.datalayer.dao.SegmentDAO;
 import lapr.project.datalayer.oracle.AircraftModelOracle;
 import lapr.project.datalayer.oracle.AirportOracle;
 import lapr.project.datalayer.oracle.CoordinateOracle;
@@ -89,15 +92,15 @@ public class CopyProjectController {
     }
 
     public void copyProject() throws Exception {
-        AirportOracle originalAirportDAO = new AirportOracle(originalProject.getSerieNumber());
-        SegmentOracle originalSegmentDAO = new SegmentOracle(originalProject.getSerieNumber());
-        CoordinateOracle originalCoordinateDAO = new CoordinateOracle(originalProject.getSerieNumber());
+        AirportDAO originalAirportDAO = new AirportOracle(originalProject.getSerieNumber());
+        SegmentDAO originalSegmentDAO = new SegmentOracle(originalProject.getSerieNumber());
+        CoordinateDAO originalCoordinateDAO = new CoordinateOracle(originalProject.getSerieNumber());
         AircraftModelDAO originalAircraftModelDAO = new AircraftModelOracle(originalProject.getSerieNumber());
 
-        AirportOracle copyAirportDAO = new AirportOracle(projectCopy.getSerieNumber());
-        SegmentOracle copySegmentDAO = new SegmentOracle(projectCopy.getSerieNumber());
-        CoordinateOracle copyCoordinateDAO = new CoordinateOracle(projectCopy.getSerieNumber());
-        AircraftModelOracle copyAircraftModelDAO = new AircraftModelOracle(projectCopy.getSerieNumber());
+        AirportDAO copyAirportDAO = new AirportOracle(projectCopy.getSerieNumber());
+        SegmentDAO copySegmentDAO = new SegmentOracle(projectCopy.getSerieNumber());
+        CoordinateDAO copyCoordinateDAO = new CoordinateOracle(projectCopy.getSerieNumber());
+        AircraftModelDAO copyAircraftModelDAO = new AircraftModelOracle(projectCopy.getSerieNumber());
 
         //adds coordinates to copy project
         List<Coordinate> coordinates = originalCoordinateDAO.getCoordinates();
@@ -106,12 +109,12 @@ public class CopyProjectController {
                 copyCoordinateDAO.addCoordinate(coordinate);
             }
         }
-
-        //adds segments to copy project
-        List<MapEdge<Coordinate, Segment>> segments = originalSegmentDAO.getSegments();
-        if (!segments.isEmpty()) {
-            for (MapEdge<Coordinate, Segment> segment : segments) {
-                copySegmentDAO.addSegment(segment);
+        
+        //adds aircraft model
+        List<AircraftModel> aircraftModels = originalAircraftModelDAO.getAircraftModels();
+        if (!aircraftModels.isEmpty()) {
+            for (AircraftModel aircraftModel : aircraftModels) {
+                copyAircraftModelDAO.addAircraftModel(aircraftModel);
             }
         }
 
@@ -123,11 +126,11 @@ public class CopyProjectController {
             }
         }
 
-        //adds aircraft model
-        List<AircraftModel> aircraftModels = originalAircraftModelDAO.getAircraftModels();
-        if (!aircraftModels.isEmpty()) {
-            for (AircraftModel aircraftModel : aircraftModels) {
-                copyAircraftModelDAO.addAircraftModel(aircraftModel);
+        //adds segments to copy project
+        List<MapEdge<Coordinate, Segment>> segments = originalSegmentDAO.getSegments();
+        if (!segments.isEmpty()) {
+            for (MapEdge<Coordinate, Segment> segment : segments) {
+                copySegmentDAO.addSegment(segment);
             }
         }
     }
