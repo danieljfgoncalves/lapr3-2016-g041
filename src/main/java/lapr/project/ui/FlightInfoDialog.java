@@ -10,13 +10,21 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.measure.quantity.Mass;
+import javax.measure.unit.SI;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,14 +35,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import lapr.project.controller.CreateFlightInfoController;
+import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.FlightInfo;
-import lapr.project.model.FlightSimulator;
+import lapr.project.model.FlightPattern;
 import lapr.project.model.FlightType;
 import lapr.project.model.Project;
 import lapr.project.ui.components.ListCellRendererAircraftModel;
 import lapr.project.ui.components.ListCellRendererAirport;
+import org.jscience.physics.amount.Amount;
 
 /**
  * The frame to create project.
@@ -48,14 +59,14 @@ import lapr.project.ui.components.ListCellRendererAirport;
 public class FlightInfoDialog extends JDialog {
 
     /**
+     * The controller to create the flight info.
+     */
+    private final CreateFlightInfoController controller;
+
+    /**
      * The active project.
      */
     private final Project project;
-
-    /**
-     * The flight info.
-     */
-    private FlightInfo flightInfo;
 
     /**
      * The flight type.
@@ -281,14 +292,15 @@ public class FlightInfoDialog extends JDialog {
      * Creates an instance of the flight info dialog.
      *
      * @param parentWindow the parent window
-     * @param simulator the simulator
      * @param project
      */
-    public FlightInfoDialog(Window parentWindow, FlightSimulator simulator, Project project) {
+    public FlightInfoDialog(Window parentWindow, Project project) {
         super(parentWindow, WINDOW_TITLE);
         setModal(true);
-        this.project = project;
         this.setResizable(false);
+
+        this.project = project;
+        this.controller = new CreateFlightInfoController(project.getSerieNumber());
 
         listClassTxt = new ArrayList();
         listClassLabels = new ArrayList();
@@ -452,12 +464,18 @@ public class FlightInfoDialog extends JDialog {
         JLabel selectAircraftModelLabel = new JLabel("Select the Aircraft Model:");
         selectAircraftModelLabel.setFont(FORM_LABEL_FONT);
 
+        List<AircraftModel> aircraftModels = new ArrayList<>();
+        try {
+            aircraftModels = controller.getAircraftModels();
+        } catch (SQLException ex) {
+            Logger.getLogger(FlightInfoDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         JComboBox<AircraftModel> aircraftModelComboBox = new JComboBox<>();
+        aircraftModelComboBox.setModel(new DefaultComboBoxModel(aircraftModels.toArray()));
         aircraftModelComboBox.setPreferredSize(new Dimension(300, 25));
-//        for (AircraftModel aircraftModel : project.getAircraftModelsRegister().getAircraftModels()) {
-//            aircraftModelComboBox.addItem(aircraftModel);
-//        }
         aircraftModelComboBox.setRenderer(new ListCellRendererAircraftModel());
+        aircraftModel = (AircraftModel) aircraftModelComboBox.getSelectedItem();
 
         aircraftModelComboBox.addActionListener(new ActionListener() {
             @Override
@@ -1002,7 +1020,16 @@ public class FlightInfoDialog extends JDialog {
         finishButton.setPreferredSize(BUTTON_PREFERRED_SIZE);
 
         finishButton.addActionListener((ActionEvent ae) -> {
-            // TODO
+            try {
+                FlightInfo flightInfo = createFlightInfo();
+                controller.createFlightInfo(flightInfo);
+
+                JOptionPane.showMessageDialog(this,
+                        "The flight info was created!");
+                dispose();
+            } catch (SQLException ex) {
+                Logger.getLogger(FlightInfoDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         return finishButton;
     }
@@ -1025,4 +1052,34 @@ public class FlightInfoDialog extends JDialog {
         return cancelButton;
     }
 
+    public static void main(String[] args) {
+        Frame f = new Frame();
+        f.setVisible(true);
+
+        FlightInfoDialog fid = new FlightInfoDialog(f, new Project());
+        fid.setVisible(true);
+    }
+
+    private FlightInfo createFlightInfo() {
+
+        List<Integer> maxPassengerPerClass = new ArrayList<>();
+        for (int i = 0; i < numClasses; i++) {
+            maxPassengerPerClass.add(Integer.parseInt(listClassTxt.get(i).getText()));
+        }
+        String companyName = txtCompanyName.getText();
+        Amount<Mass> maxCargo = Amount.valueOf(Double.valueOf(txtMaxCargo.getText()), SI.KILOGRAM);
+        Integer maxCrew = Integer.parseInt(txtMaxCrew.getText());
+
+        Aircraft aircraft = new Aircraft(-1, aircraftModel, companyName,
+                maxCargo, maxCrew, maxPassengerPerClass, new FlightPattern()); // TODO create flight pattern
+
+        return new FlightInfo(
+                flightType,
+                txtFlightInfoName.getText(),
+                originAirport,
+                destinationAirport,
+                aircraft,
+                listClassTxt,
+                listClassTxt);
+    }
 }

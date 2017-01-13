@@ -208,7 +208,7 @@ public class CustomMenuBar extends JMenuBar {
 
     /**
      * Creates the create flight info menu item.
-     * 
+     *
      * @return create flight info menu item
      */
     private JMenuItem createFlightInfoItem() {
@@ -216,7 +216,7 @@ public class CustomMenuBar extends JMenuBar {
         item.setAccelerator(KeyStroke.getKeyStroke("ctrl I"));
         item.addActionListener((ActionEvent e) -> {
             if (mainFrame.getActiveProject() != null) {
-                FlightInfoDialog flightInfoDialog = new FlightInfoDialog(mainFrame, simulator, mainFrame.getActiveProject());
+                FlightInfoDialog flightInfoDialog = new FlightInfoDialog(mainFrame, mainFrame.getActiveProject());
                 flightInfoDialog.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(mainFrame,
