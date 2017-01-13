@@ -209,13 +209,16 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
         JPanel importsPanel = new JPanel();
 
         JButton importAirNetworkButton = new JButton("Import Air Network");
+        JButton importAirportsButton = new JButton("Import Airports");
+        importAirportsButton.setEnabled(false);
+        
         importAirNetworkButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         importAirNetworkButton.addActionListener((ActionEvent e) -> {
             ImportAirNetworkUI importUI = new ImportAirNetworkUI(controller.getCreatedProject());
             importUI.setSettings();
+            importAirportsButton.setEnabled(importUI.isSuccess());
         });
-
-        JButton importAirportsButton = new JButton("Import Airports");
+        
         importAirportsButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         importAirportsButton.addActionListener((ActionEvent ae) -> {
             ImportAirportsUI importAirportsUI = new ImportAirportsUI(controller.getCreatedProject());
