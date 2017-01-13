@@ -95,8 +95,12 @@ public class FlightSimulationOracle implements FlightSimulationDAO {
             try (ResultSet resultSetClasses = (ResultSet) callableStatementSegments.getObject(1)) {
                 while (resultSetClasses.next()) {
                     String segmentID = callableStatementSegments.getString(1);
-                    Segment segment = segmentDAO.getSegment(segmentID).getElement();
-                    flightPlan.add(segment);
+                    if (segmentID != null) {
+                        Segment segment = segmentDAO.getSegment(segmentID).getElement();
+                        if (segment != null) {
+                            flightPlan.add(segment);
+                        }
+                    }
                 }
             }
         }

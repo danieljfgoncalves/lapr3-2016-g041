@@ -128,7 +128,7 @@ public class AirNetwork {
     public boolean addSegment(Coordinate coordinateA, Coordinate coordinateB, Segment newSegment) {
 
         // Calculate distance between coordinates
-        Amount<Length> distance = Calculus.distance(coordinateA, coordinateA, newSegment.getAltitude());
+        Amount<Length> distance = Calculus.distance(coordinateA, coordinateB, newSegment.getAltitude());
 
         return this.network.insertEdge(coordinateA, coordinateB, newSegment, distance.doubleValue(SI.METER));
     }
@@ -170,7 +170,7 @@ public class AirNetwork {
         }
 
         // Calculate distance between coordinates
-        Amount<Length> distance = Calculus.distance(coordinateA, coordinateA, newSegment.getAltitude());
+        Amount<Length> distance = Calculus.distance(coordinateA, coordinateB, newSegment.getAltitude());
 
         return this.network.insertEdge(coordinateA, coordinateB, newSegment, distance.doubleValue(SI.METER));
     }

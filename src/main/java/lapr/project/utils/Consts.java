@@ -51,11 +51,15 @@ public class Consts {
      * Ratio of specific heat at constant value. (dimensionless)
      */
     public static final Amount<Dimensionless> GAMMA = Amount.valueOf(1.4, Unit.ONE);
-    
+
+    /**
+     * Fuel mass to liter
+     */
+    public static final double LITER_CONV = 0.804;
+
     /**
      * Time step for fuel burn calculation.
      */
     public static final Amount UNIV_GAS_CONST = Amount.valueOf(287d, SI.JOULE.divide(SI.KILOGRAM).divide(SI.KELVIN));
-    
 
 }
