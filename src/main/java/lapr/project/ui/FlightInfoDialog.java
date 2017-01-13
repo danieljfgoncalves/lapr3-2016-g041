@@ -39,10 +39,12 @@ import lapr.project.controller.CreateFlightInfoController;
 import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
+import lapr.project.model.Coordinate;
 import lapr.project.model.FlightInfo;
 import lapr.project.model.FlightPattern;
 import lapr.project.model.FlightType;
 import lapr.project.model.Project;
+import lapr.project.model.Stop;
 import lapr.project.ui.components.ListCellRendererAircraftModel;
 import lapr.project.ui.components.ListCellRendererAirport;
 import org.jscience.physics.amount.Amount;
@@ -224,6 +226,36 @@ public class FlightInfoDialog extends JDialog {
     private Airport destinationAirport;
 
     /**
+     * The flight pattern.
+     */
+    private FlightPattern flightPattern;
+
+    /**
+     * Airports.
+     */
+    private List<Airport> airports;
+
+    /**
+     * Coordinates.
+     */
+    private List<Coordinate> coordinates;
+
+    /**
+     * The waypoints.
+     */
+    private List<Coordinate> waypoints;
+
+    /**
+     * The stops.
+     */
+    private List<Stop> stops;
+
+    /**
+     * Waypoint dialog.
+     */
+    private SelectWaypointDialog waypointDialog;
+
+    /**
      * Padding border.
      */
     private final static EmptyBorder PADDING_BORDER = new EmptyBorder(10, 10, 10, 10);
@@ -301,6 +333,15 @@ public class FlightInfoDialog extends JDialog {
 
         this.project = project;
         this.controller = new CreateFlightInfoController(project.getSerieNumber());
+
+        airports = new ArrayList<>();
+        coordinates = new ArrayList<>();
+        try {
+            airports = controller.getAirports();
+            coordinates = controller.getCoordinates();
+        } catch (SQLException ex) {
+            Logger.getLogger(FlightInfoDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         listClassTxt = new ArrayList();
         listClassLabels = new ArrayList();
@@ -550,11 +591,12 @@ public class FlightInfoDialog extends JDialog {
      * @return the load flight pattern button
      */
     private JButton createFlightPatButton() {
+        flightPattern = null;
         JButton button = new JButton("Load Aircraft Flight Pattern");
         button.addActionListener((ActionEvent ae) -> {
-            //TESTING ONLY
             ImportFlightPatternUI importUI = new ImportFlightPatternUI();
             importUI.setSettings();
+            flightPattern = importUI.getFlightPattern();
         });
         return button;
     }
@@ -730,12 +772,10 @@ public class FlightInfoDialog extends JDialog {
         originAirportLabel.setFont(FORM_LABEL_FONT);
 
         JComboBox<Airport> originAirportComboBox = new JComboBox<>();
+        originAirportComboBox.setModel(new DefaultComboBoxModel(airports.toArray()));
         originAirportComboBox.setPreferredSize(new Dimension(420, 25));
-        //populate origin airport combobox
-//        for (Airport airport : project.getAirportsRegister().getAirports()) {
-//            originAirportComboBox.addItem(airport);
-//        }
         originAirportComboBox.setRenderer(new ListCellRendererAirport());
+        originAirport = (Airport) originAirportComboBox.getSelectedItem();
         originAirportComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -747,12 +787,10 @@ public class FlightInfoDialog extends JDialog {
         destinationAirportLabel.setFont(FORM_LABEL_FONT);
 
         JComboBox<Airport> destinationAirportComboBox = new JComboBox<>();
+        destinationAirportComboBox.setModel(new DefaultComboBoxModel(airports.toArray()));
         destinationAirportComboBox.setPreferredSize(new Dimension(420, 25));
-        //populate destination airport combobox
-//        for (Airport airport : project.getAirportsRegister().getAirports()) {
-//            destinationAirportComboBox.addItem(airport);
-//        }
         destinationAirportComboBox.setRenderer(new ListCellRendererAirport());
+        destinationAirport = (Airport) destinationAirportComboBox.getSelectedItem();
         destinationAirportComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -765,6 +803,7 @@ public class FlightInfoDialog extends JDialog {
 
         JComboBox<FlightType> flightTypeComboBox = new JComboBox<>(FlightType.values());
         flightTypeComboBox.setPreferredSize(new Dimension(100, 25));
+        flightType = (FlightType) flightTypeComboBox.getSelectedItem();
         flightTypeComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -846,7 +885,7 @@ public class FlightInfoDialog extends JDialog {
     private JButton createAddWaypointButton() {
         JButton addWaypointButton = new JButton("Add Waypoint");
         addWaypointButton.addActionListener((ActionEvent ae) -> {
-            SelectWaypointDialog waypointDialog = new SelectWaypointDialog(this, project);
+            waypointDialog = new SelectWaypointDialog(this, coordinates);
             waypointDialog.setVisible(true);
         });
         return addWaypointButton;
@@ -1069,17 +1108,24 @@ public class FlightInfoDialog extends JDialog {
         String companyName = txtCompanyName.getText();
         Amount<Mass> maxCargo = Amount.valueOf(Double.valueOf(txtMaxCargo.getText()), SI.KILOGRAM);
         Integer maxCrew = Integer.parseInt(txtMaxCrew.getText());
-
         Aircraft aircraft = new Aircraft(-1, aircraftModel, companyName,
-                maxCargo, maxCrew, maxPassengerPerClass, new FlightPattern()); // TODO create flight pattern
+                maxCargo, maxCrew, maxPassengerPerClass, flightPattern);
 
-        return new FlightInfo(
-                flightType,
-                txtFlightInfoName.getText(),
-                originAirport,
-                destinationAirport,
-                aircraft,
-                listClassTxt,
-                listClassTxt);
+        String flightDesignator = txtFlightInfoName.getText();
+        waypoints = new ArrayList<>();
+        stops = new ArrayList<>();
+
+        return new FlightInfo(flightType, flightDesignator, originAirport,
+                destinationAirport, aircraft, waypoints, stops);
+    }
+
+    /**
+     * Adds a waypoint.
+     *
+     * @param coordinate coordinate
+     */
+    public void addWaypoint(Coordinate coordinate) {
+        this.waypoints.add(coordinate);
+        waypointDialog.dispose();
     }
 }

@@ -88,7 +88,7 @@ public class FlightInfo implements Comparable<FlightInfo> {
      * @param stops stops of flight
      */
     public FlightInfo(FlightType type, String designator, Airport originAirport,
-            Airport destinationAirport, Aircraft aircraft, List waypoints, List stops) {
+            Airport destinationAirport, Aircraft aircraft, List<Coordinate> waypoints, List<Stop> stops) {
 
         this.flightType = type;
         this.designator = designator;

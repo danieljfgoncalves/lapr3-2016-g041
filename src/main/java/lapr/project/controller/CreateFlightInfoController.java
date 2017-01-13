@@ -6,8 +6,12 @@ package lapr.project.controller;
 import java.sql.SQLException;
 import java.util.List;
 import lapr.project.datalayer.oracle.AircraftModelOracle;
+import lapr.project.datalayer.oracle.AirportOracle;
+import lapr.project.datalayer.oracle.CoordinateOracle;
 import lapr.project.datalayer.oracle.FlightInfoOracle;
 import lapr.project.model.AircraftModel;
+import lapr.project.model.Airport;
+import lapr.project.model.Coordinate;
 import lapr.project.model.FlightInfo;
 
 /**
@@ -43,6 +47,28 @@ public class CreateFlightInfoController {
     public List<AircraftModel> getAircraftModels() throws SQLException {
         AircraftModelOracle aircraftModelDAO = new AircraftModelOracle(projectSertieNumber);
         return aircraftModelDAO.getAircraftModels();
+    }
+
+    /**
+     * Gets the airports.
+     *
+     * @return airports
+     * @throws SQLException sql exception
+     */
+    public List<Airport> getAirports() throws SQLException {
+        AirportOracle airportDAO = new AirportOracle(projectSertieNumber);
+        return airportDAO.getAirports();
+    }
+
+    /**
+     * Gets the coordinates.
+     *
+     * @return coordinates
+     * @throws SQLException sql exception
+     */
+    public List<Coordinate> getCoordinates() throws SQLException {
+        CoordinateOracle coordinateDAO = new CoordinateOracle(projectSertieNumber);
+        return coordinateDAO.getCoordinates();
     }
 
     /**

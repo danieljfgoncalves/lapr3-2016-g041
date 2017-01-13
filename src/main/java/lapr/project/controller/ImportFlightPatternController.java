@@ -4,6 +4,7 @@
 package lapr.project.controller;
 
 import java.io.File;
+import lapr.project.model.FlightPattern;
 import lapr.project.utils.importable.FlightPatternCSV;
 
 /**
@@ -15,7 +16,7 @@ import lapr.project.utils.importable.FlightPatternCSV;
  * @author Tiago Correia 1151031
  */
 public class ImportFlightPatternController {
-    
+
     /**
      * Creates an instance of the controller.
      */
@@ -29,12 +30,17 @@ public class ImportFlightPatternController {
      * @return true if imported was successful
      * @throws Exception
      */
-    public boolean importFlightPattern(File fileToImport) throws Exception {
+    public FlightPattern importFlightPattern(File fileToImport) throws Exception {
 
         FlightPatternCSV importer = new FlightPatternCSV(fileToImport);
 
-        Object flightPattern = importer.importFile();
+        Object flightPatternObj = importer.importFile();
 
-        return flightPattern != null;
+        if (flightPatternObj != null && flightPatternObj instanceof FlightPattern) {
+            FlightPattern flightPattern = (FlightPattern) flightPatternObj;
+            return flightPattern;
+        }
+
+        return null;
     }
 }
