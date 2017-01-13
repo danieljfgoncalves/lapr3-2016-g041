@@ -18,7 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import lapr.project.model.Coordinate;
 import lapr.project.model.FlightSimulation;
+import lapr.project.model.Stop;
 
 /**
  * The frame to create the results dialog.
@@ -146,27 +148,54 @@ public class ShowResultsDialog extends JDialog {
 
         JLabel originLabel = new JLabel("Origin Airport:");
         originLabel.setFont(BOLD_LABEL_FONT);
-        JLabel originResultLabel = new JLabel("OPO"); //TODO
+        JLabel originResultLabel = new JLabel(flightSimulation.getFlightInfo().getOriginAirport().getIATA());
         originResultLabel.setFont(PLAIN_LABEL_FONT);
 
         JLabel destLabel = new JLabel("Destination Airport:");
         destLabel.setFont(BOLD_LABEL_FONT);
-        JLabel destResultLabel = new JLabel("LHR"); //TODO
+        JLabel destResultLabel = new JLabel(flightSimulation.getFlightInfo().getDestinationAirport().getIATA());
         destResultLabel.setFont(PLAIN_LABEL_FONT);
 
+        // prints OPO, LIS, ETC
         JLabel techStopsLabel = new JLabel("Technical Stops:");
         techStopsLabel.setFont(BOLD_LABEL_FONT);
-        JLabel techStopsResultLabel = new JLabel("MAD"); //TODO
+        StringBuilder techStops = new StringBuilder();
+        for (int i = 0; i < flightSimulation.getFlightInfo().getStops().size(); i++) {
+            if (i != flightSimulation.getFlightInfo().getWaypoints().size() - 1) {
+                techStops.append(flightSimulation.getFlightInfo().getStops().get(i).getAirport().getIATA()).append(", ");
+            } else {
+                techStops.append(flightSimulation.getFlightInfo().getStops().get(i).getAirport().getIATA());
+            }
+        }
+        JLabel techStopsResultLabel = new JLabel(techStops.toString());
         techStopsResultLabel.setFont(PLAIN_LABEL_FONT);
 
+        // prints PT01, PT02, ES04, ETC
         JLabel waypointsLabel = new JLabel("Waypoints:");
         waypointsLabel.setFont(BOLD_LABEL_FONT);
-        JLabel waypointsResultLabel = new JLabel("PT02, PT04, ES03"); //TODO
+        StringBuilder waypoints = new StringBuilder();
+        for (int i = 0; i < flightSimulation.getFlightInfo().getWaypoints().size(); i++) {
+            if (i != flightSimulation.getFlightInfo().getWaypoints().size() - 1) {
+                waypoints.append(flightSimulation.getFlightInfo().getWaypoints().get(i).getId()).append(", ");
+            } else {
+                waypoints.append(flightSimulation.getFlightInfo().getWaypoints().get(i).getId());
+            }
+        }
+        JLabel waypointsResultLabel = new JLabel(waypoints.toString());
         waypointsResultLabel.setFont(PLAIN_LABEL_FONT);
 
+        // prints PT01 -> ES04 -> ETC
         JLabel pathLabel = new JLabel("Result Path:");
         pathLabel.setFont(BOLD_LABEL_FONT);
-        JLabel pathResultLabel = new JLabel("PT01 -> PT05 -> ES05 -> ES06 -> FR06 -> UK02 -> UK08"); //TODO
+        StringBuilder path = new StringBuilder();
+        for (int i = 0; i < flightSimulation.getFlightplan().size(); i++) {
+            if (i != flightSimulation.getFlightplan().size() - 1) {
+                path.append(flightSimulation.getFlightplan().get(i).getId()).append(" -> ");
+            } else {
+                path.append(flightSimulation.getFlightplan().get(i).getId());
+            }
+        }
+        JLabel pathResultLabel = new JLabel(path.toString());
         pathResultLabel.setFont(PLAIN_LABEL_FONT);
 
         //align horizontally
@@ -291,4 +320,5 @@ public class ShowResultsDialog extends JDialog {
         });
         return button;
     }
+
 }
