@@ -12,6 +12,7 @@ import javax.measure.quantity.Velocity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import lapr.project.model.AirNetwork;
+import lapr.project.model.AlgorithmAnalysis;
 import lapr.project.model.Calculus;
 import lapr.project.model.Coordinate;
 import lapr.project.model.FlightSimulation;
@@ -45,43 +46,7 @@ public class FastestPath extends ShortestFlightPlan {
     public Amount<?> generateFlightPlan(AirNetwork network, FlightSimulation flight, LinkedList<Segment> flightplan)
             throws Exception {
 
-        // NOTE: we do not consider climbing or descending during the travel,
-        // because despite the chosen path they will all have same amount of climbs and descends.
-        // We will add to the fastest time all the climbs and descends times.
-        double climbDist = 0; // TODO : replace with method
-        double climbTime = 0;
-        double descDist = 0;
-        double descTime = 0;
-
-        Coordinate vOrig = flight.getFlightInfo().getOriginAirport().getCoordinates();
-        Coordinate vDest = flight.getFlightInfo().getDestinationAirport().getCoordinates();
-        Amount<Length> altitude = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseAltitude();
-        Amount<Velocity> machNumber = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseSpeed();
-        List<Stop> stops = flight.getFlightInfo().getStops();
-
-        MapGraph<Coordinate, Segment> graph = network.getNetwork().clone();
-        for (MapEdge<Coordinate, Segment> edge : graph.edges()) {
-
-            double subToDist = 0;
-            double addToTime = 0;
-            if (isTechnicalStop(edge.getVOrig(), stops) || edge.getVOrig().equals(vOrig)) {
-                subToDist += climbDist;
-                addToTime += climbTime;
-            } else if (isTechnicalStop(edge.getVDest(), stops) || edge.getVDest().equals(vDest)) {
-                subToDist += descDist;
-                addToTime += descTime;
-            }
-
-            Amount<Angle> flightDirection = Calculus.direction(edge.getVOrig(), edge.getVDest());
-
-            double groundSpeed = Calculus.calculateGS(altitude, machNumber,
-                    edge.getElement().getWindIntensity(), edge.getElement().getWindDirection(), flightDirection).doubleValue(SI.METERS_PER_SECOND);
-            double cruiseDistance = edge.getWeight() - subToDist;
-
-            double cruiseTime = cruiseDistance / groundSpeed;
-
-            edge.setWeight(cruiseTime + addToTime);
-        }
+        MapGraph<Coordinate, Segment> graph = createFlightTimeGraph(network, flight);
 
         // New ordered list of coordinates.
         LinkedList<Coordinate> coordinates = new LinkedList<>();
@@ -107,6 +72,45 @@ public class FastestPath extends ShortestFlightPlan {
         return Amount.valueOf(distance, SI.METER);
     }
 
+    private MapGraph<Coordinate, Segment> createFlightTimeGraph(AirNetwork network, FlightSimulation flight) throws CloneNotSupportedException {
+
+        Coordinate vOrig = flight.getFlightInfo().getOriginAirport().getCoordinates();
+        Coordinate vDest = flight.getFlightInfo().getDestinationAirport().getCoordinates();
+        Amount<Length> altitude = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseAltitude();
+        Amount<Velocity> machNumber = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseSpeed();
+        List<Stop> stops = flight.getFlightInfo().getStops();
+
+        MapGraph<Coordinate, Segment> graph = network.getNetwork().clone();
+        for (MapEdge<Coordinate, Segment> edge : graph.edges()) {
+
+            double subToDist = 0;
+            double addToTime = 0;
+            if (isTechnicalStop(edge.getVOrig(), stops) || edge.getVOrig().equals(vOrig)) {
+
+                AlgorithmAnalysis climb = Calculus.calculateClimb(flight, getAirportAltitude(edge.getVOrig(), flight));
+                subToDist += climb.getDistance().doubleValue(SI.METER);
+                addToTime += climb.getDuration().doubleValue(SI.SECOND);
+            } else if (isTechnicalStop(edge.getVDest(), stops) || edge.getVDest().equals(vDest)) {
+
+                AlgorithmAnalysis landing = Calculus.calculateLanding(flight, getAirportAltitude(edge.getVDest(), flight));
+                subToDist += landing.getDistance().doubleValue(SI.METER);
+                addToTime += landing.getDuration().doubleValue(SI.SECOND);
+            }
+
+            Amount<Angle> flightDirection = Calculus.direction(edge.getVOrig(), edge.getVDest());
+
+            double groundSpeed = Calculus.calculateGS(altitude, machNumber,
+                    edge.getElement().getWindIntensity(), edge.getElement().getWindDirection(), flightDirection).doubleValue(SI.METERS_PER_SECOND);
+            double cruiseDistance = edge.getWeight() - subToDist;
+
+            double cruiseTime = cruiseDistance / groundSpeed;
+
+            edge.setWeight(cruiseTime + addToTime);
+        }
+
+        return graph;
+    }
+
     private boolean isTechnicalStop(Coordinate coord, List<Stop> stops) {
 
         boolean isStop = false;
@@ -121,6 +125,26 @@ public class FastestPath extends ShortestFlightPlan {
             }
         }
         return isStop;
+    }
+
+    private Amount<Length> getAirportAltitude(Coordinate coordinate, FlightSimulation flight) {
+
+        if (coordinate.equals(flight.getFlightInfo().getOriginAirport().getCoordinates())) {
+            return flight.getFlightInfo().getOriginAirport().getAltitude();
+        }
+        if (coordinate.equals(flight.getFlightInfo().getOriginAirport().getCoordinates())) {
+            return flight.getFlightInfo().getDestinationAirport().getAltitude();
+        }
+
+        Iterator<Stop> it = flight.getFlightInfo().getStops().iterator();
+        while (it.hasNext()) {
+
+            Stop next = it.next();
+            if (coordinate.equals(next.getCoordinate())) {
+                return next.getAirport().getAltitude();
+            }
+        }
+        return Amount.valueOf(0d, SI.METER);
     }
 
     @Override

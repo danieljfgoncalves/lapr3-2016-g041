@@ -7,16 +7,9 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import lapr.project.datalayer.dao.AirportDAO;
-import lapr.project.datalayer.dao.CoordinateDAO;
-import lapr.project.datalayer.dao.SegmentDAO;
 import lapr.project.datalayer.oracle.AirportOracle;
-import lapr.project.datalayer.oracle.CoordinateOracle;
-import lapr.project.datalayer.oracle.SegmentOracle;
 import lapr.project.model.Airport;
-import lapr.project.model.Coordinate;
 import lapr.project.model.Project;
-import lapr.project.model.Segment;
-import lapr.project.utils.graph.MapEdge;
 import lapr.project.utils.importable.AirportXML;
 
 /**
@@ -34,6 +27,9 @@ public class ImportAirportsController {
      */
     private final Project selectedProject;
     
+    /**
+     * The list of airports.
+     */
     private List<Airport> airports;
 
     /**
@@ -52,8 +48,8 @@ public class ImportAirportsController {
      * @return the imported list of airports or null if null
      * @throws Exception
      */
-    public boolean importAirports(File fileToImport) throws Exception {
-        AirportXML importer = new AirportXML(fileToImport);
+    public boolean importAirports(File fileToImport, Project project) throws Exception {
+        AirportXML importer = new AirportXML(fileToImport, project);
         airports = (List<Airport>) importer.importFile();
 
         if (airports == null) {
@@ -62,6 +58,12 @@ public class ImportAirportsController {
         return true;
     }
 
+    /**
+     * Saves imported airports in the database.
+     * 
+     * @throws SQLException
+     * @throws Exception 
+     */
     public void saveToDatabase() throws SQLException, Exception {
         AirportDAO airportDAO = new AirportOracle(selectedProject.getSerieNumber());
         for (Airport airport : airports) {
