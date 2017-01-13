@@ -8,7 +8,6 @@ import javax.measure.quantity.Area;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Mass;
-import javax.measure.quantity.Power;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.quantity.Pressure;
 import javax.measure.unit.NonSI;
@@ -609,8 +608,7 @@ public class Calculus {
                 return flight.getFlightInfo().getAircraft().getFlightPattern().getVdesc(altitude);
             default:
                 // CRUISE
-                Amount<Velocity> mach = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseSpeed();
-                return calculateTAS(altitude, mach);
+                return Amount.valueOf(0, SI.METERS_PER_SECOND);
         }
     }
 
@@ -709,13 +707,18 @@ public class Calculus {
             pressure = getPressure(altitude);
             temperature = getTemperature(altitude);
             airDensity = getAirDensity(pressure, temperature);
-            ias = getIAS(flight, altitude, regime);
-            mTrue = getMachTrue(ias, airDensity);
+            if (!regime.equals(REGIME.CRUISE)) {
+                ias = getIAS(flight, altitude, regime);
+                mTrue = getMachTrue(ias, airDensity);
+            } else {
+                mTrue = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseSpeed();
+            }
             tas = calculateTAS(altitude, mTrue);
             drag = getDragForce(flight, altitude, mass, e, mTrue);
             double landingFactor = (regime == REGIME.LANDING) ? 0.1 : 1;
-            thrust = getThrust(flight, lambda, mTrue, airDensity).times(landingFactor);
-            totalThrust = getTotalThrust(thrust, numMotors);
+            thrust = (regime == REGIME.CRUISE) ? Amount.valueOf(0, SI.NEWTON)
+                    : getThrust(flight, lambda, mTrue, airDensity).times(landingFactor);
+            totalThrust = (regime == REGIME.CRUISE) ? drag : getTotalThrust(thrust, numMotors);
             fuelBurn = getFuelBurnCalculation(totalThrust, Amount.valueOf(TIMESTEP, SI.SECOND), tsfc);
             climbRate = getRateOfClimb(totalThrust, drag, tas, mass);
             climbAngle = getClimbingAngle(climbRate, tas);
@@ -724,7 +727,7 @@ public class Calculus {
             consumption = consumption.plus(fuelBurn);
             startingAltitude = getCumulativeAltitude(altitude, climbRate, Amount.valueOf(TIMESTEP, SI.SECOND)).doubleValue(SI.METER);
             lapsedTime += TIMESTEP;
-            
+
             switch (regime) {
                 case CLIMB:
                     stopCriteria = (startingAltitude < cruiseAltitude) && (climbRate.isGreaterThan(MIN_CLIMB_RATE));

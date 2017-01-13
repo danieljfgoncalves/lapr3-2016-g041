@@ -10,7 +10,6 @@ import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
-import javax.measure.quantity.Power;
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Temperature;
 import javax.measure.quantity.Velocity;
@@ -642,32 +641,33 @@ public class CalculusTest {
     /**
      * Test of calculateCruise method, of class Calculus.
      */
-    //@Test
+    @Test
     public void testCalculateCruise() {
         System.out.println("calculateCruise");
 
-        Amount<Length> airportAltitude = Amount.valueOf(0.0, SI.METER);
+        Amount<Length> segmentDistance = Amount.valueOf(411652, SI.METER);
         flight.getFlightInfo().getAircraft().setFlightPattern(flightPattern);
 
         flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().setLapseRateFactor(Amount.valueOf(0.96, Unit.ONE));
         flight.getFlightInfo().getAircraft().getAircraftModel().setWingArea(Amount.valueOf(858, SI.SQUARE_METRE));
         flight.getFlightInfo().getAircraft().getAircraftModel().setAspectRatio(Amount.valueOf(9, Unit.ONE));
-        flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().setCruiseAltitude(Amount.valueOf(10061, SI.METER));
+        flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().setCruiseAltitude(Amount.valueOf(10500, SI.METER));
         flight.getFlightInfo().getAircraft().getAircraftModel().setE(Amount.valueOf(0.84, Unit.ONE));
         flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getThrustFunction().setThrust0(Amount.valueOf(3.38E+05, SI.NEWTON));
         flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getThrustFunction().setThrustMaxSpeed(Amount.valueOf(1.80E+05, SI.NEWTON));
         flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getThrustFunction().setMaxSpeed(Amount.valueOf(0.9, NonSI.MACH));
         flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().setNumberOfMotors(4);
         flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().setTsfc(Amount.valueOf(1.60E-04, CustomUnits.TSFC_NNS));
+        flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().setCruiseSpeed(Amount.valueOf(0.76929307, NonSI.MACH));
         flight.setEffectiveCargo(Amount.valueOf(70000, SI.KILOGRAM));
         flight.setEffectiveFuel(Amount.valueOf(8040d, SI.KILOGRAM));
         flight.getFlightInfo().getAircraft().getAircraftModel().setEmptyWeight(Amount.valueOf(3.00E+05, SI.KILOGRAM));
 
-        double expResult1 = 220159d;
-        double expResult2 = 1500d;
-        double expResult3 = 1877d;
+        double expResult1 = 411652d;
+        double expResult2 = 1800d;
+        double expResult3 = 7029d;
 
-        AlgorithmAnalysis alg = Calculus.calculateLanding(flight, airportAltitude);
+        AlgorithmAnalysis alg = Calculus.calculateCruise(flight, segmentDistance);
         double result1 = alg.getDistance().doubleValue(SI.METER);
         double result2 = alg.getDuration().doubleValue(SI.SECOND);
         double result3 = alg.getConsumption().doubleValue(SI.KILOGRAM);

@@ -10,7 +10,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -1082,14 +1081,6 @@ public class FlightInfoDialog extends JDialog {
             }
         });
         return cancelButton;
-    }
-
-    public static void main(String[] args) {
-        Frame f = new Frame();
-        f.setVisible(true);
-
-        FlightInfoDialog fid = new FlightInfoDialog(f, new Project());
-        fid.setVisible(true);
     }
 
     private FlightInfo createFlightInfo() {
