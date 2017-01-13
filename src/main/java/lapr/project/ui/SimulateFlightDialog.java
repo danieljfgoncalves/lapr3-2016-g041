@@ -72,12 +72,12 @@ public class SimulateFlightDialog extends JDialog {
     /**
      * The flights info.
      */
-    private static List<FlightInfo> flightsInfo;
+    private List<FlightInfo> flightsInfo;
 
     /**
      * The controller to simulate flights.
      */
-    private static SimulateFlightController controller;
+    private SimulateFlightController controller;
 
     /**
      * Title for the frame.
@@ -130,6 +130,11 @@ public class SimulateFlightDialog extends JDialog {
     private JLabel selectAlgorithmLabel;
 
     /**
+     * Show results dialog.
+     */
+    private ShowResultsDialog resultsDialog;
+
+    /**
      * The input components.
      */
     private JTable flightInfoTable;
@@ -143,6 +148,7 @@ public class SimulateFlightDialog extends JDialog {
     private List<JTextField> membersPerClassTextFields;
     private List<JLabel> membersPerClassLayers;
     private AirNetwork airNetwork;
+    private FlightPlan algorithm;
 
     /**
      * Padding border.
@@ -701,17 +707,10 @@ public class SimulateFlightDialog extends JDialog {
         finishButton.setEnabled(false);
 
         finishButton.addActionListener((ActionEvent ae) -> {
-            try {
-                FlightSimulation flightSimulation = setupFlightSimulation();
-                controller.createFlightSimulation(flightSimulation);
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "The server is busy. Try later.",
-                        "Database busy",
-                        JOptionPane.WARNING_MESSAGE);
-                Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            FlightSimulation flightSimulation = setupFlightSimulation();
+
+            resultsDialog = new ShowResultsDialog(this, flightSimulation, algorithm.getDescription());
+            resultsDialog.setVisible(true);
         });
         return finishButton;
     }
@@ -764,7 +763,7 @@ public class SimulateFlightDialog extends JDialog {
                     .parseInt(membersPerClassTextFields.get(i).getText()));
         }
 
-        FlightPlan algorithm = algorithmList.getSelectedValue();
+        algorithm = algorithmList.getSelectedValue();
         LinkedList<Segment> flightplan = new LinkedList<>();
 
         FlightSimulation flightSimulation = new FlightSimulation(
@@ -781,7 +780,6 @@ public class SimulateFlightDialog extends JDialog {
                     "Not enough fuel",
                     JOptionPane.WARNING_MESSAGE);
             Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
-            dispose();
         } catch (FailedAnalysisException ex) {
             JOptionPane.showMessageDialog(
                     null,
@@ -789,7 +787,6 @@ public class SimulateFlightDialog extends JDialog {
                     "Database busy",
                     JOptionPane.WARNING_MESSAGE);
             Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
-            dispose();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(
                     null,
@@ -797,12 +794,35 @@ public class SimulateFlightDialog extends JDialog {
                     "Invalid fields",
                     JOptionPane.WARNING_MESSAGE);
             Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
-            dispose();
         }
 
         flightSimulation.setFlightplan(flightplan);
 
         return flightSimulation;
+    }
+
+    /**
+     *
+     * @param flightSimulation
+     */
+    public void saveOnDatabase(FlightSimulation flightSimulation) {
+        try {
+            controller.createFlightSimulation(flightSimulation);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "The flight simulation was successfully added!",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "The server is busy. Try later.",
+                    "Database busy",
+                    JOptionPane.WARNING_MESSAGE);
+            Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        resultsDialog.dispose();
+        dispose();
     }
 
     public static void main(String[] args) {

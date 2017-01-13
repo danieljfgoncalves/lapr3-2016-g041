@@ -6,7 +6,6 @@ package lapr.project.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -35,7 +34,7 @@ public class ShowResultsDialog extends JDialog {
     /**
      * The parent frame.
      */
-    private final JDialog parentFrame;
+    private final SimulateFlightDialog parentFrame;
 
     /**
      * The flight simulation with the results.
@@ -84,7 +83,7 @@ public class ShowResultsDialog extends JDialog {
      * @param algorithm the algorithm used
      * @param flightSimulation the flight simulator with the results
      */
-    public ShowResultsDialog(JDialog parentFrame, FlightSimulation flightSimulation, String algorithm) {
+    public ShowResultsDialog(SimulateFlightDialog parentFrame, FlightSimulation flightSimulation, String algorithm) {
         super(parentFrame, WINDOW_TITLE);
         setModal(true);
         this.parentFrame = parentFrame;
@@ -272,7 +271,7 @@ public class ShowResultsDialog extends JDialog {
     private JButton createSaveButton() {
         JButton button = new JButton("Save");
         button.addActionListener((ActionEvent ae) -> {
-            //TODO
+            parentFrame.saveOnDatabase(flightSimulation);
         });
         return button;
     }
@@ -292,14 +291,4 @@ public class ShowResultsDialog extends JDialog {
         });
         return button;
     }
-
-    //DELETE - TEST ONLY
-    public static void main(String[] args) {
-        JDialog d = new JDialog();
-        d.setVisible(true);
-        ShowResultsDialog srd = new ShowResultsDialog(d, new FlightSimulation(), "test");
-        srd.setPreferredSize(new Dimension(500, 500));
-        srd.setVisible(true);
-    }
-
 }
