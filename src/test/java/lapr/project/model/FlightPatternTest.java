@@ -76,7 +76,7 @@ public class FlightPatternTest {
     @Test
     public void testNumLines() {
         System.out.println("numLines");
-        int expResult = 16;
+        int expResult = 15;
         int result = instance.numLines();
         assertEquals(expResult, result);
     }
