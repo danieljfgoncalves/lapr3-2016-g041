@@ -10,7 +10,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,7 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import lapr.project.model.Coordinate;
-import lapr.project.model.Project;
 
 /**
  * The frame to create select waypoit dialog.
@@ -37,7 +38,7 @@ public class SelectWaypointDialog extends JDialog {
     /**
      * The parent frame.
      */
-    private final JDialog parentFrame;
+    private final FlightInfoDialog parentFrame;
 
     /**
      * The combo box with the coordinates for mandatory waypoints.
@@ -45,9 +46,9 @@ public class SelectWaypointDialog extends JDialog {
     private JComboBox<Coordinate> waypointsComboBox;
 
     /**
-     * The open project.
+     * The coordinates.
      */
-    private final Project project;
+    private final List<Coordinate> coordinates;
 
     /**
      * the selected waypoint.
@@ -78,14 +79,15 @@ public class SelectWaypointDialog extends JDialog {
      * Creates an instance of select mandatory waypoint dialog.
      *
      * @param parentFrame the parent frame
-     * @param project the open project
+     * @param coordinates coordinates
      */
-    public SelectWaypointDialog(JDialog parentFrame, Project project) {
+    public SelectWaypointDialog(FlightInfoDialog parentFrame, List<Coordinate> coordinates) {
         super(parentFrame, WINDOW_TITLE);
         setModal(true);
-        this.parentFrame = parentFrame;
-        this.project = project;
         this.setResizable(false);
+
+        this.parentFrame = parentFrame;
+        this.coordinates = coordinates;
 
         createComponents();
 
@@ -122,13 +124,10 @@ public class SelectWaypointDialog extends JDialog {
 
         JLabel selectWaypointLabel = new JLabel("Select the desired mandatory waypoint:");
 
-        JComboBox<Coordinate> waypointsComboBox = new JComboBox<>();
+        waypointsComboBox = new JComboBox<>();
+        waypointsComboBox.setModel(new DefaultComboBoxModel(coordinates.toArray()));
         waypointsComboBox.setPreferredSize(new Dimension(350, 25));
-        //populate origin airport combobox
-//        for (Coordinate coordinate : project.getAirNetwork().getNetwork().vertices()) {
-//            waypointsComboBox.addItem(coordinate);
-//        }
-//        waypointsComboBox.setRenderer(//TODO);
+        waypoint = (Coordinate) waypointsComboBox.getSelectedItem();
         waypointsComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -183,7 +182,7 @@ public class SelectWaypointDialog extends JDialog {
     private JButton createAddButton() {
         JButton button = new JButton("Add");
         button.addActionListener((ActionEvent ae) -> {
-            //TODO
+            parentFrame.addWaypoint(new Coordinate((Coordinate) waypointsComboBox.getSelectedItem()));
         });
         return button;
     }

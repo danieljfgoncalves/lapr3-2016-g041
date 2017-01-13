@@ -3,7 +3,6 @@
  */
 package lapr.project.datalayer.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 import lapr.project.model.Project;
 
@@ -24,7 +23,7 @@ public interface ProjectDAO {
      * @return the project with a specific serie number
      * @throws Exception exception
      */
-    Project getProject(Integer projectSerieNumber) throws Exception;
+    Project getProject(int projectSerieNumber) throws Exception;
 
     /**
      * Gets the list of projects.

@@ -8,11 +8,17 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import lapr.project.datalayer.dao.SegmentDAO;
 import lapr.project.datalayer.oracle.FlightInfoOracle;
 import lapr.project.datalayer.oracle.FlightSimulationOracle;
+import lapr.project.datalayer.oracle.SegmentOracle;
+import lapr.project.model.AirNetwork;
+import lapr.project.model.Coordinate;
 import lapr.project.model.FlightInfo;
 import lapr.project.model.FlightSimulation;
+import lapr.project.model.Segment;
 import lapr.project.model.flightplan.FlightPlan;
+import lapr.project.utils.graph.MapEdge;
 
 /**
  * Represents the controller to simulate flights.
@@ -82,6 +88,24 @@ public class SimulateFlightController {
         }
 
         return flightPlans;
+    }
+
+    /**
+     * Gets the air network.
+     *
+     * @return the air network
+     * @throws Exception exception
+     */
+    public AirNetwork getAirNetwork() throws Exception {
+        SegmentDAO segmentDAO = new SegmentOracle(projectSertieNumber);
+        List<MapEdge<Coordinate, Segment>> edges = segmentDAO.getSegments();
+        AirNetwork airNetwork = new AirNetwork();
+        for (MapEdge<Coordinate, Segment> mapEdge : edges) {
+            airNetwork.addJunction(mapEdge.getVDest());
+            airNetwork.addJunction(mapEdge.getVOrig());
+            airNetwork.addSegment(mapEdge.getVOrig(), mapEdge.getVDest(), mapEdge.getElement());
+        }
+        return airNetwork;
     }
 
     /**

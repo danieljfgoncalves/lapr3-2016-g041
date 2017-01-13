@@ -46,9 +46,9 @@ public class AirportOracle implements AirportDAO {
      *
      * @param rs the DB result set
      * @return an airport object
-     * @throws Exception
+     * @throws SQLException sql exception
      */
-    private Airport mapRow(ResultSet rs) throws Exception {
+    private Airport mapRow(ResultSet rs) throws SQLException {
 
         Airport airport = new Airport();
         airport.setIATA(rs.getString(1));
@@ -63,7 +63,7 @@ public class AirportOracle implements AirportDAO {
     }
 
     @Override
-    public Airport getAirport(String iata) throws Exception {
+    public Airport getAirport(String iata) throws SQLException {
 
         String query = "{? = call FC_GET_AIRPORT (?, ?)}";
 
@@ -89,7 +89,7 @@ public class AirportOracle implements AirportDAO {
     }
 
     @Override
-    public List<Airport> getAirports() throws Exception {
+    public List<Airport> getAirports() throws SQLException {
 
         List<Airport> airports = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class AirportOracle implements AirportDAO {
     }
 
     @Override
-    public void addAirport(Airport airport) throws Exception {
+    public void addAirport(Airport airport) throws SQLException {
 
         String query = "{call PC_CREATE_AIRPORT (?, ?, ?, ?, ?, ?, ?)}";
 
@@ -140,7 +140,7 @@ public class AirportOracle implements AirportDAO {
     @Override
     public String getCoordinateIdFromDB(Double latitude, Double longitude, int numSerie) throws SQLException {
         String query = "{?= call FC_GET_ID_COORDINATE(?, ?, ?)}";
-        
+
         String idCoordinate = "";
 
         try (Connection connection = DbConnection.getConnection();

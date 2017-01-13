@@ -27,7 +27,7 @@ public class CoordinateOracle implements CoordinateDAO {
     /**
      * Project's id.
      */
-    private int projectSerieNumber;
+    private final int projectSerieNumber;
 
     /**
      * Constructor of a coordinate oracle class.
@@ -46,18 +46,18 @@ public class CoordinateOracle implements CoordinateDAO {
      * @return a coordinate object
      * @throws Exception
      */
-    private Coordinate mapRow(ResultSet rs) throws Exception {
+    private Coordinate mapRow(ResultSet rs) throws SQLException {
 
         Coordinate coordinate = new Coordinate();
         coordinate.setId(rs.getString(1));
-        coordinate.setLatitude(rs.getDouble(2));
-        coordinate.setLatitude(rs.getDouble(3));
+        coordinate.setLatitude(Double.parseDouble(rs.getString(2)));
+        coordinate.setLongitude(Double.parseDouble(rs.getString(3)));
 
         return coordinate;
     }
 
     @Override
-    public Coordinate getCoordinate(String id) throws Exception {
+    public Coordinate getCoordinate(String id) throws SQLException {
         // TODO : Implement stored procedure.
         String query = "{? = call FC_GET_COORDINATE (?, ?)}";
 
@@ -83,7 +83,7 @@ public class CoordinateOracle implements CoordinateDAO {
     }
 
     @Override
-    public List<Coordinate> getCoordinates() throws Exception {
+    public List<Coordinate> getCoordinates() throws SQLException {
 
         List<Coordinate> coordinates = new ArrayList<>();
 

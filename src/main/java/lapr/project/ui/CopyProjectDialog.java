@@ -220,19 +220,16 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
                 if (!(controller.createProjectCopy(nameTextField.getText(), descriptionTextField.getText()))) {
                     throw new IllegalArgumentException("The given name already exists or is invalid. Please try again!");
                 } else {
-                    JOptionPane.showMessageDialog(rootPane,
-                            "A project with the same serie number already exists!",
-                            "Copy Project",
-                            JOptionPane.WARNING_MESSAGE);
+                    int input = JOptionPane.showConfirmDialog(parentWindow, "Project successfully copied!", "Project Copy", JOptionPane.DEFAULT_OPTION);
+                    if (input == JOptionPane.OK_OPTION) {
+                        parentWindow.activateProject(controller.getCopiedProject());
+                        dispose();
+
+                        if (parentWindow instanceof ProjectSelectionDialog) {
+                            ((ProjectSelectionDialog) parentWindow).refreshProjectsList(this.projectDAO.getProjects());
+                        }
+                    }
                 }
-
-                parentWindow.activateProject(controller.getCopiedProject());
-                dispose();
-
-                if (parentWindow instanceof ProjectSelectionDialog) {
-                    ((ProjectSelectionDialog) parentWindow).refreshProjectsList(this.projectDAO.getProjects());
-                }
-
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(
                         null,

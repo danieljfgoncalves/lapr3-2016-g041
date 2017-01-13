@@ -30,7 +30,7 @@ public class Consts {
     /**
      * Temperature lapse rate. (Kelvin/meter)(K/m)
      */
-    public static final Amount<Temperature> TEMP_LAPSE_RATE = Amount.valueOf(-0.0065, CustomUnits.TEMP_GRADIENT_SI);
+    public static final Amount TEMP_LAPSE_RATE = Amount.valueOf(-0.0065, CustomUnits.TEMP_GRADIENT_SI);
 
     /**
      * Air density sea level. (Kg/m3)
@@ -40,7 +40,7 @@ public class Consts {
     /**
      * Pressure at sea level. (N/m2)
      */
-    public static final Amount<Pressure> AIR_PRESSURE_SEA_LEVEL = Amount.valueOf(101325, CustomUnits.PRESSURE_SI);
+    public static final Amount<Pressure> AIR_PRESSURE_SEA_LEVEL = Amount.valueOf(101325, SI.PASCAL);
 
     /**
      * Speed of sound at sea level. (m/s)
@@ -51,10 +51,15 @@ public class Consts {
      * Ratio of specific heat at constant value. (dimensionless)
      */
     public static final Amount<Dimensionless> GAMMA = Amount.valueOf(1.4, Unit.ONE);
-    
+
     /**
      * Fuel mass to liter
      */
     public static final double LITER_CONV = 0.804;
+
+    /**
+     * Time step for fuel burn calculation.
+     */
+    public static final Amount UNIV_GAS_CONST = Amount.valueOf(287d, SI.JOULE.divide(SI.KILOGRAM).divide(SI.KELVIN));
 
 }

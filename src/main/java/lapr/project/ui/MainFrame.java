@@ -197,7 +197,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         createFlightInfoButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         createFlightInfoButton.setEnabled(false);
         createFlightInfoButton.addActionListener((ActionEvent ae) -> {
-            FlightInfoDialog flightInfoDialog = new FlightInfoDialog(this, simulator, getActiveProject());
+            FlightInfoDialog flightInfoDialog = new FlightInfoDialog(this, getActiveProject());
             flightInfoDialog.setVisible(true);
         });
 
