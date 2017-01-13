@@ -182,8 +182,7 @@ public class SelectWaypointDialog extends JDialog {
     private JButton createAddButton() {
         JButton button = new JButton("Add");
         button.addActionListener((ActionEvent ae) -> {
-            waypoint = (Coordinate) waypointsComboBox.getSelectedItem();
-            parentFrame.addWaypoint(waypoint);
+            parentFrame.addWaypoint(new Coordinate((Coordinate) waypointsComboBox.getSelectedItem()));
         });
         return button;
     }

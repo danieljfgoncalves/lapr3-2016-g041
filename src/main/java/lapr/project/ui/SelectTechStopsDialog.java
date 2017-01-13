@@ -9,8 +9,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.GregorianCalendar;
+import java.util.List;
+import javax.measure.quantity.Duration;
+import javax.measure.unit.NonSI;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,8 +26,9 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import lapr.project.model.Airport;
-import lapr.project.model.Project;
+import lapr.project.model.Stop;
 import lapr.project.ui.components.ListCellRendererAirport;
+import org.jscience.physics.amount.Amount;
 
 /**
  * The frame to create select technical stop dialog.
@@ -39,12 +44,12 @@ public class SelectTechStopsDialog extends JDialog {
     /**
      * The parent frame.
      */
-    private final JDialog parentFrame;
+    private final FlightInfoDialog parentFrame;
 
     /**
-     * The combo box with the airports for technical stops.
+     * The airports list.
      */
-    private JComboBox<Airport> airportComboBox;
+    private final List<Airport> airports;
 
     /**
      * The minimum stop time text field.
@@ -52,14 +57,9 @@ public class SelectTechStopsDialog extends JDialog {
     private JTextField txtMinStopTime;
 
     /**
-     * The open project.
-     */
-    private final Project project;
-
-    /**
      * the selected technical stop airport.
      */
-    private Airport techStop;
+    private Airport stopAirport;
 
     /**
      * Padding border.
@@ -85,14 +85,15 @@ public class SelectTechStopsDialog extends JDialog {
      * Creates an instance of select technical stop dialog.
      *
      * @param parentFrame the parent frame
-     * @param project the open project
+     * @param airports
      */
-    public SelectTechStopsDialog(JDialog parentFrame, Project project) {
+    public SelectTechStopsDialog(FlightInfoDialog parentFrame, List<Airport> airports) {
         super(parentFrame, WINDOW_TITLE);
         setModal(true);
-        this.parentFrame = parentFrame;
-        this.project = project;
         this.setResizable(false);
+
+        this.airports = airports;
+        this.parentFrame = parentFrame;
 
         createComponents();
 
@@ -131,17 +132,12 @@ public class SelectTechStopsDialog extends JDialog {
         JLabel minimumStopTimeLabel = new JLabel("Minimum stop time (minutes):");
 
         JComboBox<Airport> techStopComboBox = new JComboBox<>();
+        techStopComboBox.setModel(new DefaultComboBoxModel(airports.toArray()));
         techStopComboBox.setPreferredSize(new Dimension(420, 25));
-        //populate origin airport combobox
-//        for (Airport airport : project.getAirportsRegister().getAirports()) {
-//            techStopComboBox.addItem(airport);
-//        }
         techStopComboBox.setRenderer(new ListCellRendererAirport());
-        techStopComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                techStop = (Airport) techStopComboBox.getSelectedItem();
-            }
+        stopAirport = (Airport) techStopComboBox.getSelectedItem();
+        techStopComboBox.addActionListener((ActionEvent ae) -> {
+            stopAirport = (Airport) techStopComboBox.getSelectedItem();
         });
 
         txtMinStopTime = new JTextField();
@@ -201,7 +197,11 @@ public class SelectTechStopsDialog extends JDialog {
     private JButton createAddButton() {
         JButton button = new JButton("Add");
         button.addActionListener((ActionEvent ae) -> {
-            //TODO
+            Amount<Duration> minStopMinutes = Amount
+                    .valueOf(Double.parseDouble(txtMinStopTime.getText()), NonSI.MINUTE);
+            parentFrame.addStop(new Stop(stopAirport, minStopMinutes,
+                    new GregorianCalendar(), new GregorianCalendar()));
+            dispose();
         });
         return button;
     }

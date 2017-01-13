@@ -336,6 +336,8 @@ public class FlightInfoDialog extends JDialog {
 
         airports = new ArrayList<>();
         coordinates = new ArrayList<>();
+        waypoints = new ArrayList<>();
+        stops = new ArrayList<>();
         try {
             airports = controller.getAirports();
             coordinates = controller.getCoordinates();
@@ -776,11 +778,8 @@ public class FlightInfoDialog extends JDialog {
         originAirportComboBox.setPreferredSize(new Dimension(420, 25));
         originAirportComboBox.setRenderer(new ListCellRendererAirport());
         originAirport = (Airport) originAirportComboBox.getSelectedItem();
-        originAirportComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                originAirport = (Airport) originAirportComboBox.getSelectedItem();
-            }
+        originAirportComboBox.addActionListener((ActionEvent ae) -> {
+            originAirport = (Airport) originAirportComboBox.getSelectedItem();
         });
 
         JLabel destinationAirportLabel = new JLabel("Destination Airport:");
@@ -791,11 +790,8 @@ public class FlightInfoDialog extends JDialog {
         destinationAirportComboBox.setPreferredSize(new Dimension(420, 25));
         destinationAirportComboBox.setRenderer(new ListCellRendererAirport());
         destinationAirport = (Airport) destinationAirportComboBox.getSelectedItem();
-        destinationAirportComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                destinationAirport = (Airport) destinationAirportComboBox.getSelectedItem();
-            }
+        destinationAirportComboBox.addActionListener((ActionEvent ae) -> {
+            destinationAirport = (Airport) destinationAirportComboBox.getSelectedItem();
         });
 
         JLabel flightTypeLabel = new JLabel("Flight Type:");
@@ -804,11 +800,8 @@ public class FlightInfoDialog extends JDialog {
         JComboBox<FlightType> flightTypeComboBox = new JComboBox<>(FlightType.values());
         flightTypeComboBox.setPreferredSize(new Dimension(100, 25));
         flightType = (FlightType) flightTypeComboBox.getSelectedItem();
-        flightTypeComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                flightType = (FlightType) flightTypeComboBox.getSelectedItem();
-            }
+        flightTypeComboBox.addActionListener((ActionEvent ae) -> {
+            flightType = (FlightType) flightTypeComboBox.getSelectedItem();
         });
 
         JButton addTechStopButton = createAddTechStopButton();
@@ -871,7 +864,7 @@ public class FlightInfoDialog extends JDialog {
     private JButton createAddTechStopButton() {
         JButton addTechStopButton = new JButton("Add Technical Stop");
         addTechStopButton.addActionListener((ActionEvent ae) -> {
-            SelectTechStopsDialog techStopDialog = new SelectTechStopsDialog(this, project);
+            SelectTechStopsDialog techStopDialog = new SelectTechStopsDialog(this, this.airports);
             techStopDialog.setVisible(true);
         });
         return addTechStopButton;
@@ -1112,8 +1105,6 @@ public class FlightInfoDialog extends JDialog {
                 maxCargo, maxCrew, maxPassengerPerClass, flightPattern);
 
         String flightDesignator = txtFlightInfoName.getText();
-        waypoints = new ArrayList<>();
-        stops = new ArrayList<>();
 
         return new FlightInfo(flightType, flightDesignator, originAirport,
                 destinationAirport, aircraft, waypoints, stops);
@@ -1127,5 +1118,14 @@ public class FlightInfoDialog extends JDialog {
     public void addWaypoint(Coordinate coordinate) {
         this.waypoints.add(coordinate);
         waypointDialog.dispose();
+    }
+
+    /**
+     * Adds a stop.
+     *
+     * @param stop stop
+     */
+    public void addStop(Stop stop) {
+        this.stops.add(stop);
     }
 }
