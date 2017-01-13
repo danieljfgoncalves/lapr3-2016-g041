@@ -275,13 +275,19 @@ public class FlightInfoOracle implements FlightInfoDao {
             String queryFlightPattern = "{call PC_ADD_FLIGHT_PATTERN (?, ?, ?, ?, ?)}";
             Amount[][] matrixFlightPattern = flightInfo.getAircraft().getFlightPattern().getFlightProfile();
             for (Amount[] matrixFlightPatternRow : matrixFlightPattern) {
-                try (CallableStatement callableStatementFlightPattern = connection.prepareCall(queryFlightPattern)) {
-                    callableStatementFlightPattern.setDouble(1, idAircraft);
-                    callableStatementFlightPattern.setDouble(2, matrixFlightPatternRow[0].doubleValue(SI.METER));
-                    callableStatementFlightPattern.setDouble(3, matrixFlightPatternRow[1].doubleValue(SI.METRES_PER_SECOND));
-                    callableStatementFlightPattern.setDouble(4, matrixFlightPatternRow[2].doubleValue(SI.METRES_PER_SECOND));
-                    callableStatementFlightPattern.setDouble(5, matrixFlightPatternRow[3].doubleValue(SI.METERS_PER_SECOND));
-                    callableStatementFlightPattern.executeUpdate();
+                if (matrixFlightPatternRow[0] != null
+                        && matrixFlightPatternRow[1] != null
+                        && matrixFlightPatternRow[2] != null
+                        && matrixFlightPatternRow[2] != null) {
+
+                    try (CallableStatement callableStatementFlightPattern = connection.prepareCall(queryFlightPattern)) {
+                        callableStatementFlightPattern.setDouble(1, idAircraft);
+                        callableStatementFlightPattern.setDouble(2, matrixFlightPatternRow[0].doubleValue(SI.METER));
+                        callableStatementFlightPattern.setDouble(3, matrixFlightPatternRow[1].doubleValue(SI.METRES_PER_SECOND));
+                        callableStatementFlightPattern.setDouble(4, matrixFlightPatternRow[2].doubleValue(SI.METRES_PER_SECOND));
+                        callableStatementFlightPattern.setDouble(5, matrixFlightPatternRow[3].doubleValue(SI.METERS_PER_SECOND));
+                        callableStatementFlightPattern.executeUpdate();
+                    }
                 }
             }
 
