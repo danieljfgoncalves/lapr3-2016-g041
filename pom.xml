@@ -54,6 +54,12 @@
             <artifactId>LGoodDatePicker</artifactId>
             <version>8.3.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.j2html/j2html -->
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+            <version>0.7</version>
+        </dependency>
     </dependencies>
 
 </project>

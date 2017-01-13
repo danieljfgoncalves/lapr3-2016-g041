@@ -51,5 +51,10 @@ public class Consts {
      * Ratio of specific heat at constant value. (dimensionless)
      */
     public static final Amount<Dimensionless> GAMMA = Amount.valueOf(1.4, Unit.ONE);
+    
+    /**
+     * Fuel mass to liter
+     */
+    public static final double LITER_CONV = 0.804;
 
 }
