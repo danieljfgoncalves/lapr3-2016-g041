@@ -12,7 +12,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -31,7 +30,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -68,6 +66,11 @@ import org.jscience.physics.amount.Amount;
  * @author Tiago Correia - 1151031
  */
 public class SimulateFlightDialog extends JDialog {
+
+    /**
+     * The main frame.
+     */
+    private final MainFrame mainFrame;
 
     /**
      * The flights info.
@@ -208,12 +211,14 @@ public class SimulateFlightDialog extends JDialog {
     /**
      * Creates an instance of simulate flight dialog.
      *
-     * @param parentWindow the parent window
+     * @param mainFrame the parent window
      * @param selectedProject
      */
-    public SimulateFlightDialog(Window parentWindow, Project selectedProject) {
-        super(parentWindow, WINDOW_TITLE);
+    public SimulateFlightDialog(MainFrame mainFrame, Project selectedProject) {
+        super(mainFrame, WINDOW_TITLE);
         setModal(true);
+
+        this.mainFrame = mainFrame;
 
         try {
             controller = new SimulateFlightController(selectedProject.getSerieNumber());
@@ -223,7 +228,7 @@ public class SimulateFlightDialog extends JDialog {
 
             pack();
             setMinimumSize(new Dimension(getWidth(), getHeight()));
-            setLocationRelativeTo(parentWindow);
+            setLocationRelativeTo(mainFrame);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(
                     null,
@@ -821,15 +826,8 @@ public class SimulateFlightDialog extends JDialog {
                     JOptionPane.WARNING_MESSAGE);
             Logger.getLogger(SimulateFlightDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
+        mainFrame.refreshFlighSimulations();
         resultsDialog.dispose();
         dispose();
-    }
-
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.setVisible(true);
-
-        SimulateFlightDialog d = new SimulateFlightDialog(f, new Project());
-        d.setVisible(true);
     }
 }

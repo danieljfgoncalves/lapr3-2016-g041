@@ -6,6 +6,7 @@ package lapr.project.model;
 import java.util.Arrays;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Velocity;
+import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 /**
@@ -23,10 +24,8 @@ public class FlightPattern {
      *
      * |Altitude| vClimb | vDesc | rDesc | *not in the matrix*
      *
-     * | value | value | value | value | 
-     * | value | value | value | value | 
-     * | value | value | value | value | 
-     * | (...) | (...) | (...) | (...) |
+     * | value | value | value | value | | value | value | value | value | |
+     * value | value | value | value | | (...) | (...) | (...) | (...) |
      *
      */
     private Amount[][] matrix;
@@ -139,7 +138,7 @@ public class FlightPattern {
      * @return the lineNumber
      */
     public int numLines() {
-        return lineIndex + 1;
+        return lineIndex;
     }
 
     /**
@@ -182,11 +181,12 @@ public class FlightPattern {
      * @return
      */
     public int getAltitudeIndex(Amount<Length> altitude) {
-        for (int i = 0; i < matrix.length; i++) {
-            if ((altitude.equals(matrix[i][ALTITUDE_COLUMN])
-                    || (altitude.isGreaterThan(matrix[i][ALTITUDE_COLUMN])
-                    && altitude.isLessThan(matrix[i + 1][ALTITUDE_COLUMN])))) {
-                return i;
+        double altitude1 = altitude.doubleValue(SI.METER);
+        for (int i = 1; i < numLines(); i++) {
+
+            double tempValue = (matrix[i - 1][ALTITUDE_COLUMN]).doubleValue(SI.METER);
+            if (altitude1 >= tempValue && altitude1 < matrix[i][ALTITUDE_COLUMN].doubleValue(SI.METER)) {
+                return i-1;
             }
         }
         return -1;

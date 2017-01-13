@@ -41,7 +41,7 @@ public class Calculus {
     /**
      * Time step for fuel burn calculation.
      */
-    private static final double TIMESTEP = 120;
+    private static final double TIMESTEP = 60;
 
     /**
      * Minimal climbing rate. (m/s)
@@ -164,7 +164,7 @@ public class Calculus {
      * @param segment segment
      * @param first the first coordinate
      * @param second the second coordinate
-
+     *
      * @return distance to calculate the range.
      */
     public static Amount<Length> virtualDistance(double realDistance, FlightSimulation flight,
@@ -178,7 +178,7 @@ public class Calculus {
 
         double realDuration = realDistance / calculateTAS(altitude, mach).doubleValue(SI.METERS_PER_SECOND);
         double virtualDuration = realDistance / calculateGS(altitude, mach, windSpeed, windDirection, flightDirection).doubleValue(SI.METERS_PER_SECOND);
-        double factor = (virtualDuration / realDuration) - 1;  
+        double factor = (virtualDuration / realDuration) - 1;
         double virtualDistance = realDistance + (realDistance * factor);
 
         return Amount.valueOf(virtualDistance, SI.METER);
@@ -195,7 +195,7 @@ public class Calculus {
      */
     public static Amount<Force> getLiftForce(Amount<Length> altitude, Amount<Mass> mass,
             Amount<Area> wingsArea, Amount<Velocity> machNumber) {
-        
+
         Amount<Pressure> press = getPressure(altitude);
         Amount<Temperature> temp = getTemperature(altitude);
 
@@ -217,7 +217,7 @@ public class Calculus {
      */
     public static Amount<Dimensionless> getLiftCoefficient(Amount<Length> altitude, Amount<Mass> mass,
             Amount<Area> wingsArea, Amount<Velocity> machNumber) {
-        
+
         Amount<Pressure> press = getPressure(altitude);
         Amount<Temperature> temp = getTemperature(altitude);
 
@@ -253,8 +253,7 @@ public class Calculus {
         double j = Consts.TEMP_LAPSE_RATE.doubleValue(CustomUnits.TEMP_GRADIENT_SI) * i;
         double k = Math.pow(1 + j, 5.2561);
         double result = Consts.AIR_PRESSURE_SEA_LEVEL.doubleValue(SI.PASCAL) * k;
-        
-        
+
         return Amount.valueOf(result, SI.PASCAL);
     }
 
@@ -292,7 +291,7 @@ public class Calculus {
      */
     public static Amount<Velocity> calculateTAS(Amount<Length> altitude, Amount<Velocity> machNumber) {
         Amount<Temperature> temp = getTemperature(altitude);
-        
+
         return (Amount<Velocity>) getSpeedOfSound(temp).times(machNumber.doubleValue(NonSI.MACH));
     }
 
@@ -376,9 +375,9 @@ public class Calculus {
         Amount<Temperature> temp = getTemperature(altitude);
         double cDrag = getDragCoefficient(altitude, mass, aspectRatio, dragCoefficient0, wingArea, e, machNumber).doubleValue(Unit.ONE);
         double airDensity = getAirDensity(press, temp).doubleValue(CustomUnits.VOLUMETRIC_DENSITY_SI);
-        double squaredTas= Math.pow((calculateTAS(altitude, machNumber).doubleValue(SI.METERS_PER_SECOND)), 2);
+        double squaredTas = Math.pow((calculateTAS(altitude, machNumber).doubleValue(SI.METERS_PER_SECOND)), 2);
         double wingsArea = wingArea.doubleValue(SI.SQUARE_METRE);
-        
+
         double result = 0.5 * airDensity * squaredTas * wingsArea * cDrag;
 
         return Amount.valueOf(result, SI.NEWTON);
@@ -424,13 +423,13 @@ public class Calculus {
 
         double density1 = Consts.AIR_DENSITY_SEA_LEVEL.doubleValue(CustomUnits.VOLUMETRIC_DENSITY_SI);
         double density2 = airDensity.doubleValue(CustomUnits.VOLUMETRIC_DENSITY_SI);
-        
-        double i = Math.pow(ias.doubleValue(SI.METERS_PER_SECOND) / 661.5, 2);
+
+        double i = Math.pow(ias.doubleValue(NonSI.KNOT) / 661.5, 2);
         double j = Math.pow(1 + 0.2 * i, 3.5) - 1;
         double k = (density1 / density2) * j + 1;
         double l = (Math.pow(k, 0.286) - 1) * 5;
         double result = Math.sqrt(l);
-        
+
         return Amount.valueOf(result, NonSI.MACH);
     }
 
@@ -456,7 +455,7 @@ public class Calculus {
      * @return the climbing angle (degree)
      */
     public static Amount<Angle> getClimbingAngle(Amount<Velocity> rateOfClimb, Amount<Velocity> tas) {
-        
+
         double rateOfclimb1 = rateOfClimb.doubleValue(SI.METERS_PER_SECOND);
         double tas1 = tas.doubleValue(SI.METERS_PER_SECOND);
         double result = Math.asin(rateOfclimb1 / tas1);
@@ -473,7 +472,7 @@ public class Calculus {
      * @return a distance (m)
      */
     public static Amount<Length> getTimeStepDistance(Amount<Velocity> tas, Amount<Angle> angle, Amount<Duration> timeStep) {
-        
+
         return (Amount<Length>) tas.times(Math.cos(angle.doubleValue(SI.RADIAN))).times(timeStep);
     }
 
@@ -511,7 +510,7 @@ public class Calculus {
      * @return the actual cumulative distance (m)
      */
     public static Amount<Length> getCumulativeDistance(Amount<Length> cumulativePreviousDistance, Amount<Length> distance) {
-        
+
         double cumulativePrevDist = cumulativePreviousDistance.doubleValue(SI.METER);
         double dist = distance.doubleValue(SI.METER);
         double result = (cumulativePrevDist + dist);
@@ -564,7 +563,8 @@ public class Calculus {
      * Obtains the thrust value (N)
      *
      * @param flight the flight
-     * @param lambda lambda the lambda value to be used to calculate the thrust(N)
+     * @param lambda lambda the lambda value to be used to calculate the
+     * thrust(N)
      * @param machTrue the Mach true number (M)
      * @param airDensity the air density (Kg/m3)
      * @return the thrust value (N)
@@ -593,7 +593,7 @@ public class Calculus {
         return thrust.times(numberOfMotors);
     }
 
-   /**
+    /**
      * Enumeration of the flight regimes.
      */
     private static enum REGIME {
@@ -624,7 +624,7 @@ public class Calculus {
     public static AlgorithmAnalysis calculateClimb(FlightSimulation flight,
             Amount<Length> airportAltitude) {
 
-        return calculateFlightAnalysis(flight, REGIME.CLIMB, airportAltitude, null);
+        return calculateFlightAnalysis(flight, REGIME.CLIMB, airportAltitude, Amount.valueOf(0.0, SI.METER));
     }
 
     /**
@@ -638,7 +638,7 @@ public class Calculus {
     public static AlgorithmAnalysis calculateLanding(FlightSimulation flight,
             Amount<Length> airportAltitude) {
 
-        return calculateFlightAnalysis(flight, REGIME.LANDING, airportAltitude, null);
+        return calculateFlightAnalysis(flight, REGIME.LANDING, airportAltitude, Amount.valueOf(0.0, SI.METER));
     }
 
     /**
@@ -651,7 +651,7 @@ public class Calculus {
      */
     public static AlgorithmAnalysis calculateCruise(FlightSimulation flight, Amount<Length> segmentDistance) {
 
-        return calculateFlightAnalysis(flight, REGIME.CRUISE, null, segmentDistance);
+        return calculateFlightAnalysis(flight, REGIME.CRUISE, Amount.valueOf(0.0, SI.METER), segmentDistance);
     }
 
     /**
@@ -685,7 +685,7 @@ public class Calculus {
         Amount<Mass> fuelBurn = Amount.valueOf(0, SI.KILOGRAM);
         Amount<Length> distance = Amount.valueOf(0, SI.METER);
         Amount<Force> lambda = getLambda(thrust_0, thrustMaxSpeed, maxSpeed);
-        Amount<Velocity> climbRate = Amount.valueOf(0, SI.METERS_PER_SECOND);
+        Amount<Velocity> climbRate = Amount.valueOf(Double.MAX_VALUE, SI.METERS_PER_SECOND);
         // Unintialized variables to calculate during iteration
         Amount<Length> altitude;
         Amount<VolumetricDensity> airDensity;
@@ -700,23 +700,9 @@ public class Calculus {
         Amount<Pressure> pressure;
         Amount<Temperature> temperature;
 
-        boolean stopCriteria;
-        switch (regime) {
-            case CLIMB:
-                stopCriteria = startingAltitude < cruiseAltitude || climbRate.isLessThan(MIN_CLIMB_RATE);
-                break;
-            case LANDING:
-                stopCriteria = startingAltitude < airportAltitude.doubleValue(SI.METER);
-                break;
-            default:
-                // CRUISE
-                stopCriteria = (distance.isLessThan(segmentDistance));
-                break;
-        }
-
+        boolean stopCriteria = true;
         while (stopCriteria) {
 
-            lapsedTime += TIMESTEP;
             // Variables to calculate during iteration
             altitude = Amount.valueOf(startingAltitude, SI.METER);
             mass = getNewMass(mass, fuelBurn);
@@ -727,149 +713,32 @@ public class Calculus {
             mTrue = getMachTrue(ias, airDensity);
             tas = calculateTAS(altitude, mTrue);
             drag = getDragForce(flight, altitude, mass, e, mTrue);
-            thrust = getThrust(flight, lambda, mTrue, airDensity);
+            double landingFactor = (regime == REGIME.LANDING) ? 0.1 : 1;
+            thrust = getThrust(flight, lambda, mTrue, airDensity).times(landingFactor);
             totalThrust = getTotalThrust(thrust, numMotors);
             fuelBurn = getFuelBurnCalculation(totalThrust, Amount.valueOf(TIMESTEP, SI.SECOND), tsfc);
-            climbRate = getRateOfClimb(totalThrust, drag, tas, tsfc);
+            climbRate = getRateOfClimb(totalThrust, drag, tas, mass);
             climbAngle = getClimbingAngle(climbRate, tas);
             stepDistance = getTimeStepDistance(tas, climbAngle, Amount.valueOf(TIMESTEP, SI.SECOND));
             distance = getCumulativeDistance(distance, stepDistance);
             consumption = consumption.plus(fuelBurn);
             startingAltitude = getCumulativeAltitude(altitude, climbRate, Amount.valueOf(TIMESTEP, SI.SECOND)).doubleValue(SI.METER);
-
-            // TODO: Adapt last timestep.
+            lapsedTime += TIMESTEP;
+            
+            switch (regime) {
+                case CLIMB:
+                    stopCriteria = (startingAltitude < cruiseAltitude) && (climbRate.isGreaterThan(MIN_CLIMB_RATE));
+                    break;
+                case LANDING:
+                    stopCriteria = startingAltitude > airportAltitude.doubleValue(SI.METER);
+                    break;
+                default:
+                    // CRUISE
+                    stopCriteria = (distance.isLessThan(segmentDistance));
+                    break;
+            }
         }
-        
+
         return new AlgorithmAnalysis(distance, Amount.valueOf(lapsedTime, SI.SECOND), consumption);
-    }
-    
-    
-      /**
-     * Obtains the maximum range.
-     *
-     * @param tsfc the thrust specific fuel consumption
-     * @param initialWeight the initial weight
-     * @param finalWeight the final weight
-     * @param altitude the altitude
-     * @param machNumber the mach number
-     * @param aspectRatio the aspect ratio (wingSpan^2 / wingsArea)
-     * (dimensionless)
-     * @param dragCoefficient0 the initial drag coefficient
-     * @param e the efficiency factor
-     * @param wingsArea the wings area
-     * @return the calculated maximum range
-     */
-    public static Amount<Length> getMaximumRange(Amount<Power> tsfc, Amount<Mass> initialWeight, Amount<Mass> finalWeight,
-            Amount<Length> altitude, Amount<Velocity> machNumber, Amount<Dimensionless> aspectRatio,
-            Amount<Dimensionless> dragCoefficient0, Amount<Dimensionless> e, Amount<Area> wingsArea) {
-
-        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
-        Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
-                wingsArea, e, machNumber, aspectRatio);
-        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
-
-        Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));
-        Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI)))
-                * (liftForce.doubleValue(SI.NEWTON) / (dragForce.doubleValue(SI.NEWTON))) * resultLN;
-
-        return Amount.valueOf(maxRange, SI.KILOMETER);
-    }
-
-    /**
-     * Obtains the maximum range for a given flight with a given initial weight
-     * and a final weight. (m)
-     *
-     * @param flight the flight
-     * @param initialWeight the initial weight (Kg)
-     * @param finalWeight the final weight (Kg)
-     * @param machNumber the mach number (m)
-     * @return the maximum range for a given flight with a given initial weight
-     * and final weight
-     */
-    public static Amount<Length> getMaximumRange(FlightSimulation flight, Amount<Velocity> machNumber,
-            Amount<Mass> initialWeight, Amount<Mass> finalWeight) {
-
-        Amount tsfc = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getTsfc();
-        Amount<Length> altitude = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseAltitude();
-        Amount<Area> wingsArea = flight.getFlightInfo().getAircraft().getAircraftModel().getWingArea();
-        Amount<Dimensionless> dragCoefficient0 = Amount.valueOf(flight.getFlightInfo().getAircraft().getAircraftModel().
-                getCdragFunction(machNumber.doubleValue(NonSI.MACH)), Unit.ONE);
-        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
-        Amount<Dimensionless> e = flight.getFlightInfo().getAircraft().getAircraftModel().getE();
-        Amount<Dimensionless> aspectRatio = flight.getFlightInfo().getAircraft().getAircraftModel().getAspectRatio();
-        Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
-                wingsArea, e, machNumber, aspectRatio);
-        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
-
-        Double resultLN = Math.log(initialWeight.doubleValue(SI.KILOGRAM)) - Math.log(finalWeight.doubleValue(SI.KILOGRAM));
-        Double maxRange = (tas.doubleValue(SI.METERS_PER_SECOND) / (tsfc.doubleValue(CustomUnits.TSFC_SI)))
-                * (liftForce.doubleValue(SI.NEWTON) / (dragForce.doubleValue(SI.NEWTON))) * resultLN;
-
-        return Amount.valueOf(maxRange, SI.KILOMETER);
-    }
-
-    /**
-     * Obtains the fuel consumption.
-     *
-     * @param tsfc the thrust specific fuel consumption
-     * @param initialWeight the initial weight
-     * @param altitude the altitude
-     * @param machNumber the mach number
-     * @param dragCoefficient0 the initial drag coefficient
-     * @param aspectRatio the aspect ratio (wingSpan^2 / wingsArea)
-     * (dimensionless)
-     * @param e the efficiency factor
-     * @param wingsArea the wings area
-     * @param distance the distance
-     * @return the calculated fuel consumption
-     */
-    public static Amount<Mass> getFuelConsumption(Amount<Power> tsfc, Amount<Mass> initialWeight,
-            Amount<Length> altitude, Amount<Velocity> machNumber,
-            Amount<Dimensionless> dragCoefficient0, Amount<Dimensionless> aspectRatio, Amount<Dimensionless> e,
-            Amount<Area> wingsArea, Amount<Length> distance) {
-
-        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
-        Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
-                wingsArea, e, machNumber, aspectRatio);
-        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
-
-        Double finalWeight = initialWeight.doubleValue(SI.KILOGRAM) / Math.pow(Math.E, (distance.doubleValue(SI.KILOMETER)
-                * tsfc.doubleValue(CustomUnits.TSFC_SI) / ((liftForce.doubleValue(SI.NEWTON) / dragForce.doubleValue(SI.NEWTON))
-                * tas.doubleValue(SI.METERS_PER_SECOND))));
-
-        return Amount.valueOf((initialWeight.doubleValue(SI.KILOGRAM) - finalWeight), SI.KILOGRAM);
-    }
-
-    /**
-     * Obtains the fuel consumption for a given flight, for a given initial
-     * weight and final weight (Kg)
-     *
-     * @param flight the flight
-     * @param initialWeight the initial weight (Kg)
-     * @param machNumber the mach number (m)
-     * @param distance the distance (m)
-     * @return the fuel consumption for a given flight, for a given initial
-     * weight and final weight
-     */
-    public static Amount<Mass> getFuelConsumption(FlightSimulation flight, Amount<Mass> initialWeight,
-            Amount<Velocity> machNumber, Amount<Length> distance) {
-
-        Amount tsfc = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getTsfc();
-        Amount<Length> altitude = flight.getFlightInfo().getAircraft().getAircraftModel().getMotorization().getCruiseAltitude();
-        Amount<Area> wingsArea = flight.getFlightInfo().getAircraft().getAircraftModel().getWingArea();
-        Amount<Dimensionless> dragCoefficient0 = Amount.valueOf(flight.getFlightInfo().getAircraft().getAircraftModel().
-                getCdragFunction(machNumber.doubleValue(NonSI.MACH)), Unit.ONE);
-        Amount<Dimensionless> aspectRatio = flight.getFlightInfo().getAircraft().getAircraftModel().getAspectRatio();
-        Amount<Dimensionless> e = flight.getFlightInfo().getAircraft().getAircraftModel().getE();
-        Amount<Force> liftForce = getLiftForce(altitude, initialWeight, wingsArea, machNumber);
-        Amount<Force> dragForce = getDragForce(altitude, initialWeight, dragCoefficient0,
-                wingsArea, e, machNumber, aspectRatio);
-        Amount<Velocity> tas = calculateTAS(altitude, machNumber);
-
-        Double finalWeight = initialWeight.doubleValue(SI.KILOGRAM) / Math.pow(Math.E, (distance.doubleValue(SI.KILOMETER)
-                * tsfc.doubleValue(CustomUnits.TSFC_SI) / ((liftForce.doubleValue(SI.NEWTON) / dragForce.doubleValue(SI.NEWTON))
-                * tas.doubleValue(SI.METERS_PER_SECOND))));
-
-        return Amount.valueOf((initialWeight.doubleValue(SI.KILOGRAM) - finalWeight), SI.KILOGRAM);
     }
 }

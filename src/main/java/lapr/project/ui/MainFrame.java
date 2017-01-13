@@ -7,16 +7,24 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import lapr.project.datalayer.dao.FlightSimulationDAO;
+import lapr.project.datalayer.oracle.FlightSimulationOracle;
 import lapr.project.model.FlightSimulation;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
@@ -64,6 +72,11 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private static final Dimension BUTTON_PREFERED_SIZE = new Dimension(150, 30);
 
     /**
+     * The simulations.
+     */
+    private List<FlightSimulation> simulations;
+
+    /**
      * The project title label.
      */
     private JLabel projectTitleLabel;
@@ -87,6 +100,11 @@ public class MainFrame extends JFrame implements ProjectHandler {
      * Create Simulation button.
      */
     private JButton createSimulationButton;
+
+    /**
+     * Create open simulation button.
+     */
+    private JButton openSimulationButton;
 
     /**
      * Creates an instance of the main frame.
@@ -164,13 +182,11 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private JPanel createTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
 
-        // TODO remove this mock object
-        ArrayList<FlightSimulation> flightSimulations = new ArrayList<>();
-        flightSimulations.add(new FlightSimulation());
-        flightSimulations.add(new FlightSimulation());
-        flightSimulations.add(new FlightSimulation());
-
-        simulationsTable = new JTable(new TableModelFlightSimulation(flightSimulations));
+        simulationsTable = new JTable(new TableModelFlightSimulation(new ArrayList<>()));
+        ListSelectionModel listSelectionModel = simulationsTable.getSelectionModel();
+        listSelectionModel.addListSelectionListener((ListSelectionEvent lse) -> {
+            openSimulationButton.setEnabled(!listSelectionModel.isSelectionEmpty());
+        });
 
         JScrollPane scrollPane = new JScrollPane(simulationsTable);
         scrollPane.setBorder(PADDING_BORDER);
@@ -189,9 +205,13 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private JPanel createButtonsPanel() {
         JPanel buttonsPanel = new JPanel();
 
-        JButton openSimulationButton = new JButton("Open Simulation");
+        openSimulationButton = new JButton("Open Simulation");
         openSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         openSimulationButton.setEnabled(false);
+        openSimulationButton.addActionListener((ActionEvent ae) -> {
+            ShowSimulation showSimulation = new ShowSimulation(this, simulations.get(simulationsTable.getSelectedRow()));
+            showSimulation.setVisible(true);
+        });
 
         createFlightInfoButton = new JButton("New Flight Info");
         createFlightInfoButton.setPreferredSize(BUTTON_PREFERED_SIZE);
@@ -231,12 +251,25 @@ public class MainFrame extends JFrame implements ProjectHandler {
      * Refresh the main frame fields.
      */
     private void refreshProject() {
-        //Collections.sort(activeProject.getSimulations().getFlights());
-        //simulationsTable.setModel(new TableModelFlightSimulation(activeProject.getSimulations().getFlights()));
         this.projectTitleLabel.setText(activeProject.getName());
         this.projectDescriptionLabel.setText(activeProject.getDescription());
         this.simulationsTable.setVisible(true);
         createFlightInfoButton.setEnabled(true);
         createSimulationButton.setEnabled(true);
+        refreshFlighSimulations();
+    }
+
+    /**
+     * Refresh the flight simulations.
+     */
+    public void refreshFlighSimulations() {
+        FlightSimulationDAO flightSimulationDAO = new FlightSimulationOracle(activeProject.getSerieNumber());
+        simulations = new ArrayList<>();
+        try {
+            simulations = flightSimulationDAO.getFlightSimulations();
+        } catch (Exception ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        simulationsTable.setModel(new TableModelFlightSimulation(simulations));
     }
 }
