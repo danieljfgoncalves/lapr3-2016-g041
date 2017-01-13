@@ -14,7 +14,6 @@ import lapr.project.ui.components.ImportFileChooser;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class ImportAirNetworkUI extends ImportFileChooser {
@@ -23,7 +22,7 @@ public class ImportAirNetworkUI extends ImportFileChooser {
      * Selected Project.
      */
     private final Project selectedProject;
-    
+
     /**
      * If succesfully imported.
      */
@@ -48,7 +47,7 @@ public class ImportAirNetworkUI extends ImportFileChooser {
 
         try {
             // Import selected File
-            if(controller.importAirNetwork(getSelectedFile())){
+            if (controller.importAirNetwork(getSelectedFile())) {
                 controller.saveToDatabase();
             };
             // If no critical error
