@@ -8,6 +8,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,6 +20,8 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import lapr.project.datalayer.dao.FlightSimulationDAO;
+import lapr.project.datalayer.oracle.FlightSimulationOracle;
 import lapr.project.model.FlightSimulation;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
@@ -164,13 +169,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private JPanel createTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
 
-        // TODO remove this mock object
-        ArrayList<FlightSimulation> flightSimulations = new ArrayList<>();
-        flightSimulations.add(new FlightSimulation());
-        flightSimulations.add(new FlightSimulation());
-        flightSimulations.add(new FlightSimulation());
-
-        simulationsTable = new JTable(new TableModelFlightSimulation(flightSimulations));
+        simulationsTable = new JTable(new TableModelFlightSimulation(new ArrayList<>()));
 
         JScrollPane scrollPane = new JScrollPane(simulationsTable);
         scrollPane.setBorder(PADDING_BORDER);
@@ -231,12 +230,25 @@ public class MainFrame extends JFrame implements ProjectHandler {
      * Refresh the main frame fields.
      */
     private void refreshProject() {
-        //Collections.sort(activeProject.getSimulations().getFlights());
-        //simulationsTable.setModel(new TableModelFlightSimulation(activeProject.getSimulations().getFlights()));
         this.projectTitleLabel.setText(activeProject.getName());
         this.projectDescriptionLabel.setText(activeProject.getDescription());
         this.simulationsTable.setVisible(true);
         createFlightInfoButton.setEnabled(true);
         createSimulationButton.setEnabled(true);
+        refreshFlighSimulations();
+    }
+
+    /**
+     * Refresh the flight simulations.
+     */
+    private void refreshFlighSimulations() {
+        FlightSimulationDAO flightSimulationDAO = new FlightSimulationOracle(activeProject.getSerieNumber());
+        List<FlightSimulation> simulations = new ArrayList<>();
+        try {
+            simulations = flightSimulationDAO.getFlightSimulations();
+        } catch (Exception ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        simulationsTable.setModel(new TableModelFlightSimulation(simulations));
     }
 }
