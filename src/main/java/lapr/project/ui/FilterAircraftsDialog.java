@@ -10,8 +10,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -23,9 +26,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import lapr.project.controller.ExportByAircraftsController;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.FlightSimulation;
-import lapr.project.ui.components.ListCellRendererAirport;
+import lapr.project.ui.components.ListCellRendererAircraftModel;
 
 /**
  * The frame to filter simulations dialog.
@@ -45,7 +49,7 @@ public class FilterAircraftsDialog extends JDialog {
     /**
      * The aircrafts list.
      */
-    private final List<AircraftModel> aircraftModelsList;
+    private List<AircraftModel> aircraftModelsList;
 
     /**
      * the selected aircraft model.
@@ -53,9 +57,14 @@ public class FilterAircraftsDialog extends JDialog {
     private AircraftModel aircraftModel;
 
     /**
+     * The controller to export by aircraft.
+     */
+    private final ExportByAircraftsController controller;
+
+    /**
      * List of flight simulations
      */
-    private List<FlightSimulation> flightSimulations;
+    private final List<FlightSimulation> flightSimulations;
 
     /**
      * Padding border.
@@ -81,17 +90,29 @@ public class FilterAircraftsDialog extends JDialog {
      * Creates an instance of filter aircraft models dialog.
      *
      * @param parentFrame the parent frame
-     * @param aircraftModelsList the list of aircraft models
-     * @param flightSimulations
+     * @param flightSimulations the flights simulations
+     * @param projectSerieNumber the project serie number
      */
-    public FilterAircraftsDialog(Window parentFrame, List<AircraftModel> aircraftModelsList, List<FlightSimulation> flightSimulations) {
+    public FilterAircraftsDialog(Window parentFrame, List<FlightSimulation> flightSimulations, int projectSerieNumber) {
         super(parentFrame, WINDOW_TITLE);
         setModal(true);
         this.setResizable(false);
 
-        this.aircraftModelsList = aircraftModelsList;
+        this.controller = new ExportByAircraftsController(projectSerieNumber);
         this.parentFrame = parentFrame;
         this.flightSimulations = flightSimulations;
+
+        try {
+            this.aircraftModelsList = controller.getAircraftModels();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "The server is busy. Try later.",
+                    "Database busy",
+                    JOptionPane.WARNING_MESSAGE);
+            Logger.getLogger(FilterAircraftsDialog.class.getName()).log(Level.SEVERE, null, ex);
+            dispose();
+        }
 
         createComponents();
 
@@ -131,7 +152,7 @@ public class FilterAircraftsDialog extends JDialog {
         JComboBox<AircraftModel> aircraftModelsComboBox = new JComboBox<>();
         aircraftModelsComboBox.setModel(new DefaultComboBoxModel(aircraftModelsList.toArray()));
         aircraftModelsComboBox.setPreferredSize(new Dimension(420, 25));
-        aircraftModelsComboBox.setRenderer(new ListCellRendererAirport());
+        aircraftModelsComboBox.setRenderer(new ListCellRendererAircraftModel());
         aircraftModel = (AircraftModel) aircraftModelsComboBox.getSelectedItem();
         aircraftModelsComboBox.addActionListener((ActionEvent ae) -> {
             aircraftModel = (AircraftModel) aircraftModelsComboBox.getSelectedItem();
@@ -190,13 +211,13 @@ public class FilterAircraftsDialog extends JDialog {
                 }
             }
             if (!filteredSimulations.isEmpty()) {
-                int selection = JOptionPane.showConfirmDialog(null, "Simulations added successfully!", "Simulation Filter", JOptionPane.DEFAULT_OPTION);
-                if (selection == JOptionPane.OK_OPTION) {
-
-                    dispose();
-                }
+                FilteredSimulationsUI filteredSimulationsUI = new FilteredSimulationsUI(this, flightSimulations);
+                filteredSimulationsUI.setVisible(true);
             } else {
-                int selection = JOptionPane.showConfirmDialog(null, "There is no simulations with selected aircraft!", "Simulation Filter", JOptionPane.DEFAULT_OPTION);
+                int selection = JOptionPane.showConfirmDialog(null,
+                        "There is no simulations with selected aircraft!",
+                        "Simulation Filter",
+                        JOptionPane.DEFAULT_OPTION);
                 if (selection == JOptionPane.OK_OPTION) {
                     dispose();
                 }
