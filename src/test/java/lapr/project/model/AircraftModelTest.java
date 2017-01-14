@@ -23,7 +23,6 @@ import static org.junit.Assert.*;
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
- * @author João Pereira - 1151241
  * @author Tiago Correia - 1151031
  */
 public class AircraftModelTest {
@@ -217,7 +216,7 @@ public class AircraftModelTest {
         System.out.println("equals");
 
         Object obj = new AircraftModel();
-        ((AircraftModel)obj).setModelID("12abc67");
+        ((AircraftModel) obj).setModelID("12abc67");
 
         assertFalse(instance.equals(obj));
     }
