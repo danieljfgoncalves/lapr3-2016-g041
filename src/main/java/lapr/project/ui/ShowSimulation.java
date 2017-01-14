@@ -10,15 +10,22 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import lapr.project.model.AlgorithmAnalysis;
 import lapr.project.model.FlightSimulation;
+import lapr.project.utils.Consts;
 
 /**
  * The frame to create the results dialog.
@@ -65,24 +72,28 @@ public class ShowSimulation extends JDialog {
      * Title for the frame.
      */
     private static final String WINDOW_TITLE = "Results";
+    private final int projectID;
 
     /**
      * Creates an instance of the show results dialog.
      *
      * @param parentWindow the parent frame
      * @param flightSimulation the flight simulator with the results
+     * @param projectID
      */
-    public ShowSimulation(Window parentWindow, FlightSimulation flightSimulation) {
+    public ShowSimulation(Window parentWindow, FlightSimulation flightSimulation, int projectID) {
         super(parentWindow, WINDOW_TITLE);
         setModal(true);
 
         this.flightSimulation = flightSimulation;
+        this.projectID = projectID;
         this.setResizable(true);
 
         createComponents();
 
         pack();
         setLocationRelativeTo(parentWindow);
+
     }
 
     /**
@@ -112,19 +123,26 @@ public class ShowSimulation extends JDialog {
         panel.setBackground(DEFAULT_COLOR);
         panel.setBorder(DEFAULT_GREY_LINE_BORDER);
 
+        AlgorithmAnalysis analysis = new AlgorithmAnalysis();
+        try {
+            analysis = this.flightSimulation.calculateAnalysis(this.projectID);
+        } catch (Exception ex) {
+            Logger.getLogger(ShowResultsDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         JLabel fuelConsumptionLabel = new JLabel("Fuel Consumption:");
         fuelConsumptionLabel.setFont(BOLD_LABEL_FONT);
-        JLabel fuelConsumptionResultLabel = new JLabel("85000 L"); //TODO
+        JLabel fuelConsumptionResultLabel = new JLabel(String.format("%.2f L", (analysis.getConsumption().doubleValue(SI.KILOGRAM) * Consts.LITER_CONV)));
         fuelConsumptionResultLabel.setFont(PLAIN_LABEL_FONT);
 
         JLabel timeLabel = new JLabel("Time:");
         timeLabel.setFont(BOLD_LABEL_FONT);
-        JLabel timeResultLabel = new JLabel("175 minutes"); //TODO
+        JLabel timeResultLabel = new JLabel(String.format("%d Minutes", analysis.getDuration().longValue(NonSI.MINUTE)));
         timeResultLabel.setFont(PLAIN_LABEL_FONT);
 
         JLabel distanceLabel = new JLabel("Distance: ");
         distanceLabel.setFont(BOLD_LABEL_FONT);
-        JLabel distanceResultLabel = new JLabel("2420 km"); //TODO
+        JLabel distanceResultLabel = new JLabel(String.format("%d km", analysis.getDistance().longValue(SI.KILOMETER)));
         distanceResultLabel.setFont(PLAIN_LABEL_FONT);
 
         JLabel originLabel = new JLabel("Origin Airport:");

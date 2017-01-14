@@ -152,6 +152,7 @@ public class SimulateFlightDialog extends JDialog {
     private List<JLabel> membersPerClassLayers;
     private AirNetwork airNetwork;
     private FlightPlan algorithm;
+    private int projectID;
 
     /**
      * Padding border.
@@ -221,6 +222,7 @@ public class SimulateFlightDialog extends JDialog {
         this.mainFrame = mainFrame;
 
         try {
+            this.projectID = selectedProject.getSerieNumber();
             controller = new SimulateFlightController(selectedProject.getSerieNumber());
             flightsInfo = controller.getFlightsInfo();
             airNetwork = controller.getAirNetwork();
@@ -714,7 +716,7 @@ public class SimulateFlightDialog extends JDialog {
         finishButton.addActionListener((ActionEvent ae) -> {
             FlightSimulation flightSimulation = setupFlightSimulation();
 
-            resultsDialog = new ShowResultsDialog(this, flightSimulation, algorithm.getDescription());
+            resultsDialog = new ShowResultsDialog(this, flightSimulation, algorithm.getDescription(), projectID);
             resultsDialog.setVisible(true);
         });
         return finishButton;

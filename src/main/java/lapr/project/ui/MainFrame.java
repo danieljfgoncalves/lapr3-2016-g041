@@ -216,7 +216,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         openSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         openSimulationButton.setEnabled(false);
         openSimulationButton.addActionListener((ActionEvent ae) -> {
-            ShowSimulation showSimulation = new ShowSimulation(this, simulations.get(simulationsTable.getSelectedRow()));
+            ShowSimulation showSimulation = new ShowSimulation(this, simulations.get(simulationsTable.getSelectedRow()), activeProject.getSerieNumber());
             showSimulation.setVisible(true);
         });
 

@@ -6,10 +6,15 @@ package lapr.project.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.unit.SI;
+import lapr.project.datalayer.dao.SegmentDAO;
+import lapr.project.datalayer.oracle.SegmentOracle;
+import lapr.project.utils.graph.MapEdge;
 import org.jscience.physics.amount.Amount;
 
 /**
@@ -301,7 +306,7 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
 
     /**
      * Gets the effective number of passengers per class.
-     * 
+     *
      * @return effective number of passengers per class
      */
     public List<Integer> getPassengersPerClass() {
@@ -310,13 +315,109 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
 
     /**
      * Sets the effective number of passengers per class.
-     * 
+     *
      * @param passengersPerClass effective number of passengers per class
      */
     public void setPassengersPerClass(List<Integer> passengersPerClass) {
         this.passengersPerClass = passengersPerClass;
     }
-    
+
+    public AlgorithmAnalysis calculateAnalysis(int projectID) throws Exception {
+
+        AlgorithmAnalysis analysis = new AlgorithmAnalysis();
+
+        FlightSimulation flight = new FlightSimulation(this);
+
+        if (!flightplan.isEmpty()) {
+
+            SegmentDAO dao = new SegmentOracle(projectID);
+
+            LinkedList<Segment> aux = new LinkedList<>(flightplan);
+
+            // Departure
+            Segment first = aux.pop();
+            MapEdge<Coordinate, Segment> firstEdge = dao.getSegment(first.getId());
+
+            analysis.sumAnalysis(Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude()));
+            if (isTechnicalStop(firstEdge.getVDest())) {
+                Stop stop = getStop(firstEdge.getVDest());
+                analysis.sumAnalysis(Calculus.calculateLanding(flight, stop.getAirport().getAltitude()));
+            }
+
+            // Arrival
+            Segment last = aux.removeLast();
+            MapEdge<Coordinate, Segment> lastEdge = dao.getSegment(last.getId());
+
+            for (Segment segment : aux) {
+                MapEdge<Coordinate, Segment> edge = dao.getSegment(segment.getId());
+
+                AlgorithmAnalysis climb = new AlgorithmAnalysis();
+                AlgorithmAnalysis landing = new AlgorithmAnalysis();
+                if (isTechnicalStop(edge.getVOrig())) {
+                    Stop stop = getStop(edge.getVOrig());
+                    climb = Calculus.calculateClimb(flight, stop.getAirport().getAltitude());
+                    analysis.addsDuration(stop.getMinimumStopMinutes());
+                    flight.setEffectiveFuel(this.effectiveFuel);
+                }
+                if (isTechnicalStop(edge.getVDest())) {
+                    Stop stop = getStop(edge.getVDest());
+                    landing = Calculus.calculateLanding(flight, stop.getAirport().getAltitude());
+                }
+                Amount<Length> cruiseDist = Amount.valueOf(edge.getWeight(), SI.METER)
+                        .minus(climb.getDistance().plus(landing.getDistance()));
+                analysis.sumAnalysis(Calculus.calculateCruise(flight, cruiseDist));
+                analysis.sumAnalysis(climb);
+                analysis.sumAnalysis(landing);
+            }
+            if (isTechnicalStop(lastEdge.getVOrig())) {
+                Stop stop = getStop(lastEdge.getVOrig());
+                analysis.sumAnalysis(Calculus.calculateClimb(flight, stop.getAirport().getAltitude()));
+                analysis.addsDuration(stop.getMinimumStopMinutes());
+                flight.setEffectiveFuel(this.effectiveFuel);
+            }
+            // Arrival
+            analysis.sumAnalysis(Calculus.calculateLanding(flight, flight.getFlightInfo().getDestinationAirport().getAltitude()));
+
+        }
+
+        return analysis;
+    }
+
+    private Stop getStop(Coordinate coord) {
+
+        Iterator<Stop> it = this.getFlightInfo().getStops().iterator();
+
+        while (it.hasNext()) {
+
+            Stop next = it.next();
+
+            if (coord.equals(next.getCoordinate())) {
+                return next;
+            }
+        }
+        return new Stop();
+    }
+
+    private boolean isTechnicalStop(Coordinate coord) {
+
+        if (coord == null) {
+            return false;
+        }
+
+        boolean isStop = false;
+        Iterator<Stop> it = this.getFlightInfo().getStops().iterator();
+
+        while (!isStop && it.hasNext()) {
+
+            Stop next = it.next();
+
+            if (coord.equals(next.getCoordinate())) {
+                isStop = true;
+            }
+        }
+        return isStop;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
