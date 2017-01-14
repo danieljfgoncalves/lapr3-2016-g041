@@ -83,8 +83,6 @@ public class CustomMenuBar extends JMenuBar {
         menu.add(createSimulation1Item());
         menu.add(createSimulation2Item());
         menu.add(createSimulation3Item());
-        menu.add(createSimulation4Item());
-        menu.add(createSimulation5Item());
         menu.add(createSubMenuList());
         return menu;
     }
@@ -212,7 +210,7 @@ public class CustomMenuBar extends JMenuBar {
      * @return create flight info menu item
      */
     private JMenuItem createFlightInfoItem() {
-        JMenuItem item = new JMenuItem("Create Flight Info", 'I');
+        JMenuItem item = new JMenuItem("New Flight Info", 'I');
         item.setAccelerator(KeyStroke.getKeyStroke("ctrl I"));
         item.addActionListener((ActionEvent e) -> {
             if (mainFrame.getActiveProject() != null) {
@@ -271,34 +269,6 @@ public class CustomMenuBar extends JMenuBar {
     }
 
     /**
-     * Creates the Simulation 4 menu item.
-     *
-     * @return Simulation 4 menu item
-     */
-    private JMenuItem createSimulation4Item() {
-        JMenuItem item = new JMenuItem("Simulation 4", '4');
-        item.setAccelerator(KeyStroke.getKeyStroke("ctrl 4"));
-        item.addActionListener((ActionEvent e) -> {
-            // TODO
-        });
-        return item;
-    }
-
-    /**
-     * Creates the Simulation 5 menu item.
-     *
-     * @return Simulation 5 menu item
-     */
-    private JMenuItem createSimulation5Item() {
-        JMenuItem item = new JMenuItem("Simulation 5", '5');
-        item.setAccelerator(KeyStroke.getKeyStroke("ctrl 5"));
-        item.addActionListener((ActionEvent e) -> {
-            // TODO
-        });
-        return item;
-    }
-
-    /**
      * Creates the sub menu list for Export.
      *
      * @return the submenu list
@@ -306,20 +276,34 @@ public class CustomMenuBar extends JMenuBar {
     private JMenu createSubMenuList() {
         JMenu menuExport = new JMenu("Export");
         menuExport.setMnemonic(KeyEvent.VK_E);
-        menuExport.add(createItemExportXML());
-        menuExport.add(createItemExportHTML());
+        menuExport.add(createSubMenuListHTML());
         menuExport.setEnabled(true);
         return menuExport;
     }
 
     /**
-     * Creates the XML exportation item.
+     * Creates the sub menu list for HTML.
      *
-     * @return XML exportation item
+     * @return the submenu list
      */
-    private JMenuItem createItemExportXML() {
-        JMenuItem item = new JMenuItem("XML", 'X');
-        item.setAccelerator(KeyStroke.getKeyStroke("ctrl X"));
+    private JMenu createSubMenuListHTML() {
+        JMenu menuExport = new JMenu("HTML");
+        menuExport.setMnemonic(KeyEvent.VK_H);
+        menuExport.add(createItemExportByAirports());
+        menuExport.add(createItemExportByAircraft());
+        menuExport.add(createItemExportByFlightInfo());
+        menuExport.setEnabled(true);
+        return menuExport;
+    }
+
+    /**
+     * Creates the export by airports item.
+     *
+     * @return HTML exportation item
+     */
+    private JMenuItem createItemExportByAirports() {
+        JMenuItem item = new JMenuItem("Export by Airport", 'A');
+        item.setAccelerator(KeyStroke.getKeyStroke("ctrl A"));
         item.addActionListener((ActionEvent e) -> {
             // TODO
         });
@@ -327,13 +311,27 @@ public class CustomMenuBar extends JMenuBar {
     }
 
     /**
-     * Creates the HTML exportation item.
+     * Creates the export by aircraft item.
      *
      * @return HTML exportation item
      */
-    private JMenuItem createItemExportHTML() {
-        JMenuItem item = new JMenuItem("HTML", 'H');
-        item.setAccelerator(KeyStroke.getKeyStroke("ctrl H"));
+    private JMenuItem createItemExportByAircraft() {
+        JMenuItem item = new JMenuItem("Export by Aircraft", 'B');
+        item.setAccelerator(KeyStroke.getKeyStroke("ctrl B"));
+        item.addActionListener((ActionEvent e) -> {
+            // TODO
+        });
+        return item;
+    }
+
+    /**
+     * Creates the export by flight info item.
+     *
+     * @return HTML exportation item
+     */
+    private JMenuItem createItemExportByFlightInfo() {
+        JMenuItem item = new JMenuItem("Export by Flight Info", 'F');
+        item.setAccelerator(KeyStroke.getKeyStroke("ctrl F"));
         item.addActionListener((ActionEvent e) -> {
             // TODO
         });
