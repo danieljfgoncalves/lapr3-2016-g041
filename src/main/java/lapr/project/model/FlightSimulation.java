@@ -317,7 +317,7 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
     public void setPassengersPerClass(List<Integer> passengersPerClass) {
         this.passengersPerClass = passengersPerClass;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 7;

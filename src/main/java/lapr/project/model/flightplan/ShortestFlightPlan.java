@@ -6,13 +6,15 @@ package lapr.project.model.flightplan;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import javax.measure.quantity.Mass;
+import javax.measure.unit.SI;
 import lapr.project.model.Coordinate;
 import lapr.project.model.FlightSimulation;
 import lapr.project.model.Junction;
 import lapr.project.model.Segment;
 import lapr.project.utils.exceptions.InsufficientFuelException;
 import lapr.project.utils.graph.MapGraph;
-import lapr.project.utils.graph.MapGraphAlgorithms;
+import org.jscience.physics.amount.Amount;
 
 /**
  * Abstract class to represent shortest flight plan (example distance, time,
@@ -33,6 +35,14 @@ public abstract class ShortestFlightPlan implements FlightPlan {
      * @return the extra weight from a stop/waypoint.
      */
     protected abstract double addStopWeight(Junction junction);
+
+    /**
+     * Preformes an action to the flight at a stop.
+     *
+     * @param junction the junction to analyse
+     * @param flight the flight to preforme the action
+     */
+    protected abstract void actionAtStop(Junction junction, FlightSimulation flight);
 
     protected abstract double pathAlgorithm(MapGraph<Coordinate, Segment> network, Coordinate vOrig, Coordinate vDest,
             LinkedList<Coordinate> efficientPath, FlightSimulation flight, List<Junction> junctions)
@@ -79,11 +89,16 @@ public abstract class ShortestFlightPlan implements FlightPlan {
             LinkedList<Coordinate> pathToNextVert = new LinkedList<>();
             double minDist = Double.POSITIVE_INFINITY;
             Junction nextVert = new Coordinate(); // Placeholder (to avoid null dereferencing)
+            Amount<Mass> nextFuel = Amount.valueOf(0d, SI.KILOGRAM);
+            Amount<Mass> currentFuel = flight.getEffectiveFuel();
             for (Junction junction : junctions) {
+
+                flight.setEffectiveFuel(currentFuel);
 
                 LinkedList<Coordinate> temp = new LinkedList<>();
                 double dist = pathAlgorithm(graph, currentVert, junction.getCoordinate(), temp, flight, junctions);
                 if (dist > 0 && dist < minDist) {
+                    nextFuel = flight.getEffectiveFuel();
                     minDist = dist;
                     pathToNextVert = temp;
                     nextVert = junction;
@@ -92,20 +107,23 @@ public abstract class ShortestFlightPlan implements FlightPlan {
             if (minDist == Double.POSITIVE_INFINITY) {
                 return -1d;
             }
+            // Fuel at next vert
+            flight.setEffectiveFuel(nextFuel);
             // Add values for nearest junction.
             pathToNextVert.pop(); // First Vert is already in path.
             currentVert = nextVert.getCoordinate();
             shortestPath.addAll(pathToNextVert);
             totalDist += minDist;
-            // add stopage time/distance, if any.
+            // add stopage time/distance, if any & preformes an action if any.
+            actionAtStop(nextVert, flight);
             totalDist += addStopWeight(nextVert);
             // remove visited vert
             junctions.remove(nextVert);
         }
 
-        // find shortest path from last wayoint/stop to destination
+        // find shortest path from last waypoint/stop to destination
         LinkedList<Coordinate> pathToDest = new LinkedList<>();
-        double distToDest = MapGraphAlgorithms.shortestPath(graph, currentVert, vDest, pathToDest);
+        double distToDest = pathAlgorithm(graph, currentVert, vDest, pathToDest, flight, junctions);
         if (distToDest == -1) {
             return -1d;
         }

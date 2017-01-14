@@ -89,4 +89,9 @@ public class ShortestDistance extends ShortestFlightPlan {
         return getDescription();
     }
 
+    @Override
+    protected void actionAtStop(Junction junction, FlightSimulation flight) {
+        // does nothing
+    }
+
 }
