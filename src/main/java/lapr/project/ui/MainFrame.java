@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +107,11 @@ public class MainFrame extends JFrame implements ProjectHandler {
      * Create open simulation button.
      */
     private JButton openSimulationButton;
+
+    /**
+     * The export simulations button
+     */
+    private JButton exportSimulationsButton;
 
     /**
      * Creates an instance of the main frame.
@@ -231,10 +235,11 @@ public class MainFrame extends JFrame implements ProjectHandler {
             SimulateFlightDialog simulateFlightDialog = new SimulateFlightDialog(this, activeProject);
             simulateFlightDialog.setVisible(true);
         });
-        
-        JButton exportSimulations = new JButton("Export filtered");
-        exportSimulations.setPreferredSize(BUTTON_PREFERED_SIZE);
-        exportSimulations.addActionListener((ActionEvent ae) -> {
+
+        exportSimulationsButton = new JButton("Filtered Export");
+        exportSimulationsButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        exportSimulationsButton.setEnabled(false);
+        exportSimulationsButton.addActionListener((ActionEvent ae) -> {
             AirportOracle airportDAO = new AirportOracle(activeProject.getSerieNumber());
             List<Airport> airports = new ArrayList<>();
             try {
@@ -247,10 +252,9 @@ public class MainFrame extends JFrame implements ProjectHandler {
         });
 
         buttonsPanel.add(openSimulationButton);
-        buttonsPanel.add(exportSimulations);
+        buttonsPanel.add(exportSimulationsButton);
         buttonsPanel.add(createFlightInfoButton);
         buttonsPanel.add(createSimulationButton);
-        
 
         return buttonsPanel;
     }
@@ -275,6 +279,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         this.simulationsTable.setVisible(true);
         createFlightInfoButton.setEnabled(true);
         createSimulationButton.setEnabled(true);
+        exportSimulationsButton.setEnabled(true);
         refreshFlighSimulations();
     }
 

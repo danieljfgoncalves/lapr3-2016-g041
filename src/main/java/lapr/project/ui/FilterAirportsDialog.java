@@ -60,7 +60,7 @@ public class FilterAirportsDialog extends JDialog {
     /**
      * List of flight simulations
      */
-    private List<FlightSimulation> flightSimulations;
+    private final List<FlightSimulation> flightSimulations;
 
     /**
      * Padding border.
@@ -214,11 +214,8 @@ public class FilterAirportsDialog extends JDialog {
                 }
             }
             if (!filteredSimulations.isEmpty()) {
-                int selection = JOptionPane.showConfirmDialog(null, "Simulations added successfully!", "Simulation Filter", JOptionPane.DEFAULT_OPTION);
-                if (selection == JOptionPane.OK_OPTION) {
-
-                    dispose();
-                }
+                FilteredSimulationsUI filteredSimulationsUI = new FilteredSimulationsUI(this, flightSimulations);
+                filteredSimulationsUI.setVisible(true);
             } else {
                 int selection = JOptionPane.showConfirmDialog(null, "There is no simulations with selected airports!", "Simulation Filter", JOptionPane.DEFAULT_OPTION);
                 if (selection == JOptionPane.OK_OPTION) {
