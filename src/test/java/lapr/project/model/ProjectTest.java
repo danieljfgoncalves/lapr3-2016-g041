@@ -3,8 +3,6 @@
  */
 package lapr.project.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -75,33 +73,6 @@ public class ProjectTest {
         AirNetwork airNetwork = new AirNetwork();
         instance.setAirNetwork(airNetwork);
         assertEquals(airNetwork, instance.getAirNetwork());
-    }
-
-    /**
-     * Test of getAirports and setAirports methods, of class Project.
-     */
-    @Test
-    public void testGetSetAirports() {
-        System.out.println("getAirports");
-
-        AirportsRegister airports = new AirportsRegister();
-        instance.setAirportsRegister(airports);
-        assertEquals(airports, instance.getAirportsRegister());
-    }
-
-    /**
-     * Test of getAircraftModelsRegister and setAircraftModelsRegister method,
-     * of class Project.
-     */
-    @Test
-    public void testGetSetAircraftModelsRegister() {
-        System.out.println("getAircraftModelsRegister");
-
-        List<AircraftModel> aircraftModels = new ArrayList();
-        AircraftModelsRegister aircraftModelsRegister = new AircraftModelsRegister(aircraftModels);
-        instance.setAircraftModelsRegister(aircraftModelsRegister);
-
-        assertEquals(aircraftModelsRegister, instance.getAircraftModelsRegister());
     }
 
     /**

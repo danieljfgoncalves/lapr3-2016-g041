@@ -36,16 +36,6 @@ public class Project implements Comparable<Project> {
     private AirNetwork airNetwork;
 
     /**
-     * The project's airports register.
-     */
-    private AirportsRegister airportsRegister;
-
-    /**
-     * The project's aircraft models register.
-     */
-    private AircraftModelsRegister aircraftModelsRegister;
-
-    /**
      * The project's simulations.
      */
     private Simulation simulations;
@@ -72,8 +62,6 @@ public class Project implements Comparable<Project> {
         this.name = DEFAULT_NAME;
         this.description = DEFAULT_DESCRIPTION;
         this.airNetwork = new AirNetwork();
-        this.airportsRegister = new AirportsRegister();
-        this.aircraftModelsRegister = new AircraftModelsRegister();
         this.simulations = new Simulation();
     }
 
@@ -89,8 +77,6 @@ public class Project implements Comparable<Project> {
         this.name = name;
         this.description = description;
         this.airNetwork = new AirNetwork();
-        this.airportsRegister = new AirportsRegister();
-        this.aircraftModelsRegister = new AircraftModelsRegister();
         this.simulations = new Simulation();
     }
 
@@ -116,8 +102,6 @@ public class Project implements Comparable<Project> {
     public Project(Project otherProject) {
         this.serieNumber = counter++;
         this.airNetwork = otherProject.airNetwork;
-        this.airportsRegister = otherProject.airportsRegister;
-        this.aircraftModelsRegister = new AircraftModelsRegister(otherProject.aircraftModelsRegister);
         this.simulations = new Simulation(); // simulations are not supposed to be copied
     }
 
@@ -194,42 +178,6 @@ public class Project implements Comparable<Project> {
     }
 
     /**
-     * Gets the project's airports register.
-     *
-     * @return the airports
-     */
-    public AirportsRegister getAirportsRegister() {
-        return airportsRegister;
-    }
-
-    /**
-     * Modifies the project's airports register.
-     *
-     * @param airports the airports to set
-     */
-    public void setAirportsRegister(AirportsRegister airports) {
-        this.airportsRegister = airports;
-    }
-
-    /**
-     * Gets the project's aircraft models register.
-     *
-     * @return the aircraftModelsRegister
-     */
-    public AircraftModelsRegister getAircraftModelsRegister() {
-        return aircraftModelsRegister;
-    }
-
-    /**
-     * Modifies the project's aircraft models register.
-     *
-     * @param aircraftModelsRegister the aircraftModels to set
-     */
-    public void setAircraftModelsRegister(AircraftModelsRegister aircraftModelsRegister) {
-        this.aircraftModelsRegister = aircraftModelsRegister;
-    }
-
-    /**
      * Gets the project's simulations.
      *
      * @return the simulations
@@ -286,9 +234,7 @@ public class Project implements Comparable<Project> {
                 + "Name: %s\n"
                 + "Description: %s\n"
                 + "Air Network: %s\n"
-                + "Airports: %s\n"
-                + "Aircraft Models: %s\n"
-                + "Simulations: %s", serieNumber, name, description, airNetwork, airportsRegister, aircraftModelsRegister, simulations);
+                + "Simulations: %s", serieNumber, name, description, airNetwork, simulations);
     }
 
     @Override
