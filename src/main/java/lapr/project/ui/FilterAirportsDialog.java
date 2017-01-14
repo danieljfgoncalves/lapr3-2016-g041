@@ -217,10 +217,11 @@ public class FilterAirportsDialog extends JDialog {
                 FilteredSimulationsUI filteredSimulationsUI = new FilteredSimulationsUI(this, flightSimulations);
                 filteredSimulationsUI.setVisible(true);
             } else {
-                int selection = JOptionPane.showConfirmDialog(null, "There is no simulations with selected airports!", "Simulation Filter", JOptionPane.DEFAULT_OPTION);
-                if (selection == JOptionPane.OK_OPTION) {
-                    dispose();
-                }
+                int selection = JOptionPane.showConfirmDialog(
+                        null,
+                        "There is no simulations with selected airports!",
+                        "Simulation Filter",
+                        JOptionPane.DEFAULT_OPTION);
             }
         });
         return button;

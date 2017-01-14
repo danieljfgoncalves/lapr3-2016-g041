@@ -5,6 +5,7 @@ package lapr.project.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
@@ -109,9 +110,14 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private JButton openSimulationButton;
 
     /**
-     * The export simulations button
+     * The export simulations button.
      */
-    private JButton exportSimulationsButton;
+    private JButton exportByAirportButton;
+
+    /**
+     * The export by aircraft button.
+     */
+    private JButton exportByAircraftButton;
 
     /**
      * Creates an instance of the main frame.
@@ -210,7 +216,9 @@ public class MainFrame extends JFrame implements ProjectHandler {
      * @return buttons panel
      */
     private JPanel createButtonsPanel() {
-        JPanel buttonsPanel = new JPanel();
+        JPanel buttonsPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         openSimulationButton = new JButton("Open Simulation");
         openSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
@@ -236,10 +244,10 @@ public class MainFrame extends JFrame implements ProjectHandler {
             simulateFlightDialog.setVisible(true);
         });
 
-        exportSimulationsButton = new JButton("Filtered Export");
-        exportSimulationsButton.setPreferredSize(BUTTON_PREFERED_SIZE);
-        exportSimulationsButton.setEnabled(false);
-        exportSimulationsButton.addActionListener((ActionEvent ae) -> {
+        exportByAirportButton = new JButton("Export By Airport");
+        exportByAirportButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        exportByAirportButton.setEnabled(false);
+        exportByAirportButton.addActionListener((ActionEvent ae) -> {
             AirportOracle airportDAO = new AirportOracle(activeProject.getSerieNumber());
             List<Airport> airports = new ArrayList<>();
             try {
@@ -251,10 +259,24 @@ public class MainFrame extends JFrame implements ProjectHandler {
             filterAirportsDialog.setVisible(true);
         });
 
-        buttonsPanel.add(openSimulationButton);
-        buttonsPanel.add(exportSimulationsButton);
-        buttonsPanel.add(createFlightInfoButton);
-        buttonsPanel.add(createSimulationButton);
+        exportByAircraftButton = new JButton("Export By Aircraft");
+        exportByAircraftButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        exportByAircraftButton.setEnabled(false);
+        exportByAircraftButton.addActionListener((ActionEvent ae) -> {
+            FilterAircraftsDialog filterAircraftsDialog
+                    = new FilterAircraftsDialog(this, simulations,
+                            activeProject.getSerieNumber());
+            filterAircraftsDialog.setVisible(true);
+        });
+
+        topButtons.add(openSimulationButton);
+        topButtons.add(createFlightInfoButton);
+        topButtons.add(createSimulationButton);
+        bottomButtons.add(exportByAirportButton);
+        bottomButtons.add(exportByAircraftButton);
+
+        buttonsPanel.add(topButtons, BorderLayout.NORTH);
+        buttonsPanel.add(bottomButtons, BorderLayout.CENTER);
 
         return buttonsPanel;
     }
@@ -279,7 +301,8 @@ public class MainFrame extends JFrame implements ProjectHandler {
         this.simulationsTable.setVisible(true);
         createFlightInfoButton.setEnabled(true);
         createSimulationButton.setEnabled(true);
-        exportSimulationsButton.setEnabled(true);
+        exportByAirportButton.setEnabled(true);
+        exportByAircraftButton.setEnabled(true);
         refreshFlighSimulations();
     }
 
