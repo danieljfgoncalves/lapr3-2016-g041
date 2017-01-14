@@ -25,10 +25,13 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
+import lapr.project.datalayer.dao.FlightInfoDao;
 import lapr.project.datalayer.dao.FlightSimulationDAO;
 import lapr.project.datalayer.oracle.AirportOracle;
+import lapr.project.datalayer.oracle.FlightInfoOracle;
 import lapr.project.datalayer.oracle.FlightSimulationOracle;
 import lapr.project.model.Airport;
+import lapr.project.model.FlightInfo;
 import lapr.project.model.FlightSimulation;
 import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
@@ -119,6 +122,11 @@ public class MainFrame extends JFrame implements ProjectHandler {
      * The export by aircraft button.
      */
     private JButton exportByAircraftButton;
+
+    /**
+     * The export by flight info button;
+     */
+    private JButton exportByFlightInfoButton;
 
     /**
      * Creates an instance of the main frame.
@@ -225,7 +233,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         openSimulationButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         openSimulationButton.setEnabled(false);
         openSimulationButton.addActionListener((ActionEvent ae) -> {
-            ShowSimulation showSimulation = new ShowSimulation(this, simulations.get(simulationsTable.getSelectedRow()));
+            ShowSimulation showSimulation = new ShowSimulation(this, simulations.get(simulationsTable.getSelectedRow()), activeProject.getSerieNumber());
             showSimulation.setVisible(true);
         });
 
@@ -270,11 +278,27 @@ public class MainFrame extends JFrame implements ProjectHandler {
             filterAircraftsDialog.setVisible(true);
         });
 
+        exportByFlightInfoButton = new JButton("Export By Flight Info");
+        exportByFlightInfoButton.setPreferredSize(BUTTON_PREFERED_SIZE);
+        exportByFlightInfoButton.setEnabled(false);
+        exportByFlightInfoButton.addActionListener((ActionEvent ae) -> {
+            FlightInfoDao flightInfoDAO = new FlightInfoOracle(activeProject.getSerieNumber());
+            List<FlightInfo> flights = new ArrayList();
+            try {
+                flights = flightInfoDAO.getFlightsInfo();
+            } catch (Exception ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            SelectFlightInfosDialog flightInfosDialog = new SelectFlightInfosDialog(this, flights);
+            flightInfosDialog.setVisible(true);
+        });
+
         topButtons.add(openSimulationButton);
         topButtons.add(createFlightInfoButton);
         topButtons.add(createSimulationButton);
         bottomButtons.add(exportByAirportButton);
         bottomButtons.add(exportByAircraftButton);
+        bottomButtons.add(exportByFlightInfoButton);
 
         buttonsPanel.add(topButtons, BorderLayout.NORTH);
         buttonsPanel.add(bottomButtons, BorderLayout.CENTER);
@@ -304,6 +328,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         createSimulationButton.setEnabled(true);
         exportByAirportButton.setEnabled(true);
         exportByAircraftButton.setEnabled(true);
+        exportByFlightInfoButton.setEnabled(true);
         refreshFlighSimulations();
     }
 

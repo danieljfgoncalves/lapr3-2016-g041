@@ -102,6 +102,15 @@ public class AlgorithmAnalysis {
     }
 
     /**
+     * Adds distance.
+     *
+     * @param distance the distance to set
+     */
+    public void addsDistance(Amount<Length> distance) {
+        this.distance.plus(distance);
+    }
+
+    /**
      * Obtains the duration.
      *
      * @return the duration
@@ -120,6 +129,15 @@ public class AlgorithmAnalysis {
     }
 
     /**
+     * Adds duration.
+     *
+     * @param duration the duration to set
+     */
+    public void addsDuration(Amount<Duration> duration) {
+        this.duration.plus(duration);
+    }
+
+    /**
      * Obtains the fuel consumption.
      *
      * @return the consumption
@@ -135,6 +153,21 @@ public class AlgorithmAnalysis {
      */
     public void setConsumption(Amount<Mass> consumption) {
         this.consumption = consumption;
+    }
+
+    /**
+     * Adds the fuel consumption.
+     *
+     * @param consumption the consumption to set
+     */
+    public void addsConsumption(Amount<Mass> consumption) {
+        this.consumption.plus(consumption);
+    }
+
+    public void sumAnalysis(AlgorithmAnalysis other) {
+        this.consumption.plus(other.consumption);
+        this.distance.plus(other.distance);
+        this.duration.plus(other.duration);
     }
 
     @Override
