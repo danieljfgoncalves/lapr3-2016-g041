@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
+import javax.measure.quantity.Velocity;
+import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import lapr.project.datalayer.dao.SegmentDAO;
 import lapr.project.datalayer.oracle.SegmentOracle;
@@ -320,6 +322,24 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
      */
     public void setPassengersPerClass(List<Integer> passengersPerClass) {
         this.passengersPerClass = passengersPerClass;
+    }
+
+    public Amount<Mass> getExactFuel(int projectID) throws Exception {
+
+        AlgorithmAnalysis analysis = this.calculateAnalysis(projectID);
+
+        double extraTime = (analysis.getDuration().doubleValue(NonSI.HOUR) > 3.0) ? 3600d : 1800d;
+
+        Amount<Length> altitude = this.flightInfo.getAircraft().getAircraftModel().getMotorization().getCruiseAltitude();
+        Amount<Velocity> mach = this.flightInfo.getAircraft().getAircraftModel().getMotorization().getCruiseSpeed();
+
+        Amount<Velocity> tas = Calculus.calculateTAS(altitude, mach);
+
+        double extraDistance = tas.doubleValue(SI.METERS_PER_SECOND) / extraTime;
+
+        analysis.addsConsumption(Calculus.calculateCruise(this, Amount.valueOf(extraDistance, SI.METER)).getConsumption());
+
+        return analysis.getConsumption();
     }
 
     public AlgorithmAnalysis calculateAnalysis(int projectID) throws Exception {
