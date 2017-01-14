@@ -335,7 +335,7 @@ public class FlightSimulation implements Comparable<FlightSimulation> {
 
         Amount<Velocity> tas = Calculus.calculateTAS(altitude, mach);
 
-        double extraDistance = tas.doubleValue(SI.METERS_PER_SECOND) / extraTime;
+        double extraDistance = tas.doubleValue(SI.METERS_PER_SECOND) * extraTime;
 
         analysis.addsConsumption(Calculus.calculateCruise(this, Amount.valueOf(extraDistance, SI.METER)).getConsumption());
 

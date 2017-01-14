@@ -132,7 +132,7 @@ public class ShowSimulation extends JDialog {
 
         JLabel fuelConsumptionLabel = new JLabel("Fuel Consumption:");
         fuelConsumptionLabel.setFont(BOLD_LABEL_FONT);
-        JLabel fuelConsumptionResultLabel = new JLabel(String.format("%.2f L", (analysis.getConsumption().doubleValue(SI.KILOGRAM) * Consts.LITER_CONV)));
+        JLabel fuelConsumptionResultLabel = new JLabel(String.format("%.2f L", (analysis.getConsumption().doubleValue(SI.KILOGRAM) / Consts.LITER_CONV)));
         fuelConsumptionResultLabel.setFont(PLAIN_LABEL_FONT);
 
         JLabel timeLabel = new JLabel("Time:");

@@ -133,7 +133,7 @@ public class FlightSimulationHTML implements Exportable {
                         strBuilder.append(td(String.format("%.2f KG", cargo)));
                         break;
                     case 7:
-                        double liters = flight.getEffectiveFuel().doubleValue(SI.KILOGRAM) * Consts.LITER_CONV;
+                        double liters = flight.getEffectiveFuel().doubleValue(SI.KILOGRAM) / Consts.LITER_CONV;
                         strBuilder.append(td(String.format("%.2f L", liters)));
                         break;
                     case 8:

@@ -276,7 +276,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
             }
             JOptionPane.showMessageDialog(
                     null,
-                    String.format("The exact fuel with reserve for this flight should be %.0f liters.", exactFuel.doubleValue(SI.KILOGRAM) * Consts.LITER_CONV),
+                    String.format("The exact fuel with reserve for this flight should be %.0f liters.", exactFuel.doubleValue(SI.KILOGRAM) / Consts.LITER_CONV),
                     "Exact Fuel",
                     JOptionPane.WARNING_MESSAGE);
         });
