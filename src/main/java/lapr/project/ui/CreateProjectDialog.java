@@ -109,8 +109,8 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(
                     null,
-                    "There was an error on database.",
-                    "Data Error",
+                    "The server is busy. Try later.",
+                    "Database busy",
                     JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -211,14 +211,14 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
         JButton importAirNetworkButton = new JButton("Import Air Network");
         JButton importAirportsButton = new JButton("Import Airports");
         importAirportsButton.setEnabled(false);
-        
+
         importAirNetworkButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         importAirNetworkButton.addActionListener((ActionEvent e) -> {
             ImportAirNetworkUI importUI = new ImportAirNetworkUI(controller.getCreatedProject());
             importUI.setSettings();
             importAirportsButton.setEnabled(importUI.isSuccess());
         });
-        
+
         importAirportsButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         importAirportsButton.addActionListener((ActionEvent ae) -> {
             ImportAirportsUI importAirportsUI = new ImportAirportsUI(controller.getCreatedProject());
@@ -264,8 +264,8 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(
                         null,
-                        "There was an error trying to read data from database.",
-                        "Data Error",
+                        "The server is busy. Try later.",
+                        "Database busy",
                         JOptionPane.WARNING_MESSAGE);
             }
         });
@@ -289,8 +289,8 @@ public class CreateProjectDialog<T extends Window & ProjectHandler> extends JDia
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(
                             null,
-                            "There was an error trying to read data from database.",
-                            "Data Error",
+                            "The server is busy. Try later.",
+                            "Database busy",
                             JOptionPane.WARNING_MESSAGE);
                 }
             }

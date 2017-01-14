@@ -72,7 +72,7 @@ public class FlightSimulationOracle implements FlightSimulationDAO {
 
         // effective passengers per class
         List<Integer> passengersPerClass = new ArrayList<>();
-        String queryClasses = "{?= call FC_GET_CLASSES_MAX (?)}";
+        String queryClasses = "{?= call FC_GET_AIRCRAFT_CLASS (?)}";
         try (CallableStatement callableStatementClasses = connection.prepareCall(queryClasses)) {
             callableStatementClasses.registerOutParameter(1, OracleTypes.CURSOR);
             callableStatementClasses.setDouble(2, id);

@@ -437,9 +437,9 @@ public class SimulateFlightDialog extends JDialog {
         scheduledArrivalLabel.setFont(FORM_LABEL_FONT);
         JLabel crewElementsLabel = new JLabel("Number of crew elements:");
         crewElementsLabel.setFont(FORM_LABEL_FONT);
-        JLabel effectiveCargoLabel = new JLabel("Effective cargo weight:");
+        JLabel effectiveCargoLabel = new JLabel("Effective cargo weight (kg):");
         effectiveCargoLabel.setFont(FORM_LABEL_FONT);
-        JLabel effectiveFuelLoadLabel = new JLabel("Effective fuel load:");
+        JLabel effectiveFuelLoadLabel = new JLabel("Effective fuel load (kg):");
         effectiveFuelLoadLabel.setFont(FORM_LABEL_FONT);
 
         JLabel class1MembersLabel = new JLabel("Number of elements in class 1:");
