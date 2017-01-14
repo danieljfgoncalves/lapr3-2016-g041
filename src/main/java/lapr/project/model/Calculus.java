@@ -498,7 +498,14 @@ public class Calculus {
      */
     public static Amount<Mass> getFuelBurnCalculation(Amount<Force> totalThrust, Amount<Duration> timeStep, Amount tsfc) {
 
-        return (Amount<Mass>) totalThrust.times(timeStep).times(tsfc).divide(Constants.g);
+        double totalThrust1 = totalThrust.doubleValue(SI.NEWTON);
+        double timeStep1 = timeStep.doubleValue(SI.SECOND);
+        double tsfc1 = tsfc.doubleValue(CustomUnits.TSFC_NNS);
+        double g1 = Constants.g.doubleValue(SI.METERS_PER_SQUARE_SECOND);
+        
+        double result = totalThrust1 * timeStep1 * tsfc1 / g1;
+        
+        return Amount.valueOf(result, SI.KILOGRAM);
     }
 
     /**

@@ -62,8 +62,8 @@ public class ImportAircraftModelsUI extends ImportFileChooser {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(
                     null,
-                    "There was an error trying to read data from database.",
-                    "Data Error",
+                    "The server is busy. Try later.",
+                    "Database busy",
                     JOptionPane.WARNING_MESSAGE);
         }
     }

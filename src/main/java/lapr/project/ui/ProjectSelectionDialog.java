@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JList;
@@ -104,9 +106,10 @@ public class ProjectSelectionDialog extends JDialog implements ProjectHandler {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(
                     null,
-                    "There was an error trying to read data from database.",
-                    "Data Error",
+                    "The server is busy. Try later.",
+                    "Database busy",
                     JOptionPane.WARNING_MESSAGE);
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         createComponents();

@@ -127,7 +127,7 @@ public class AircraftModelsXML implements Importable {
 
                 String tsfcContentor = motorizationElement.getElementsByTagName("TSFC").item(0).getTextContent();
                 double tsfcValue = Regex.getValue(tsfcContentor);
-                Unit tsfcUnit = Regex.getUnit(tsfcContentor).equalsIgnoreCase("SI") ? CustomUnits.TSFC_SI : CustomUnits.TSFC_US;
+                Unit tsfcUnit = Regex.getUnit(tsfcContentor).equalsIgnoreCase("SI") ? CustomUnits.TSFC_NNS : CustomUnits.TSFC_US;
 
                 double lapseRateFactor = Double.parseDouble(motorizationElement.getElementsByTagName("lapse_rate_factor").item(0).getTextContent());
 

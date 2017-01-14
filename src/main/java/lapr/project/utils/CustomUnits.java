@@ -28,7 +28,7 @@ public class CustomUnits {
     /**
      * TSFC unit in SI System of units (kg/s/N)
      */
-    public static final Unit TSFC_SI = (SI.KILOGRAM.divide(SI.SECOND)).divide(SI.NEWTON);
+    public static final Unit TSFC_SI = (SI.NEWTON).divide(SI.NEWTON).divide(SI.SECOND);
     
     /**
      * TSFC unit in SI System of units (N/N/S)
