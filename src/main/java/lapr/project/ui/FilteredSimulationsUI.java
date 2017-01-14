@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -165,12 +164,5 @@ public class FilteredSimulationsUI extends JDialog {
         panel.add(exportSimulationsButton);
 
         return panel;
-    }
-
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.setVisible(true);
-        FilteredSimulationsUI filteredSimulationsUI = new FilteredSimulationsUI(f, new ArrayList<>());
-        filteredSimulationsUI.setVisible(true);
     }
 }

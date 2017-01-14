@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -315,6 +316,11 @@ public class MainFrame extends JFrame implements ProjectHandler {
         try {
             simulations = flightSimulationDAO.getFlightSimulations();
         } catch (Exception ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Can't load simulations. The server is busy. Try later.",
+                    "Database busy",
+                    JOptionPane.WARNING_MESSAGE);
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         simulationsTable.setModel(new TableModelFlightSimulation(simulations));

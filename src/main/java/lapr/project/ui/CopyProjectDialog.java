@@ -244,8 +244,8 @@ public class CopyProjectDialog<T extends Window & ProjectHandler> extends JDialo
                 }
                 JOptionPane.showMessageDialog(
                         null,
-                        "There was an error trying to read data from database.",
-                        "Data Error",
+                        "The server is busy. Try later.",
+                        "Database busy",
                         JOptionPane.WARNING_MESSAGE);
             } catch (Exception ex) {
                 Logger.getLogger(CopyProjectDialog.class.getName()).log(Level.SEVERE, null, ex);
