@@ -107,7 +107,7 @@ public class AlgorithmAnalysis {
      * @param distance the distance to set
      */
     public void addsDistance(Amount<Length> distance) {
-        this.distance.plus(distance);
+        this.distance = this.distance.plus(distance);
     }
 
     /**
@@ -134,7 +134,7 @@ public class AlgorithmAnalysis {
      * @param duration the duration to set
      */
     public void addsDuration(Amount<Duration> duration) {
-        this.duration.plus(duration);
+        this.duration = this.duration.plus(duration);
     }
 
     /**
@@ -161,13 +161,13 @@ public class AlgorithmAnalysis {
      * @param consumption the consumption to set
      */
     public void addsConsumption(Amount<Mass> consumption) {
-        this.consumption.plus(consumption);
+        this.consumption = this.consumption.plus(consumption);
     }
 
     public void sumAnalysis(AlgorithmAnalysis other) {
-        this.consumption.plus(other.consumption);
-        this.distance.plus(other.distance);
-        this.duration.plus(other.duration);
+        this.consumption = this.consumption.plus(other.consumption);
+        this.distance = this.distance.plus(other.distance);
+        this.duration = this.duration.plus(other.duration);
     }
 
     @Override

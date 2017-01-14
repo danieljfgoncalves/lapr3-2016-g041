@@ -124,9 +124,14 @@ public class MainFrame extends JFrame implements ProjectHandler {
     private JButton exportByAircraftButton;
 
     /**
-     * The export by flight info button;
+     * The export by flight info button.
      */
     private JButton exportByFlightInfoButton;
+
+    /**
+     * The button to calculate exact fuel.
+     */
+    private JButton calculateExactFuel;
 
     /**
      * Creates an instance of the main frame.
@@ -208,6 +213,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         ListSelectionModel listSelectionModel = simulationsTable.getSelectionModel();
         listSelectionModel.addListSelectionListener((ListSelectionEvent lse) -> {
             openSimulationButton.setEnabled(!listSelectionModel.isSelectionEmpty());
+            calculateExactFuel.setEnabled(!listSelectionModel.isSelectionEmpty());
         });
 
         JScrollPane scrollPane = new JScrollPane(simulationsTable);
@@ -253,6 +259,13 @@ public class MainFrame extends JFrame implements ProjectHandler {
             simulateFlightDialog.setVisible(true);
         });
 
+        calculateExactFuel = new JButton("Calculate Exact Fuel");
+        calculateExactFuel.setPreferredSize(BUTTON_PREFERED_SIZE);
+        calculateExactFuel.setEnabled(false);
+        calculateExactFuel.addActionListener((ActionEvent ae) -> {
+            // TODO
+        });
+
         exportByAirportButton = new JButton("Export By Airport");
         exportByAirportButton.setPreferredSize(BUTTON_PREFERED_SIZE);
         exportByAirportButton.setEnabled(false);
@@ -294,6 +307,7 @@ public class MainFrame extends JFrame implements ProjectHandler {
         });
 
         topButtons.add(openSimulationButton);
+        topButtons.add(calculateExactFuel);
         topButtons.add(createFlightInfoButton);
         topButtons.add(createSimulationButton);
         bottomButtons.add(exportByAirportButton);
