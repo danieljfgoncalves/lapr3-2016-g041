@@ -683,7 +683,7 @@ public class Calculus {
         Amount<Mass> fuelBurn = Amount.valueOf(0, SI.KILOGRAM);
         Amount<Length> distance = Amount.valueOf(0, SI.METER);
         Amount<Force> lambda = getLambda(thrust_0, thrustMaxSpeed, maxSpeed);
-        Amount<Velocity> climbRate = Amount.valueOf(Double.MAX_VALUE, SI.METERS_PER_SECOND);
+        Amount<Velocity> climbRate = Amount.valueOf(Double.POSITIVE_INFINITY, SI.METERS_PER_SECOND);
         // Unintialized variables to calculate during iteration
         Amount<Length> altitude;
         Amount<VolumetricDensity> airDensity;

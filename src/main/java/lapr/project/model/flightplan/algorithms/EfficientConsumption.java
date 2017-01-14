@@ -6,10 +6,12 @@ package lapr.project.model.flightplan.algorithms;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.unit.SI;
 import lapr.project.model.AirNetwork;
+import lapr.project.model.AlgorithmAnalysis;
 import lapr.project.model.Calculus;
 import lapr.project.model.Coordinate;
 import lapr.project.model.FlightSimulation;
@@ -41,11 +43,16 @@ public class EfficientConsumption extends ShortestFlightPlan {
      */
     private static final String DESCRIPTION = "Fuel efficient Path";
 
+    private Amount<Mass> initialFuel;
+
     @Override
     public Amount<?> generateFlightPlan(AirNetwork network, FlightSimulation flight, LinkedList<Segment> flightplan)
             throws Exception {
 
         MapGraph<Coordinate, Segment> graph = network.getNetwork();
+
+        // Store initial fuel
+        initialFuel = flight.getEffectiveFuel();
 
         // New ordered list of coordinates.
         LinkedList<Coordinate> coordinates = new LinkedList<>();
@@ -81,7 +88,12 @@ public class EfficientConsumption extends ShortestFlightPlan {
 
         int numVert = network.numVertices();
 
-        Coordinate[] vertices = (Coordinate[]) network.allkeyVerts().clone();
+        Object[] objs = ((Set) network.vertices()).toArray();
+        Coordinate[] vertices = new Coordinate[numVert];
+        for (int i = 0; i < objs.length; i++) {
+            vertices[i] = (Coordinate) objs[i];
+        }
+
         boolean visited[] = new boolean[numVert];
         int[] pathKeys = new int[numVert];
         double[] dist = new double[numVert];
@@ -104,6 +116,11 @@ public class EfficientConsumption extends ShortestFlightPlan {
         if (!visited[vDestId]) {
             return -1d;
         }
+
+        // Deduct wasted fuel
+        double newFuel = flight.getEffectiveFuel().doubleValue(SI.KILOGRAM) - dist[vDestId];
+        flight.setEffectiveFuel(Amount.valueOf(newFuel, SI.KILOGRAM));
+
         return dist[vDestId];
     }
 
@@ -128,13 +145,11 @@ public class EfficientConsumption extends ShortestFlightPlan {
         }
 
         dist[g.getKey(vOrig)] = 0;
-        Amount<Mass> initialFuel = flight.getEffectiveFuel();
 
         // Orgin flight departure (calculate climb)
-        double climbConsumption = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
-                .getConsumption().doubleValue(SI.KILOGRAM);
-        double climbDistance = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
-                .getDistance().doubleValue(SI.METER);
+        AlgorithmAnalysis analysisClimb = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude());
+        double climbConsumption = analysisClimb.getConsumption().doubleValue(SI.KILOGRAM);
+        double climbDistance = analysisClimb.getDistance().doubleValue(SI.METER);
         // Initialize Landing values
         double descConsumption = 0; // Start at zero
         double descDistance = 0; // Start at zero
@@ -143,14 +158,14 @@ public class EfficientConsumption extends ShortestFlightPlan {
             int vOrigValue = g.getKey(vOrig);
             visited[vOrigValue] = true;
 
+            Amount<Mass> prevFuel = flight.getEffectiveFuel();
             for (MapEdge<Coordinate, Segment> edge : g.outgoingEdges(vOrig)) {
                 Coordinate vAdj = g.opposite(vOrig, edge);
 
                 if (isTechnicalStop(vAdj, junctions)) {
-                    descConsumption = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
-                            .getConsumption().doubleValue(SI.KILOGRAM);
-                    descDistance = Calculus.calculateLanding(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
-                            .getDistance().doubleValue(SI.METER);
+                    AlgorithmAnalysis analysisDesc = Calculus.calculateLanding(flight, flight.getFlightInfo().getOriginAirport().getAltitude());
+                    descConsumption = analysisDesc.getConsumption().doubleValue(SI.KILOGRAM);
+                    descDistance = analysisDesc.getDistance().doubleValue(SI.METER);
                 }
                 // Subtract climbing & descending (distance) from distance
                 double cruiseDistance = edge.getWeight() - (climbDistance + descDistance);
@@ -160,7 +175,7 @@ public class EfficientConsumption extends ShortestFlightPlan {
                 // Add climbing consumption
                 double consumption = climbConsumption;
                 // TODO: reorganize params & units
-                Amount<Mass> currentFuel = flight.getEffectiveFuel().minus(Amount.valueOf(climbConsumption, SI.KILOGRAM));
+                Amount<Mass> currentFuel = prevFuel.minus(Amount.valueOf(climbConsumption, SI.KILOGRAM));
                 flight.setEffectiveFuel(currentFuel);
                 consumption += Calculus.calculateCruise(flight, virtualDist).getConsumption().doubleValue(SI.KILOGRAM);
                 consumption += descConsumption;
@@ -183,20 +198,25 @@ public class EfficientConsumption extends ShortestFlightPlan {
                     nextFuel = initialFuel.minus(Amount.valueOf(dist[vId], SI.KILOGRAM));
                 }
             }
-            if (nextFuel.doubleValue(SI.KILOGRAM) < 1) {
-                throw new InsufficientFuelException();
-            }
+
             flight.setEffectiveFuel(nextFuel);
             if (isTechnicalStop(vOrig, junctions)) {
-                climbConsumption = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
-                        .getConsumption().doubleValue(SI.KILOGRAM);
-                climbDistance = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude())
-                        .getDistance().doubleValue(SI.METER);
+                // calculate climb for techinical stop
+                analysisClimb = Calculus.calculateClimb(flight, flight.getFlightInfo().getOriginAirport().getAltitude());
+                climbConsumption = analysisClimb.getConsumption().doubleValue(SI.KILOGRAM);
+                climbDistance = analysisClimb.getDistance().doubleValue(SI.METER);
             }
         }
+
+        // Reset Fuel
+        flight.setEffectiveFuel(initialFuel);
     }
 
     private boolean isTechnicalStop(Coordinate coord, List<Junction> junctions) {
+
+        if (coord == null) {
+            return false;
+        }
 
         boolean isStop = false;
         Iterator<Junction> it = junctions.iterator();
@@ -222,7 +242,14 @@ public class EfficientConsumption extends ShortestFlightPlan {
 
     @Override
     protected double addStopWeight(Junction junction) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return 0d;
+    }
+
+    @Override
+    protected void actionAtStop(Junction junction, FlightSimulation flight) {
+        if (junction instanceof Stop) {
+            flight.setEffectiveFuel(initialFuel);
+        }
     }
 
     @Override

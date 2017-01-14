@@ -69,7 +69,7 @@ public class FastestPath extends ShortestFlightPlan {
             first = second;
         }
 
-        return Amount.valueOf(distance, SI.METER);
+        return Amount.valueOf(distance, SI.SECOND);
     }
 
     private MapGraph<Coordinate, Segment> createFlightTimeGraph(AirNetwork network, FlightSimulation flight) throws CloneNotSupportedException {
@@ -150,7 +150,7 @@ public class FastestPath extends ShortestFlightPlan {
     @Override
     protected double addStopWeight(Junction junction) {
         // If the junction is a technical stop add minimal stop time.
-        return (junction instanceof Stop) ? ((Stop) junction).getMinimumStopMinutes().doubleValue(NonSI.MINUTE) : 0d;
+        return (junction instanceof Stop) ? ((Stop) junction).getMinimumStopMinutes().doubleValue(SI.SECOND) : 0d;
     }
 
     @Override
@@ -169,6 +169,11 @@ public class FastestPath extends ShortestFlightPlan {
     @Override
     public String toString() {
         return getDescription();
+    }
+
+    @Override
+    protected void actionAtStop(Junction junction, FlightSimulation flight) {
+        // does nothing
     }
 
 }

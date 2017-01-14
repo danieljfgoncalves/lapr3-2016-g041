@@ -1,12 +1,12 @@
-/**
- * Package location for Model concepts.
+/*
+ * Package location for flight plan algorithms.
  */
 package lapr.project.model.flightplan.algorithms;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javax.measure.quantity.Duration;
+import javax.measure.quantity.Mass;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
@@ -26,19 +26,19 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Tests a airnetwork. (contains a graph of coordinates and segments)
+ * Represents the algorithm to calculate the fastest time (SI: Min) flight plan.
  *
  * @author Daniel Gonçalves - 1151452
  * @author Eric Amaral - 1141570
  * @author Ivo Ferro - 1151159
  * @author Tiago Correia - 1151031
  */
-public class FastestPathTest {
+public class EfficientConsumptionTest {
 
     private AirNetwork airNetwork;
-    
+
     private FlightSimulation flight;
-    
+
     private FlightPattern flightPattern = new FlightPattern();
 
     @Before
@@ -130,49 +130,20 @@ public class FastestPathTest {
     }
 
     /**
-     * Test of generateFlightPlan method, of class FastestPath.
+     * Test of generateFlightPlan method, of class EfficientConsumption.
      */
     @Test
     public void testGenerateFlightPlan() throws Exception {
         System.out.println("generateFlightPlan");
         LinkedList<Segment> flightplan = new LinkedList<>();
-        FastestPath instance = new FastestPath();
-        double expResult = 21998d;
-        double result = ((Amount<Duration>) instance.generateFlightPlan(airNetwork, flight, flightplan)).doubleValue(SI.SECOND);
+        EfficientConsumption instance = new EfficientConsumption();
+        double expResult = 125767d;
+        double result = ((Amount<Mass>) instance.generateFlightPlan(airNetwork, flight, flightplan)).doubleValue(SI.KILOGRAM);
         assertEquals(expResult, result, 10d);
     }
 
     /**
-     * Test of addStopWeight method, of class FastestPath.
-     */
-//    @Test
-    public void testAddStopWeight() {
-        System.out.println("addStopWeight");
-        Junction junction = null;
-        FastestPath instance = new FastestPath();
-        double expResult = 0.0;
-        double result = instance.addStopWeight(junction);
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getDescription method, of class FastestPath.
-     */
-//    @Test
-    public void testGetDescription() {
-        System.out.println("getDescription");
-        FastestPath instance = new FastestPath();
-        String expResult = "";
-        String result = instance.getDescription();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of pathAlgorithm method, of class FastestPath.
+     * Test of pathAlgorithm method, of class EfficientConsumption.
      */
 //    @Test
     public void testPathAlgorithm() throws Exception {
@@ -183,7 +154,7 @@ public class FastestPathTest {
         LinkedList<Coordinate> efficientPath = null;
         FlightSimulation flight = null;
         List<Junction> junctions = null;
-        FastestPath instance = new FastestPath();
+        EfficientConsumption instance = new EfficientConsumption();
         double expResult = 0.0;
         double result = instance.pathAlgorithm(network, vOrig, vDest, efficientPath, flight, junctions);
         assertEquals(expResult, result, 0.0);
@@ -192,17 +163,28 @@ public class FastestPathTest {
     }
 
     /**
-     * Test of toString method, of class FastestPath.
+     * Test of addStopWeight method, of class EfficientConsumption.
      */
-//    @Test
-    public void testToString() {
-        System.out.println("toString");
-        FastestPath instance = new FastestPath();
-        String expResult = "";
-        String result = instance.toString();
+    @Test
+    public void testAddStopWeight() {
+        System.out.println("addStopWeight");
+        Junction junction = new Stop();
+        EfficientConsumption instance = new EfficientConsumption();
+        double expResult = 0.0;
+        double result = instance.addStopWeight(junction);
+        assertEquals(expResult, result, 0.0);
+    }
+
+    /**
+     * Test of getDescription method, of class EfficientConsumption.
+     */
+    @Test
+    public void testGetDescription() {
+        System.out.println("getDescription");
+        EfficientConsumption instance = new EfficientConsumption();
+        String expResult = "Fuel efficient Path";
+        String result = instance.getDescription();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }
