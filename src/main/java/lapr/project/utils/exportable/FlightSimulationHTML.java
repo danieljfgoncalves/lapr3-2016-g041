@@ -48,10 +48,8 @@ public class FlightSimulationHTML implements Exportable {
         "# of passengers",
         "# of crew members",
         "cargo",
-        "fuel", 
+        "fuel",
         "flight plan"};
-
-    private static final String FILE_NAME = "flight_sim_results.html";
 
     /**
      * Creates a flight export html object
@@ -66,11 +64,10 @@ public class FlightSimulationHTML implements Exportable {
     @Override
     public void export(File file) throws IOException {
 
-        File htmlFile = new File(file, FILE_NAME);
-        if (!htmlFile.exists()) {
-            htmlFile.createNewFile();
+        if (!file.exists()) {
+            file.createNewFile();
         }
-        if (htmlFile.canWrite()) {
+        if (file.canWrite()) {
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Calendar cal = Calendar.getInstance(); //2016/01/11 12:08:43
@@ -89,7 +86,7 @@ public class FlightSimulationHTML implements Exportable {
                     .append(body().renderCloseTag())
                     .append(html().renderCloseTag());
 
-            try (BufferedWriter output = new BufferedWriter(new FileWriter(htmlFile))) {
+            try (BufferedWriter output = new BufferedWriter(new FileWriter(file))) {
                 output.write(html.toString());
             }
 
@@ -153,39 +150,5 @@ public class FlightSimulationHTML implements Exportable {
         }
         strBuilder.append(table().renderCloseTag());
         return strBuilder.toString();
-    }
-
-    public static void main(String[] args) throws IOException {
-
-        FlightSimulation flight = new FlightSimulation();
-        LinkedList<Segment> fp = new LinkedList<>();
-        fp.add(new Segment());
-        fp.add(new Segment());
-        fp.add(new Segment());
-        fp.add(new Segment());
-
-        flight.setFlightplan(fp);
-
-        List<Integer> cl = new LinkedList<>();
-        cl.add(100);
-        cl.add(50);
-        cl.add(10);
-
-        flight.setPassengersPerClass(cl);
-
-        List<FlightSimulation> fs = new LinkedList<>();
-        fs.add(flight);
-        fs.add(new FlightSimulation(flight));
-        fs.add(new FlightSimulation(flight));
-        fs.add(new FlightSimulation(flight));
-
-        FlightSimulationHTML f = new FlightSimulationHTML(fs);
-
-        File file = new File("/Users/danielGoncalves/ISEP/2_ANO/LAPR3/Project/repo/lapr3-2016-g041/");
-
-        if (file.isDirectory()) {
-            f.export(file);
-        }
-
     }
 }
