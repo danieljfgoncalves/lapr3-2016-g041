@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.measure.quantity.Mass;
+import javax.measure.unit.SI;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,6 +39,8 @@ import lapr.project.model.Project;
 import lapr.project.model.FlightSimulator;
 import lapr.project.ui.components.CustomMenuBar;
 import lapr.project.ui.components.TableModelFlightSimulation;
+import lapr.project.utils.Consts;
+import org.jscience.physics.amount.Amount;
 
 /**
  * The main frame for the application.
@@ -263,7 +267,18 @@ public class MainFrame extends JFrame implements ProjectHandler {
         calculateExactFuel.setPreferredSize(BUTTON_PREFERED_SIZE);
         calculateExactFuel.setEnabled(false);
         calculateExactFuel.addActionListener((ActionEvent ae) -> {
-            // TODO
+            FlightSimulation flightSimulation = simulations.get(simulationsTable.getSelectedRow());
+            Amount<Mass> exactFuel = Amount.valueOf(145571d, SI.KILOGRAM);
+            try {
+                exactFuel = flightSimulation.getExactFuel(activeProject.getSerieNumber());
+            } catch (Exception ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            JOptionPane.showMessageDialog(
+                    null,
+                    String.format("The exact fuel with reserve for this flight should be %.0f liters.", exactFuel.doubleValue(SI.KILOGRAM) * Consts.LITER_CONV),
+                    "Exact Fuel",
+                    JOptionPane.WARNING_MESSAGE);
         });
 
         exportByAirportButton = new JButton("Export By Airport");

@@ -114,7 +114,7 @@ public class SelectFlightInfosDialog extends JDialog {
 
     /**
      * Creates a JTable with a list of flight infos.
-     * 
+     *
      * @return the panel with the JTable
      */
     private JPanel createTable() {
@@ -136,8 +136,8 @@ public class SelectFlightInfosDialog extends JDialog {
 
     /**
      * The panel with the export button.
-     * 
-     * @return 
+     *
+     * @return
      */
     private JPanel createExportButton() {
         JPanel panel = new JPanel();
@@ -159,7 +159,6 @@ public class SelectFlightInfosDialog extends JDialog {
                 try {
                     flightInfoHTML.export(file);
                     dispose();
-                    parentWindow.dispose();
                     JOptionPane.showMessageDialog(this,
                             "The file was successfully exported!");
                 } catch (IOException ex) {
